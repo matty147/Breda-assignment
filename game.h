@@ -18,5 +18,4 @@ public:
 private:
 	Surface* screen;
 };
-
 }; // namespace Tmpl8
