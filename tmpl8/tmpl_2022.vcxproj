@@ -57,7 +57,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\lib;..\lib\OpenGL;..\lib\SDL2-2.0.3\include;..\lib\freeimage\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\lib;..\lib\OpenGL;..\lib\SDL2-2.0.3\include;..\lib\freeimage\inc;$(ProjectDir)/tmpl8;$(ProjectDir)\tmpl8</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -90,7 +90,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\lib;..\lib\OpenGL;..\lib\SDL2-2.0.3\include;..\lib\freeimage\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\lib;..\lib\OpenGL;..\lib\SDL2-2.0.3\include;..\lib\freeimage\inc;$(ProjectDir)/tmpl8;$(ProjectDir)\tmpl8</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -122,13 +122,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\game.cpp" />
-    <ClCompile Include="player.cpp" />
+    <ClCompile Include="..\player.cpp" />
     <ClCompile Include="surface.cpp" />
     <ClCompile Include="template.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\game.h" />
-    <ClInclude Include="player.h" />
+    <ClInclude Include="..\player.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="template.h" />
   </ItemGroup>
