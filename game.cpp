@@ -3,43 +3,32 @@
 #include <windows.h>
 #include <cstdio>
 #include <algorithm>
+#include <vector>
 
 #include "player.h"
+#include "level.h"
 
 namespace Tmpl8
 {
-	Sprite Playersprite{ new Surface("tmpl8/assets/sprPlayer.png"), 1 }; // can be either
+	Sprite Playersprite{ new Surface("assets/sprPlayer.png"), 1 }; // can be either
+	Sprite Tilessprite{ new Surface("assets/nc2tiles.png"), 1 }; // can be either
+	//Sprite Playersprite{ new Surface("tmpl8/assets/sprPlayer.png"), 1 }; // can be either
+
 	int ScreenHeight = 0, ScreenWidth = 0;
 
-	class Level
-	{
-	public:
-		Level(int iwidth, int iheight)
-		{
-			width = iwidth;
-			height = iheight;
-		}
-
-		void draw(Surface* gameScreen) {
-			
-		}
-
-		int width, height;
-	};
+	Player myPlayer(64, 64);
+	Level level(10, 10);
 
 	void Game::Init()
 	{
 		ScreenWidth = screen->GetWidth();
 		ScreenHeight = screen->GetHeight();
-
+		level.CreateLevel();
 	}
 	
 	void Game::Shutdown()
 	{
 	}
-
-	Player myPlayer(64, 64);
-	Level level(10,10);
 
 	void Game::Tick(float deltaTime)
 	{
@@ -48,7 +37,11 @@ namespace Tmpl8
 		screen->Line(0,ScreenHeight - 200,ScreenWidth, ScreenHeight - 200,0x00FF00);
 		screen->Line(600,0 ,600, ScreenHeight,0x00FF00);
 
+		level.Draw(screen);
+
 		myPlayer.Move(deltaTime);
 		myPlayer.Draw(screen);
+
+		printf("%d", level.Collision(319, 319));
 	}
 };
