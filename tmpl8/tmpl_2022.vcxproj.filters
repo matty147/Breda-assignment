@@ -9,6 +9,7 @@
     </ClCompile>
     <ClCompile Include="..\game.cpp" />
     <ClCompile Include="..\player.cpp" />
+    <ClCompile Include="Level.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="surface.h">
@@ -19,6 +20,7 @@
     </ClInclude>
     <ClInclude Include="..\game.h" />
     <ClInclude Include="..\player.h" />
+    <ClInclude Include="Level.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">

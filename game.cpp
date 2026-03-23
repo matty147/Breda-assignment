@@ -8,8 +8,24 @@
 
 namespace Tmpl8
 {
-	Sprite Playersprite{ new Surface("assets/sprPlayer.png"), 1 };
+	Sprite Playersprite{ new Surface("tmpl8/assets/sprPlayer.png"), 1 }; // can be either
 	int ScreenHeight = 0, ScreenWidth = 0;
+
+	class Level
+	{
+	public:
+		Level(int iwidth, int iheight)
+		{
+			width = iwidth;
+			height = iheight;
+		}
+
+		void draw(Surface* gameScreen) {
+			
+		}
+
+		int width, height;
+	};
 
 	void Game::Init()
 	{
@@ -23,8 +39,7 @@ namespace Tmpl8
 	}
 
 	Player myPlayer(64, 64);
-	Player myPlayer2(128, 64);
-	Player myPlayer3(200, 64);
+	Level level(10,10);
 
 	void Game::Tick(float deltaTime)
 	{
@@ -35,10 +50,5 @@ namespace Tmpl8
 
 		myPlayer.Move(deltaTime);
 		myPlayer.Draw(screen);
-		myPlayer2.Move(deltaTime);
-		myPlayer2.Draw(screen);
-		myPlayer3.Move(deltaTime);
-		myPlayer3.Draw(screen);
-
 	}
 };
