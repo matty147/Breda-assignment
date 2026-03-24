@@ -26,6 +26,10 @@ namespace Tmpl8
             }
 
             tiles[5][5] = 1;
+            tiles[6][5] = 1;
+            tiles[7][5] = 1;
+            tiles[8][5] = 1;
+            tiles[9][5] = 1;
             tiles[2][3] = 6;
         }
 
@@ -52,23 +56,41 @@ namespace Tmpl8
 
         bool Level::Collision(int y, int x)
         {
-            int tx = clamp(x / 32,0,width -1), ty = clamp(y / 32,0,height -1);
+                int tx = clamp(x / 32, 0, width - 1), ty = clamp(y / 32, 0, height - 1);
 
-            return (tiles[ty][tx]);
+                return (tiles[ty][tx]);
         }
 
-        float Level::GetTileEdge(float checkY, float checkX) {
-            int topY = (int)(checkY / 32);
-            int bottomY = topY + 1;
+        float Level::GetTileEdge(float checkY, float checkX, bool horizontal) {
+            if (horizontal)
+            {
+                int leftX = (int)(checkX / 32);
+                int rightX = leftX + 1;
 
-            float topEdge = topY * 32.0f;
-            float bottomEdge = bottomY * 32.0f;
+                float leftEdge = leftX * 32.0f;
+                float rightEdge = rightX * 32.0f;
 
-            if (fabs(checkY - topEdge) <= fabs(checkY - bottomEdge)) {
-                return topEdge;
+                printf("%.2f, %.2f\n",leftEdge,rightEdge);
+
+                if (fabs(checkX - leftEdge) <= fabs(checkX - rightEdge)) {
+                    return leftEdge;
+                }
+
+                return rightEdge;
             }
+            else {
+                int topY = (int)(checkY / 32);
+                int bottomY = topY + 1;
 
-            return bottomEdge;
+                float topEdge = topY * 32.0f;
+                float bottomEdge = bottomY * 32.0f;
+
+                if (fabs(checkY - topEdge) <= fabs(checkY - bottomEdge)) {
+                    return topEdge;
+                }
+
+                return bottomEdge;
+            }
         }
 
         double Level::clamp(double d, double min, double max)

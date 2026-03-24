@@ -13,7 +13,7 @@ namespace Tmpl8
 	Sprite Tilessprite{ new Surface("assets/nc2tiles.png"), 1 }; // can be either
 	//Sprite Playersprite{ new Surface("tmpl8/assets/sprPlayer.png"), 1 }; // can be either
 
-	int ScreenHeight = 0, ScreenWidth = 0;
+	int ScreenHeight = 0, ScreenWidth = 0; 
 
 	Player myPlayer(64, 64);
 	Level level(10, 10);

@@ -29,7 +29,21 @@ namespace Tmpl8
 		if (GetAsyncKeyState(VK_LEFT))  moveX = -speed;
 		if (GetAsyncKeyState(VK_RIGHT)) moveX = speed;
 
-		x += moveX * (deltaTime / 10.0f);
+		float bottomX = x + moveX * (deltaTime / 10.0f); // rename
+		if (level.Collision(y, bottomX + 32) || level.Collision(y, bottomX))
+		{
+			float tileEdge = level.GetTileEdge(y, bottomX + 32, true);
+
+			if (moveX > 0) {
+				x = tileEdge - playerWidth;
+			}
+			else if (moveX < 0) {
+				x = tileEdge;
+			}
+		}
+		else {
+			x = bottomX;
+		}
 
 		bool jumpPressed = GetAsyncKeyState(VK_UP) & 0x8000;
 
@@ -53,12 +67,12 @@ namespace Tmpl8
 
 		float nextY = y + (currentGravity * (deltaTime / 10.0f));
 
-		float bottom = nextY + playerHeight;
+		float bottom = nextY + playerHeight; // rename
 
 		// vertical
 		if (level.Collision(bottom,x) || level.Collision(bottom - 32, x))
 		{
-			y = level.GetTileEdge(bottom, x) - playerHeight;
+			y = level.GetTileEdge(bottom, x, false) - playerHeight;
 			currentGravity = 0;
 			grounded = true;
 			jumptime = 0.3f;
@@ -69,9 +83,6 @@ namespace Tmpl8
 			y = nextY;
 			grounded = false;
 		}
-
-		// vertical
-		x = clamp(x, 0.0, (double)(600 - playerWidth));
 	}
 
 	void Player::Draw(Surface* gameScreen)
