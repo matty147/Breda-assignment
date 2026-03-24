@@ -2,6 +2,9 @@
 #include "tmpl8/surface.h"
 #include <windows.h>
 #include <cstdio>
+#include <cmath>
+
+#include "level.h"
 
 namespace Tmpl8
 {
@@ -17,7 +20,7 @@ namespace Tmpl8
 		gravity = igravity;
 	}
 
-	void Player::Move(float deltaTime)
+	void Player::Move(float deltaTime, Level& level)
 	{
 		playerWidth = Playersprite.GetWidth();
 		playerHeight = Playersprite.GetHeight();
@@ -50,9 +53,12 @@ namespace Tmpl8
 
 		float nextY = y + (currentGravity * (deltaTime / 10.0f));
 
-		if (nextY + playerHeight >= ScreenHeight - 200)
+		float bottom = nextY + playerHeight;
+
+		// vertical
+		if (level.Collision(bottom,x) || level.Collision(bottom - 32, x))
 		{
-			y = (float)(ScreenHeight - 200 - playerHeight);
+			y = level.GetTileEdge(bottom, x) - playerHeight;
 			currentGravity = 0;
 			grounded = true;
 			jumptime = 0.3f;
@@ -64,6 +70,7 @@ namespace Tmpl8
 			grounded = false;
 		}
 
+		// vertical
 		x = clamp(x, 0.0, (double)(600 - playerWidth));
 	}
 

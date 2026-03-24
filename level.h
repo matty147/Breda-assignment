@@ -12,9 +12,10 @@ namespace Tmpl8
 
 		void CreateLevel();
 		void Draw(Surface* gameScreen);
-		bool Collision(int x, int y);
-
+		bool Collision(int y, int x);
+		float GetTileEdge(float checkY, float checkX);
 	private:
+		double clamp(double d, double min, double max);
 		int width, height;
 		std::vector<std::vector<int>> tiles;
 	};

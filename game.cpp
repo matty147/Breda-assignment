@@ -1,6 +1,5 @@
 #include "game.h"
 #include "tmpl8/surface.h"
-#include <windows.h>
 #include <cstdio>
 #include <algorithm>
 #include <vector>
@@ -39,9 +38,7 @@ namespace Tmpl8
 
 		level.Draw(screen);
 
-		myPlayer.Move(deltaTime);
+		myPlayer.Move(deltaTime,level);
 		myPlayer.Draw(screen);
-
-		printf("%d", level.Collision(319, 319));
 	}
 };

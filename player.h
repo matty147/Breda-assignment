@@ -3,13 +3,14 @@
 namespace Tmpl8
 {
 	class Surface;
+	class Level;
 
 	class Player
 	{
 	public:
 		Player(float ix, float iy, float ispeed = 3.0f, int idirection = 0, float igravity = 2.0f);
 
-		void Move(float deltaTime);
+		void Move(float deltaTime, Level& level);
 		void Draw(Surface* gameScreen);
 
 	private:
