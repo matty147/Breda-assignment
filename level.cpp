@@ -23,6 +23,10 @@ namespace Tmpl8
             for (int x = 0; x < width; x++)
             {
                 tiles[10][x] = 1;
+                tiles[11][x] = 2;
+                tiles[12][x] = 2;
+                tiles[13][x] = 2;
+
             }
 
             tiles[5][5] = 1;
