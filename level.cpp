@@ -26,6 +26,8 @@ namespace Tmpl8
                 tiles[11][x] = 2;
                 tiles[12][x] = 2;
                 tiles[13][x] = 2;
+                tiles[14][x] = 2;
+                tiles[15][x] = 2;
 
             }
 
@@ -46,22 +48,33 @@ namespace Tmpl8
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (x * 32 > 0 && x * 32 < ScreenWidth && y * 32 > 0 && y * 32 < ScreenHeight)
+                    if (x * 32 >= 0 && x * 32 < ScreenWidth && y * 32 >= 0 && y * 32 < ScreenHeight)
                     {
                         int tile = tiles[y][x];
 
-                        Pixel* src = Tilessprite.GetBuffer() + 1 + tile * 33 + (1 + 0 * 33) * 595;
+                        int drawWidth = 32;
+                        int drawHeight = 32;
+
+                        if (x*32 + 32 > ScreenWidth) {
+                            drawWidth = ScreenWidth - x*32;
+                        }
+
+                        // Clip bottom edge
+                        if (y*32 + 32 > ScreenHeight) {
+                            drawHeight = ScreenHeight - y*32;
+                        }
+
+                        Pixel* src = Tilessprite.GetBuffer() + 1+ tile * 33 + (1 + 0 * 33) * 595;
                         Pixel* dst = gameScreen->GetBuffer() + x * 32 + y * 32 * 800;
-                        for (int i = 0; i < 32; i++)
+                        for (int i = 0; i < drawHeight; i++)
                         {
-                            for (int j = 0; j < 32; j++)
+                            for (int j = 0; j < drawWidth; j++)
                                 dst[j] = src[j];
                             src += 595, dst += 800;
                         }
                     }
                 }
             }
-
         }
 
         bool Level::Collision(int y, int x)
