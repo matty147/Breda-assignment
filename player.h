@@ -16,8 +16,8 @@ namespace Tmpl8
 	private:
 		double clamp(double d, double min, double max);
 
-		float x, y, speed, gravity, currentGravity = -1, jumptime = 0.3f;
-		int direction, jumpAmount = 2, playerWidth, playerHeight;
+		float x, y, speed, gravity, currentGravity = -1, jumptime = 0.3f, coyotetime;
+		int direction, jumpAmount = 0, playerWidth, playerHeight;
 		bool grounded = false, jumplastframe = false;
 	};
 }

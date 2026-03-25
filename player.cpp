@@ -20,70 +20,105 @@ namespace Tmpl8
 		gravity = igravity;
 	}
 
-	void Player::Move(float deltaTime, Level& level)
-	{
-		playerWidth = Playersprite.GetWidth();
-		playerHeight = Playersprite.GetHeight();
+    void Player::Move(float deltaTime, Level& level)
+    {
+        playerWidth = Playersprite.GetWidth();
+        playerHeight = Playersprite.GetHeight();
 
-		float moveX = 0;
-		if (GetAsyncKeyState(VK_LEFT))  moveX = -speed;
-		if (GetAsyncKeyState(VK_RIGHT)) moveX = speed;
+        float moveX = 0;
+        if (GetAsyncKeyState(VK_LEFT))  moveX = -speed;
+        if (GetAsyncKeyState(VK_RIGHT)) moveX = speed;
 
-		float bottomX = x + moveX * (deltaTime / 10.0f); // rename
-		if (level.Collision(y, bottomX + 32) || level.Collision(y, bottomX))
-		{
-			float tileEdge = level.GetTileEdge(y, bottomX + 32, true);
+        float deltaX = moveX * (deltaTime / 10.0f);
+        float nextX = x + deltaX;
 
-			if (moveX > 0) {
-				x = tileEdge - playerWidth;
-			}
-			else if (moveX < 0) {
-				x = tileEdge;
-			}
-		}
-		else {
-			x = bottomX;
-		}
+        int leftTile = (int)nextX / 32;
+        int rightTile = (int)(nextX + playerWidth - 1) / 32;
+        int topTile = (int)y / 32;
+        int bottomTile = (int)(y + playerHeight - 1) / 32;
 
-		bool jumpPressed = GetAsyncKeyState(VK_UP) & 0x8000;
+        bool hitX = false;
+        for (int r = topTile; r <= bottomTile; r++) {
+            for (int c = leftTile; c <= rightTile; c++) {
+                if (level.Collision(r * 32, c * 32)) {
+                    hitX = true;
+                    break;
+                }
+            }
+            if (hitX) break;
+        }
 
-		if (jumpPressed)
-		{
-			if (!jumplastframe && (grounded || jumpAmount > 0))
-			{
-				currentGravity = -6.0f;
-				jumpAmount--;
-				grounded = false;
-			}
-			jumplastframe = true;
-		}
-		else
-		{
-			jumplastframe = false;
-		}
+        if (hitX) {
+            if (deltaX > 0) {
+                x = (rightTile * 32) - playerWidth;
+            }
+            else if (deltaX < 0) {
+                x = (leftTile * 32) + 32;
+            }
+        }
+        else {
+            x = nextX;
+        }
 
-		currentGravity += gravity * (deltaTime / 100.0f);
-		if (currentGravity > 15.0f) currentGravity = 15.0f;
+        bool jumpPressed = GetAsyncKeyState(VK_UP) & 0x8000;
 
-		float nextY = y + (currentGravity * (deltaTime / 10.0f));
+        if (jumpPressed) {
+            if (!jumplastframe && (grounded || jumpAmount > 0)) {
+                currentGravity = -6.0f;
+                if (!(grounded || coyotetime >= 0)) jumpAmount--;
+                grounded = false;
+            }
+            jumplastframe = true;
+        }
+        else {
+            jumplastframe = false;
+        }
 
-		float bottom = nextY + playerHeight; // rename
+        currentGravity += gravity * (deltaTime / 100.0f);
+        if (currentGravity > 15.0f) currentGravity = 15.0f;
 
-		// vertical
-		if (level.Collision(bottom,x) || level.Collision(bottom - 32, x))
-		{
-			y = level.GetTileEdge(bottom, x, false) - playerHeight;
-			currentGravity = 0;
-			grounded = true;
-			jumptime = 0.3f;
-			jumpAmount = 2;
-		}
-		else
-		{
-			y = nextY;
-			grounded = false;
-		}
-	}
+        float deltaY = currentGravity * (deltaTime / 10.0f);
+        float nextY = y + deltaY;
+
+        leftTile = (int)x / 32;
+        rightTile = (int)(x + playerWidth - 1) / 32;
+        topTile = (int)nextY / 32;
+        bottomTile = (int)(nextY + playerHeight - 1) / 32;
+
+        bool hitY = false;
+        for (int r = topTile; r <= bottomTile; r++) {
+            for (int c = leftTile; c <= rightTile; c++) {
+                if (level.Collision(r * 32, c * 32)) {
+                    hitY = true;
+                    break;
+                }
+            }
+            if (hitY) break;
+        }
+
+        if (hitY) {
+            if (deltaY > 0) {
+                y = (bottomTile * 32) - playerHeight;
+                currentGravity = 0;
+                jumptime = 0.3f;
+                jumpAmount = 1;
+            }
+            else if (deltaY < 0) {
+                y = (topTile * 32) + 32;
+                currentGravity = 0;
+            }
+        }
+        else {
+            y = nextY;
+        }
+
+        grounded = level.Collision(y + 50, x) || level.Collision(y + 50, x + 16) || level.Collision(y + 50, x + 32);
+
+        if (grounded)
+        {
+            coyotetime = 1;
+        }coyotetime -= deltaTime / 100;
+    }
 
 	void Player::Draw(Surface* gameScreen)
 	{

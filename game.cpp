@@ -16,7 +16,7 @@ namespace Tmpl8
 	int ScreenHeight = 0, ScreenWidth = 0; 
 
 	Player myPlayer(64, 64);
-	Level level(10, 10);
+	Level level(20, 20);
 
 	void Game::Init()
 	{
