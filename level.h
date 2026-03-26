@@ -11,8 +11,8 @@ namespace Tmpl8
 		Level(int iwidth, int iheight);
 
 		void CreateLevel();
-		void Draw(Surface* gameScreen);
-		bool Collision(int y, int x);
+		void Draw(Surface* gameScreen, float offset);
+		bool Collision(int y, int x, float offset);
 	private:
 		double clamp(double d, double min, double max);
 		int width, height;

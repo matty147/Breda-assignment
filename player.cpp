@@ -40,7 +40,7 @@ namespace Tmpl8
         bool hitX = false;
         for (int r = topTile; r <= bottomTile; r++) {
             for (int c = leftTile; c <= rightTile; c++) {
-                if (level.Collision(r * 32, c * 32)) {
+                if (level.Collision(r * 32, c * 32,0)) {
                     hitX = true;
                     break;
                 }
@@ -88,7 +88,7 @@ namespace Tmpl8
         bool hitY = false;
         for (int r = topTile; r <= bottomTile; r++) {
             for (int c = leftTile; c <= rightTile; c++) {
-                if (level.Collision(r * 32, c * 32)) {
+                if (level.Collision(r * 32, c * 32,0)) {
                     hitY = true;
                     break;
                 }
@@ -112,7 +112,7 @@ namespace Tmpl8
             y = nextY;
         }
 
-        grounded = level.Collision(y + 50, x) || level.Collision(y + 50, x + 16) || level.Collision(y + 50, x + 32);
+        grounded = level.Collision(y + 50, x,0) || level.Collision(y + 50, x + 16,0) || level.Collision(y + 50, x + 31,0);
 
         if (grounded)
         {
