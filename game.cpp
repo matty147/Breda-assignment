@@ -7,6 +7,10 @@
 #include "player.h"
 #include "level.h"
 
+#include <iostream>
+#include <fstream>
+#include <string>
+
 namespace Tmpl8
 {
 	Sprite Playersprite{ new Surface("assets/sprPlayer.png"), 1 }; // can be either
@@ -16,13 +20,28 @@ namespace Tmpl8
 	int ScreenHeight = 0, ScreenWidth = 0; 
 
 	Player myPlayer(64, 64);
-	Level level(30, 30);
+	Level level(100, 100);
 
 	void Game::Init()
 	{
 		ScreenWidth = screen->GetWidth();
 		ScreenHeight = screen->GetHeight();
 		level.CreateLevel();
+
+		std::ifstream myFile("C:/Users/matty/source/c++/Breda-assignment/levels/level1.txt");
+
+		if (!myFile.is_open()) {
+			std::cerr << "Error: Could not open the file!" << std::endl;
+		}
+
+		std::string line;
+
+		while (std::getline(myFile, line)) {
+			std::cout << line << std::endl;
+		}
+
+		// 4. Close the file (optional but good practice)
+		myFile.close();
 	}
 	
 	void Game::Shutdown()
@@ -36,7 +55,7 @@ namespace Tmpl8
 		//screen->Line(0,ScreenHeight - 200,ScreenWidth, ScreenHeight - 200,0x00FF00);
 		//screen->Line(600,0 ,600, ScreenHeight,0x00FF00);
 
-		level.Draw(screen,0);
+		level.Draw(screen);
 
 		myPlayer.Move(deltaTime,level);
 		myPlayer.Draw(screen);

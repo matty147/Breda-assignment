@@ -3,12 +3,14 @@
 #include <windows.h>
 #include <cstdio>
 #include <vector>
+#include <cmath>
 
 std::vector<std::vector<int>> tiles;
 
 namespace Tmpl8
 {
     extern Sprite Tilessprite;
+    int test = 0;
 
         Level::Level(int iwidth, int iheight)
         {
@@ -31,6 +33,8 @@ namespace Tmpl8
 
             }
 
+            tiles[9][8] = 3;
+
             tiles[5][5] = 1;
             tiles[6][5] = 1;
             tiles[7][5] = 1;
@@ -39,7 +43,7 @@ namespace Tmpl8
             tiles[2][3] = 6;
         }
 
-        void Level::Draw(Surface* gameScreen, float offset) {
+        void Level::Draw(Surface* gameScreen) {
 
             int ScreenWidth = gameScreen->GetWidth();
             int ScreenHeight = gameScreen->GetHeight();
@@ -50,37 +54,43 @@ namespace Tmpl8
                 {
                     if (x * 32 >= 0 && x * 32 < ScreenWidth && y * 32 >= 0 && y * 32 < ScreenHeight)
                     {
-                        int tile = tiles[y][x + (int)offset];
+                        int tile = tiles[y][x];
 
                         int drawWidth = 32;
                         int drawHeight = 32;
 
-                        if (x*32 + 32 > ScreenWidth) {
-                            drawWidth = ScreenWidth - x*32;
+                        if (x * 32 + 32 > ScreenWidth) {
+                            drawWidth = ScreenWidth - x * 32;
                         }
 
-                        if (y*32 + 32 > ScreenHeight) {
-                            drawHeight = ScreenHeight - y*32;
+                        if (y * 32 + 32 > ScreenHeight) {
+                            drawHeight = ScreenHeight - y * 32;
                         }
 
-                        Pixel* src = Tilessprite.GetBuffer() + 0 + tile * 32 + 16 + (0 + 0 * 32) * 595;
-                        Pixel* dst = gameScreen->GetBuffer() + x * 33 + 16 + y * 33 * 800;
+                        Pixel* src = Tilessprite.GetBuffer() + 1 + tile * 33 + (1 + 0 * 33) * 595;
+                        Pixel* dst = gameScreen->GetBuffer() + x * 32 + y * 32 * ScreenWidth;
                         for (int i = 0; i < drawHeight; i++)
                         {
                             for (int j = 0; j < drawWidth; j++)
                                 dst[j] = src[j];
-                            src += 595, dst += 800;
+                            src += 595, dst += ScreenWidth;
                         }
                     }
                 }
             }
         }
 
-        bool Level::Collision(int y, int x, float offset)
-        {
-                int tx = clamp(x / 32, 0, width - 1), ty = clamp(y / 32, 0, height - 1);
 
-                return (tiles[ty][tx + (int)offset]);
+        bool Level::Collision(int y, int x)
+        {
+            int tx = clamp(x / 32, 0, width - 1), ty = clamp(y / 32, 0, height - 1);
+
+            if (tiles[ty][tx] == 3) // spike
+            {
+                return false;
+            }
+
+            return (tiles[ty][tx]);
         }
          
         double Level::clamp(double d, double min, double max)
