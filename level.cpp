@@ -31,6 +31,9 @@ namespace Tmpl8
         {
             tinyxml2::XMLDocument doc;
 
+            int peicemask = 0x1FFFFFFF;
+            int rotationmask = 0xE0000000;
+
             if (doc.LoadFile("C:/Users/matty/source/c++/Breda-assignment/levels/map.tmx") != XML_SUCCESS) {
                 printf("Failed to load level file!\n");
                 return;
@@ -67,6 +70,17 @@ namespace Tmpl8
                             token.erase(0, token.find_first_not_of(" \t\r\n"));
 
                             if (!token.empty()) {
+
+                                if (std::stoul(token) - 1 > 100) // rotation - last 3 bits are the rotation data
+                                {  
+                                    unsigned int rotation = (std::stoul(token) - 1 & rotationmask) >> 29;
+
+                                    printf("%d\n", rotation);
+
+                                    tiles[y][x] = rotation * 100 + std::stoul(token) - 1 & peicemask;
+                                    break;
+                                }
+
                                 tiles[y][x] = std::stoi(token) - 1;
                                 break;
                             }
@@ -88,7 +102,7 @@ namespace Tmpl8
                 {
                     if (x * 32 >= 0 && x * 32 < ScreenWidth && y * 32 >= 0 && y * 32 < ScreenHeight)
                     {
-                        int tile = tiles[y][x];
+                        int tile = tiles[y][x] % 100;
 
                         int drawWidth = 32;
                         int drawHeight = 32;
@@ -121,12 +135,14 @@ namespace Tmpl8
         {
             int tx = clamp(x / 32, 0, width - 1), ty = clamp(y / 32, 0, height - 1);
 
-            if (tiles[ty][tx] == 3) // spike
+            if (tiles[ty][tx] % 100 == 3) // spike
             {
+                printf("%d\n", tiles[ty][tx]);
+
                 return false;
             }
 
-            return (tiles[ty][tx]);
+            return (tiles[ty][tx] % 100);
         }
 
         bool Level::SpikeColision(int playerY, int playerX, int gridRow, int gridCol)
@@ -149,7 +165,7 @@ namespace Tmpl8
 
             printf("%d\n",(has_neg && has_pos));
 
-            return (has_neg && has_pos);
+            return !(has_neg && has_pos);
         }
 
         float Level::sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x)

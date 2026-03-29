@@ -39,7 +39,7 @@ namespace Tmpl8
 		screen->Clear(0);
 
 		//screen->Line(0,ScreenHeight - 200,ScreenWidth, ScreenHeight - 200,0x00FF00);
-		//screen->Line(600,0 ,600, ScreenHeight,0x00FF00);
+		//screen->Line(600,0 ,600, ScreenHeight,0x00FF00);	
 
 		level.Draw(screen);
 

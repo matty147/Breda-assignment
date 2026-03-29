@@ -8,7 +8,7 @@ namespace Tmpl8
 	class Player
 	{
 	public:
-		Player(float ix, float iy, float ispeed = 3.0f, int idirection = 0, float igravity = 2.0f);
+		Player(float ix, float iy, float ispeed = 3.0f, int idirection = 0, float igravity = 2.5f);
 
 		void Move(float deltaTime, Level& level);
 		void Draw(Surface* gameScreen);

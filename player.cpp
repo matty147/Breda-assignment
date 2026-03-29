@@ -128,7 +128,7 @@ namespace Tmpl8
             coyotetime = 1;
         }coyotetime -= deltaTime / 100;
 
-        //if (level.SpikeColision(y, x, y, x))
+        //if (level.SpikeColision(y, x, r, c))
         //{
         //    printf("ded");
         //}
