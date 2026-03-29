@@ -124,6 +124,7 @@
     <ClCompile Include="..\game.cpp" />
     <ClCompile Include="..\level.cpp" />
     <ClCompile Include="..\player.cpp" />
+    <ClCompile Include="..\tinyxml2.cpp" />
     <ClCompile Include="surface.cpp" />
     <ClCompile Include="template.cpp" />
   </ItemGroup>
@@ -131,6 +132,7 @@
     <ClInclude Include="..\game.h" />
     <ClInclude Include="..\level.h" />
     <ClInclude Include="..\player.h" />
+    <ClInclude Include="..\tinyxml2.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="template.h" />
   </ItemGroup>

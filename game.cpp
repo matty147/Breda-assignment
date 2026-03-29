@@ -28,20 +28,6 @@ namespace Tmpl8
 		ScreenHeight = screen->GetHeight();
 		level.CreateLevel();
 
-		std::ifstream myFile("C:/Users/matty/source/c++/Breda-assignment/levels/level1.txt");
-
-		if (!myFile.is_open()) {
-			std::cerr << "Error: Could not open the file!" << std::endl;
-		}
-
-		std::string line;
-
-		while (std::getline(myFile, line)) {
-			std::cout << line << std::endl;
-		}
-
-		// 4. Close the file (optional but good practice)
-		myFile.close();
 	}
 	
 	void Game::Shutdown()

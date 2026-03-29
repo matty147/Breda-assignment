@@ -11,6 +11,10 @@ namespace Tmpl8
 	extern Sprite Playersprite;
 	extern int ScreenHeight, ScreenWidth;
 
+    enum PlayerState {alive, dead};
+
+    PlayerState state = alive;
+
 	Player::Player(float ix, float iy, float ispeed, int idirection, float igravity)
 	{
 		x = ix;
@@ -88,6 +92,11 @@ namespace Tmpl8
         bool hitY = false;
         for (int r = topTile; r <= bottomTile; r++) {
             for (int c = leftTile; c <= rightTile; c++) {
+                //if (tiles[r, c] == 3)
+                //{
+
+                //}
+
                 if (level.Collision(r * 32, c * 32)) {
                     hitY = true;
                     break;
@@ -118,6 +127,11 @@ namespace Tmpl8
         {
             coyotetime = 1;
         }coyotetime -= deltaTime / 100;
+
+        //if (level.SpikeColision(y, x, y, x))
+        //{
+        //    printf("ded");
+        //}
     }
 
 	void Player::Draw(Surface* gameScreen)
