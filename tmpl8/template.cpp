@@ -10,7 +10,7 @@
 #pragma warning (disable : 4311) // pointer truncation from HANDLE to long
 #endif
 
-//#define FULLSCREEN
+#define FULLSCREEN
 //#define ADVANCEDGL
 
 #include "../game.h"
@@ -300,6 +300,7 @@ void swap()
 
 int main( int argc, char **argv ) 
 {  
+	SDL_SetHintWithPriority(SDL_HINT_RENDER_VSYNC, "0", SDL_HINT_OVERRIDE);
 #ifdef _MSC_VER
     if (!redirectIO())
         return 1;
@@ -308,18 +309,18 @@ int main( int argc, char **argv )
 	SDL_Init( SDL_INIT_VIDEO );
 #ifdef ADVANCEDGL
 #ifdef FULLSCREEN
-	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_FULLSCREEN|SDL_WINDOW_OPENGL );
+	window = SDL_CreateWindow(TemplateVersion, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ScreenWidth, ScreenHeight, SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
 #else
-	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL );
+	window = SDL_CreateWindow(TemplateVersion, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ScreenWidth, ScreenHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
 #endif
 	SDL_GLContext glContext = SDL_GL_CreateContext( window);
 	init();
 	ShowCursor( false );
 #else
 #ifdef FULLSCREEN
-	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_FULLSCREEN );
+	window = SDL_CreateWindow(TemplateVersion, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ScreenWidth, ScreenHeight, SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI);
 #else
-	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_SHOWN );
+	window = SDL_CreateWindow(TemplateVersion, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ScreenWidth, ScreenHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
 #endif
 	surface = new Surface( ScreenWidth, ScreenHeight );
 	surface->Clear( 0 );

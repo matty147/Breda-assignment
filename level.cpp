@@ -34,7 +34,7 @@ namespace Tmpl8
             int peicemask = 0x1FFFFFFF;
             int rotationmask = 0xE0000000;
 
-            if (doc.LoadFile("C:/Users/matty/source/c++/Breda-assignment/levels/map.tmx") != XML_SUCCESS) {
+            if (doc.LoadFile("levels/map.tmx") != XML_SUCCESS) { // is in the wrong place?
                 printf("Failed to load level file!\n");
                 return;
             }
@@ -116,6 +116,13 @@ namespace Tmpl8
                         }
 
                         if (tile < 0) continue;
+
+                        float rad = 90 * (3.14159f / 180.0f); // Convert degrees to radians
+                        //float cosTheta = cos(rad);
+                        //float sinTheta = sin(rad);
+
+                        //int newX = (x * cosTheta) - (y * sinTheta);
+                        //int newY = (x * sinTheta) + (y * cosTheta);
 
                         Pixel* src = Tilessprite.GetBuffer() + 1 + tile * 33 + (1 + 0 * 33) * 595;
                         Pixel* dst = gameScreen->GetBuffer() + x * 32 + y * 32 * ScreenWidth;
