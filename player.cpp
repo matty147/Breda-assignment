@@ -121,7 +121,7 @@ namespace Tmpl8
             y = nextY;
         }
 
-        grounded = level.Collision(y + 50, x) || level.Collision(y + 50, x + 16) || level.Collision(y + 50, x + 31);
+        grounded = level.Collision(y + 35, x) || level.Collision(y + 35, x + 16);
 
         if (grounded)
         {

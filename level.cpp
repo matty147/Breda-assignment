@@ -104,6 +104,26 @@ namespace Tmpl8
                     {
                         int tile = tiles[y][x] % 100;
 
+                        float angle = 0 * (3.14159f / 180.f);
+
+                        int tilesid = (tiles[y][x] / 100);
+
+                        if (tiles[y][x] > 100)
+                        {
+                            switch (tilesid)
+                            {
+                            case 3:
+                                angle = 90.0f * (3.14159f / 180.f);
+                                break;
+                            case 5:
+                                angle = 270.0f * (3.14159f / 180.f);
+                                break;
+                            default:
+                                angle = 180.0f * (3.14159f / 180.f);
+                                break;
+                            }
+                        }
+
                         int drawWidth = 32;
                         int drawHeight = 32;
 
@@ -117,20 +137,23 @@ namespace Tmpl8
 
                         if (tile < 0) continue;
 
-                        float rad = 90 * (3.14159f / 180.0f); // Convert degrees to radians
-                        //float cosTheta = cos(rad);
-                        //float sinTheta = sin(rad);
+                        float cos = std::cos(angle);
+                        float sin = std::sin(angle);
 
-                        //int newX = (x * cosTheta) - (y * sinTheta);
-                        //int newY = (x * sinTheta) + (y * cosTheta);
-
-                        Pixel* src = Tilessprite.GetBuffer() + 1 + tile * 33 + (1 + 0 * 33) * 595;
                         Pixel* dst = gameScreen->GetBuffer() + x * 32 + y * 32 * ScreenWidth;
                         for (int i = 0; i < drawHeight; i++)
                         {
                             for (int j = 0; j < drawWidth; j++)
-                                dst[j] = src[j];
-                            src += 595, dst += ScreenWidth;
+                            {
+                                int dx = j - 15, dy = i - 15;
+
+                                int newX = (int)((dx * cos) - (dy * sin) + 16.0f);
+                                int newY = (int)((dx * sin) + (dy * cos) + 16.0f);
+
+                                Pixel* src = Tilessprite.GetBuffer() + 0 + tile * 33 + newX + (0 + 0 * 33 + newY) * 595;
+                                dst[j] = *src;
+                            }
+                            dst += ScreenWidth;
                         }
                     }
                 }
