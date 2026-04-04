@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <cstdio>
 #include <cmath>
+#include <algorithm>
 
 #include "level.h"
 
@@ -29,6 +30,8 @@ namespace Tmpl8
         playerWidth = Playersprite.GetWidth();
         playerHeight = Playersprite.GetHeight();
 
+        int tileSize = 32;
+
         float moveX = 0;
         if (GetAsyncKeyState(VK_LEFT))  moveX = -speed;
         if (GetAsyncKeyState(VK_RIGHT)) moveX = speed;
@@ -36,15 +39,15 @@ namespace Tmpl8
         float deltaX = moveX * (deltaTime / 10.0f);
         float nextX = x + deltaX;
 
-        int leftTile = (int)nextX / 32;
-        int rightTile = (int)(nextX + playerWidth - 1) / 32;
-        int topTile = (int)y / 32;
-        int bottomTile = (int)(y + playerHeight - 1) / 32;
+        int leftTile = (int)nextX / tileSize;
+        int rightTile = (int)(nextX + playerWidth - 1) / tileSize;
+        int topTile = (int)y / tileSize;
+        int bottomTile = (int)(y + playerHeight - 1) / tileSize;
 
         bool hitX = false;
         for (int r = topTile; r <= bottomTile; r++) {
             for (int c = leftTile; c <= rightTile; c++) {
-                if (level.Collision(r * 32, c * 32)) {
+                if (level.Collision(r * tileSize, c * tileSize)) {
                     hitX = true;
                     break;
                 }
@@ -54,15 +57,17 @@ namespace Tmpl8
 
         if (hitX) {
             if (deltaX > 0) {
-                x = (rightTile * 32) - playerWidth;
+                x = (rightTile * tileSize) - playerWidth;
             }
             else if (deltaX < 0) {
-                x = (leftTile * 32) + 32;
+                x = (leftTile * tileSize) + tileSize;
             }
         }
         else {
             x = nextX;
         }
+
+        x = std::clamp(x, 0.0f, (float)ScreenWidth - playerWidth);
 
         bool jumpPressed = GetAsyncKeyState(VK_UP) & 0x8000;
 
@@ -84,10 +89,10 @@ namespace Tmpl8
         float deltaY = currentGravity * (deltaTime / 10.0f);
         float nextY = y + deltaY;
 
-        leftTile = (int)x / 32;
-        rightTile = (int)(x + playerWidth - 1) / 32;
-        topTile = (int)nextY / 32;
-        bottomTile = (int)(nextY + playerHeight - 1) / 32;
+        leftTile = (int)x / tileSize;
+        rightTile = (int)(x + playerWidth - 1) / tileSize;
+        topTile = (int)nextY / tileSize;
+        bottomTile = (int)(nextY + playerHeight - 1) / tileSize;
 
         bool hitY = false;
         for (int r = topTile; r <= bottomTile; r++) {
@@ -97,7 +102,7 @@ namespace Tmpl8
 
                 //}
 
-                if (level.Collision(r * 32, c * 32)) {
+                if (level.Collision(r * tileSize, c * tileSize)) {
                     hitY = true;
                     break;
                 }
@@ -107,36 +112,31 @@ namespace Tmpl8
 
         if (hitY) {
             if (deltaY > 0) {
-                y = (bottomTile * 32) - playerHeight;
+                y = (bottomTile * tileSize) - playerHeight;
                 currentGravity = 0;
                 jumptime = 0.3f;
                 jumpAmount = 1;
             }
             else if (deltaY < 0) {
-                y = (topTile * 32) + 32;
+                y = (topTile * tileSize) + tileSize;
                 currentGravity = 0;
             }
         }
         else {
             y = nextY;
         }
-
-        grounded = level.Collision(y + 35, x) || level.Collision(y + 35, x + 16);
+        
+        grounded = level.Collision(y + playerHeight * 1.25, x) || level.Collision(y + playerHeight * 1.25, x + playerWidth -1);
 
         if (grounded)
         {
             coyotetime = 1;
-        }coyotetime -= deltaTime / 100;
+        }
+        coyotetime -= deltaTime / 100;
     }
 
 	void Player::Draw(Surface* gameScreen)
 	{
 		Playersprite.Draw(gameScreen, x, y);
-	}
-
-	double Player::clamp(double d, double min, double max)
-	{
-		const double t = d < min ? min : d;
-		return t > max ? max : t;
 	}
 }

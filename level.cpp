@@ -150,7 +150,7 @@ namespace Tmpl8
                                 int newX = (int)((dx * cos) - (dy * sin) + 16.0f);
                                 int newY = (int)((dx * sin) + (dy * cos) + 16.0f);
 
-                                Pixel* src = Tilessprite.GetBuffer() + 0 + tile * 33 + newX + (0 + 0 * 33 + newY) * 595;
+                                Pixel* src = Tilessprite.GetBuffer() + tile * 33 + newX + (0 * 33 + newY) * 595;
                                 dst[j] = *src;
                             }
                             dst += ScreenWidth;
@@ -163,7 +163,7 @@ namespace Tmpl8
 
         bool Level::Collision(int y, int x)
         {
-            int tx = clamp(x / 32, 0, width - 1), ty = clamp(y / 32, 0, height - 1);
+            int tx = std::clamp(x / 32, 0, width - 1), ty = std::clamp(y / 32, 0, height - 1);
 
             if (tiles[ty][tx] % 100 == 3) // spike
             {
