@@ -19,6 +19,8 @@ namespace Tmpl8
 
 	int ScreenHeight = 0, ScreenWidth = 0; 
 
+	int currentScreen = 0;
+
 	Player myPlayer(64, 64);
 	Level level(100, 100);
 
@@ -27,7 +29,6 @@ namespace Tmpl8
 		ScreenWidth = screen->GetWidth();
 		ScreenHeight = screen->GetHeight();
 		level.CreateLevel();
-
 	}
 	
 	void Game::Shutdown()
@@ -37,9 +38,6 @@ namespace Tmpl8
 	void Game::Tick(float deltaTime)
 	{
 		screen->Clear(0);
-
-		//screen->Line(0,ScreenHeight - 200,ScreenWidth, ScreenHeight - 200,0x00FF00);
-		//screen->Line(600,0 ,600, ScreenHeight,0x00FF00);	
 
 		level.Draw(screen);
 

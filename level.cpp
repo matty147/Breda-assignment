@@ -145,16 +145,19 @@ namespace Tmpl8
                         {
                             for (int j = 0; j < drawWidth; j++)
                             {
-                                int dx = j - 15, dy = i - 15;
+                                float off = 15.5f;
 
-                                int newX = (int)((dx * cos) - (dy * sin) + 16.0f);
-                                int newY = (int)((dx * sin) + (dy * cos) + 16.0f);
+                                int dx = j - off, dy = i - off;
+
+                                int newX = (int)((dx * cos) - (dy * sin) + 16);
+                                int newY = (int)((dx * sin) + (dy * cos) + 16);
 
                                 Pixel* src = Tilessprite.GetBuffer() + tile * 33 + newX + (0 * 33 + newY) * 595;
                                 dst[j] = *src;
                             }
                             dst += ScreenWidth;
                         }
+
                     }
                 }
             }
@@ -165,11 +168,15 @@ namespace Tmpl8
         {
             int tx = std::clamp(x / 32, 0, width - 1), ty = std::clamp(y / 32, 0, height - 1);
 
-            if (tiles[ty][tx] % 100 == 3) // spike
+            if (tiles[ty][tx] % 100 == 3 || tiles[ty][tx] % 100 == 6) // spike
             {
                 printf("%d\n", tiles[ty][tx]);
 
                 return false;
+            }
+            else if (tiles[ty][tx] % 100 == 5)
+            {
+                // change levels
             }
 
             return (tiles[ty][tx] % 100);
@@ -201,12 +208,6 @@ namespace Tmpl8
         float Level::sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x)
         {
             return (p1x - p3x) * (p2y - p3y) - (p2x - p3x) * (p1y - p3y);
-        }
-
-        double Level::clamp(double d, double min, double max)
-        {
-            const double t = d < min ? min : d;
-            return t > max ? max : t;
         }
 
         int width, height;
