@@ -14,6 +14,10 @@ std::vector<std::vector<int>> tiles;
 
 using namespace tinyxml2;
 
+enum Seasons {Spring, Summer, Fall, Winter};
+
+Seasons currentSeason = Summer;
+
 namespace Tmpl8
 {
 
@@ -152,7 +156,7 @@ namespace Tmpl8
                                 int newX = (int)((dx * cos) - (dy * sin) + 16);
                                 int newY = (int)((dx * sin) + (dy * cos) + 16);
 
-                                Pixel* src = Tilessprite.GetBuffer() + tile * 33 + newX + (0 * 33 + newY) * 595;
+                                Pixel* src = Tilessprite.GetBuffer() + tile * 33 + newX + (currentSeason * 33 + newY) * 595;
                                 dst[j] = *src;
                             }
                             dst += ScreenWidth;
