@@ -16,10 +16,10 @@ namespace Tmpl8
 
     PlayerState state = alive;
 
-	Player::Player(float ix, float iy, float ispeed, int idirection, float igravity)
+	Player::Player(float iy, float ix, float ispeed, int idirection, float igravity)
 	{
-		x = ix;
 		y = iy;
+		x = ix;
 		speed = ispeed;
 		direction = idirection;
 		gravity = igravity;

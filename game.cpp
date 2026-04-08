@@ -21,16 +21,23 @@ namespace Tmpl8
 
 	int currentScreen = 0;
 
-	Player myPlayer(64, 64);
 	Level level(100, 100);
+	Player myPlayer(0, 0);
+
+	int PlayerX = 0, PlayerY = 0;
 
 	void Game::Init()
 	{
 		ScreenWidth = screen->GetWidth();
 		ScreenHeight = screen->GetHeight();
 		level.CreateLevel();
+		level.FindFlag(PlayerY,PlayerX);
+
+		myPlayer = Player(PlayerY, PlayerX);
+
+		printf("Y: %d. X: %d", PlayerY, PlayerX);
 	}
-	
+
 	void Game::Shutdown()
 	{
 	}

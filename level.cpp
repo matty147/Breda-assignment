@@ -16,7 +16,8 @@ using namespace tinyxml2;
 
 enum Seasons {Spring, Summer, Fall, Winter};
 
-Seasons currentSeason = Summer;
+Seasons currentSeason = Spring;
+float PI = 3.14159265358979323846264338327950288419716939937510582097494459072381640628620899862803482534211706798f;
 
 namespace Tmpl8
 {
@@ -95,6 +96,22 @@ namespace Tmpl8
                 printf("Level loaded successfully from TMX!\n");
         }
 
+        void Level::FindFlag(int& outY, int& outX)
+        {
+            int item = 4;
+
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+
+                    if (tiles[y][x] == item) {
+                        outX = x * 32;
+                        outY = y * 32;
+                        break;
+                    }
+                }
+            }
+        }
+
         void Level::Draw(Surface* gameScreen) {
 
             int ScreenWidth = gameScreen->GetWidth();
@@ -106,9 +123,22 @@ namespace Tmpl8
                 {
                     if (x * 32 >= 0 && x * 32 < ScreenWidth && y * 32 >= 0 && y * 32 < ScreenHeight)
                     {
+                        if (tiles[y][x] < 100)
+                        {
+                            Pixel* src = Tilessprite.GetBuffer() + 1 + tiles[y][x] * 33 + (1 + currentSeason * 33) * 595;
+                            Pixel* dst = gameScreen->GetBuffer() + x * 32 + y * 32 * ScreenWidth;
+                            for (int i = 0; i < 32; i++)
+                            {
+                                for (int j = 0; j < 32; j++)
+                                    dst[j] = src[j];
+                                src += 595, dst += ScreenWidth;
+                            }
+                            continue;
+                        }
+
                         int tile = tiles[y][x] % 100;
 
-                        float angle = 0 * (3.14159f / 180.f);
+                        float angle = 0;
 
                         int tilesid = (tiles[y][x] / 100);
 
@@ -117,13 +147,13 @@ namespace Tmpl8
                             switch (tilesid)
                             {
                             case 3:
-                                angle = 90.0f * (3.14159f / 180.f);
+                                angle = 90.0f * (PI / 180.f);
                                 break;
                             case 5:
-                                angle = 270.0f * (3.14159f / 180.f);
+                                angle = 270.0f * (PI / 180.f);
                                 break;
                             default:
-                                angle = 180.0f * (3.14159f / 180.f);
+                                angle = 180.0f * (PI / 180.f);
                                 break;
                             }
                         }
@@ -172,7 +202,7 @@ namespace Tmpl8
         {
             int tx = std::clamp(x / 32, 0, width - 1), ty = std::clamp(y / 32, 0, height - 1);
 
-            if (tiles[ty][tx] % 100 == 3 || tiles[ty][tx] % 100 == 6) // spike
+            if (tiles[ty][tx] % 100 == 3 || tiles[ty][tx] % 100 == 6 && currentSeason == Summer || tiles[ty][tx] % 100 == 4)
             {
                 printf("%d\n", tiles[ty][tx]);
 
@@ -180,7 +210,8 @@ namespace Tmpl8
             }
             else if (tiles[ty][tx] % 100 == 5)
             {
-                // change levels
+                currentSeason = Summer;
+                return false;
             }
 
             return (tiles[ty][tx] % 100);
