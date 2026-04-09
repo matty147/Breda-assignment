@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <vector>
 #include <cmath>
+#include <numbers> 
 
 #include "tinyxml2.h"
 #include <sstream>
@@ -17,7 +18,6 @@ using namespace tinyxml2;
 enum Seasons {Spring, Summer, Fall, Winter};
 
 Seasons currentSeason = Spring;
-float PI = 3.14159265358979323846264338327950288419716939937510582097494459072381640628620899862803482534211706798f;
 
 namespace Tmpl8
 {
@@ -147,13 +147,13 @@ namespace Tmpl8
                             switch (tilesid)
                             {
                             case 3:
-                                angle = 90.0f * (PI / 180.f);
+                                angle = 90.0f * (std::numbers::pi / 180.f);
                                 break;
                             case 5:
-                                angle = 270.0f * (PI / 180.f);
+                                angle = 270.0f * (std::numbers::pi / 180.f);
                                 break;
                             default:
-                                angle = 180.0f * (PI / 180.f);
+                                angle = 180.0f * (std::numbers::pi / 180.f);
                                 break;
                             }
                         }
