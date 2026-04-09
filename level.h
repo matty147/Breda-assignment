@@ -14,7 +14,7 @@ namespace Tmpl8
 		void CreateLevel();
 		void Draw(Surface* gameScreen);
 		void FindFlag(int& outY, int& outX);
-		bool Collision(int y, int x);
+		int Collision(int y, int x);
 		bool SpikeColision(int py, int px, int sy, int sx);
 	private:
 		//double clamp(double d, double min, double max);

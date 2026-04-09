@@ -198,20 +198,20 @@ namespace Tmpl8
         }
 
 
-        bool Level::Collision(int y, int x)
+        int Level::Collision(int y, int x)
         {
             int tx = std::clamp(x / 32, 0, width - 1), ty = std::clamp(y / 32, 0, height - 1);
 
-            if (tiles[ty][tx] % 100 == 3 || tiles[ty][tx] % 100 == 6 && currentSeason == Summer || tiles[ty][tx] % 100 == 4)
+            if (tiles[ty][tx] % 100 == 6 && currentSeason == Summer || tiles[ty][tx] % 100 == 4)
             {
                 printf("%d\n", tiles[ty][tx]);
 
-                return false;
+                return -1;
             }
             else if (tiles[ty][tx] % 100 == 5)
             {
                 currentSeason = Summer;
-                return false;
+                return -1;
             }
 
             return (tiles[ty][tx] % 100);

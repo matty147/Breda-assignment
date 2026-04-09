@@ -48,7 +48,7 @@ namespace Tmpl8
 
 		level.Draw(screen);
 
-		myPlayer.Move(deltaTime,level);
+		myPlayer.Update(deltaTime,level);
 		myPlayer.Draw(screen);
 	}
 };
