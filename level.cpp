@@ -15,16 +15,21 @@ std::vector<std::vector<int>> tiles;
 
 using namespace tinyxml2;
 
-enum Seasons {Spring, Summer, Fall, Winter};
+enum timeOfDay {Day, Night};
 
-Seasons currentSeason = Seasons::Spring;
+timeOfDay currentDay= timeOfDay::Day;
 
 enum class TileType {
     Empty = 0,
-    Solid = 1,
+    Grass = 1,
+    Ground = 2,
     Spike = 3,
-    Platform = 4,
-    Spring      
+    Flag = 4,
+    Portal = 5,
+    Water = 6,
+    Cement = 7,    
+    Moon = 8,    
+    Sun = 9   
 };
 
 namespace Tmpl8
@@ -106,12 +111,10 @@ namespace Tmpl8
 
         void Level::FindFlag(int& outY, int& outX)
         {
-            int item = 4;
-
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
 
-                    if (tiles[y][x] == item) {
+                    if (tiles[y][x] == (int)TileType::Flag) {
                         outX = x * 32;
                         outY = y * 32;
                         break;
@@ -133,7 +136,7 @@ namespace Tmpl8
                     {
                         if (tiles[y][x] < 100)
                         {
-                            Pixel* src = Tilessprite.GetBuffer() + 1 + tiles[y][x] * 33 + (1 + currentSeason * 33) * 595;
+                            Pixel* src = Tilessprite.GetBuffer() + 1 + tiles[y][x] * 33 + (1 + (int)currentDay * 33) * 595;
                             Pixel* dst = gameScreen->GetBuffer() + x * 32 + y * 32 * ScreenWidth;
                             for (int i = 0; i < 32; i++)
                             {
@@ -194,7 +197,7 @@ namespace Tmpl8
                                 int newX = (int)((dx * cos) - (dy * sin) + 16);
                                 int newY = (int)((dx * sin) + (dy * cos) + 16);
 
-                                Pixel* src = Tilessprite.GetBuffer() + tile * 33 + newX + (currentSeason * 33 + newY) * 595;
+                                Pixel* src = Tilessprite.GetBuffer() + tile * 33 + newX + ((int)currentDay * 33 + newY) * 595;
                                 dst[j] = *src;
                             }
                             dst += ScreenWidth;
@@ -210,15 +213,20 @@ namespace Tmpl8
         {
             int tx = std::clamp(x / 32, 0, width - 1), ty = std::clamp(y / 32, 0, height - 1);
 
-            if (tiles[ty][tx] % 100 == 6 && currentSeason == Summer || tiles[ty][tx] % 100 == 4)
-            {
-                printf("%d\n", tiles[ty][tx]);
+            //if (tiles[ty][tx] % 100 == (int)TileType::Water && currentDay == Summer || tiles[ty][tx] % 100 == (int)TileType::Spike)
+            //{
+            //    printf("%d\n", tiles[ty][tx]);
 
+            //    return -1;
+            //}
+            if (tiles[ty][tx] % 100 == (int)TileType::Sun)
+            {
+                currentDay = timeOfDay::Day;
                 return -1;
             }
-            else if (tiles[ty][tx] % 100 == 5)
+            else if (tiles[ty][tx] % 100 == (int)TileType::Moon)
             {
-                currentSeason = Summer;
+                currentDay = timeOfDay::Night;
                 return -1;
             }
 

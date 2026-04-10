@@ -6,12 +6,18 @@ namespace Tmpl8
 {
 	class Surface;
 
+
 	enum class TileType {
 		Empty = 0,
-		Solid = 1,
+		Grass = 1,
+		Ground = 2,
 		Spike = 3,
-		Platform = 4,
-		Spring = 5
+		Flag = 4,
+		Portal = 5,
+		Water = 6,
+		Cement = 7,
+		Moon = 8,
+		Sun = 9
 	};
 
 	class Level
