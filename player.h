@@ -18,6 +18,7 @@ namespace Tmpl8
 		void UpdateY(float deltaTime, Level& level, bool& jumpjumpPressed);
 		void UpdateX(float deltaTime, Level& level, float moveX);
 		void ProcessInput(float& moveX, bool& jumpPressed);
+		bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
 
 
 		float x, y, speed, gravity, currentGravity = -1, jumptime = 0.3f, coyotetime;

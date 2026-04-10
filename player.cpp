@@ -45,11 +45,6 @@ namespace Tmpl8
 
         UpdateTimers(deltaTime, level);
 
-        if (level.Collision(x, y))
-        {
-
-        }
-
         if (playerStatus == Dead)
         {
             playerStatus = Alive;
@@ -78,16 +73,7 @@ namespace Tmpl8
         int topTile = (int)y / tileSize;
         int bottomTile = (int)(y + playerHeight - 1) / tileSize;
 
-        bool hitX = false;
-        for (int r = topTile; r <= bottomTile; r++) {
-            for (int c = leftTile; c <= rightTile; c++) {
-                if (level.Collision(r * tileSize, c * tileSize)) {
-                    hitX = true;
-                    break;
-                }
-            }
-            if (hitX) break;
-        }
+        bool hitX = TileCollision(topTile, bottomTile, leftTile, rightTile, level);
 
         if (hitX) {
             if (deltaX > 0) {
@@ -127,17 +113,7 @@ namespace Tmpl8
         int topTile = (int)nextY / tileSize;
         int bottomTile = (int)(nextY + playerHeight - 1) / tileSize;
 
-        bool hitY = false;
-        for (int r = topTile; r <= bottomTile; r++) {
-            for (int c = leftTile; c <= rightTile; c++) {
-
-                if (level.Collision(r * tileSize, c * tileSize)) {
-                    hitY = true;
-                    break;
-                }
-            }
-            if (hitY) break;
-        }
+        bool hitY = TileCollision(topTile, bottomTile, leftTile, rightTile, level);
 
         if (hitY) {
             if (deltaY > 0) {
@@ -155,6 +131,44 @@ namespace Tmpl8
             y = nextY;
         }
     }
+
+    bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level)
+    {
+        bool hit = false;
+        for (int r = topTile; r <= bottomTile; r++) {
+            for (int c = leftTile; c <= rightTile; c++) {
+
+                int tileid = level.Collision(r * tileSize, c * tileSize);
+
+                if (tileid == (int)TileType::Spike) // hit spike
+                {
+                    int leftX = x;
+                    int rightX = x + playerWidth - 1;
+                    int centerX = x + (playerWidth / 2);
+
+                    int bottomY = y + playerHeight - 1;
+                    int centerY = y + (playerHeight / 2);
+
+                    if (level.SpikeColision(bottomY, leftX, r, c) ||  
+                        level.SpikeColision(bottomY, rightX, r, c) || 
+                        level.SpikeColision(bottomY, centerX, r, c) ||
+                        level.SpikeColision(centerY, leftX, r, c) ||
+                        level.SpikeColision(centerY, rightX, r, c))
+                    {
+                        playerStatus = Dead;
+                    }
+
+                    return false;
+                }
+
+                if (tileid > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     void Player::UpdateTimers(float deltaTime, Level& level)
     {

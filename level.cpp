@@ -17,7 +17,15 @@ using namespace tinyxml2;
 
 enum Seasons {Spring, Summer, Fall, Winter};
 
-Seasons currentSeason = Spring;
+Seasons currentSeason = Seasons::Spring;
+
+enum class TileType {
+    Empty = 0,
+    Solid = 1,
+    Spike = 3,
+    Platform = 4,
+    Spring      
+};
 
 namespace Tmpl8
 {
