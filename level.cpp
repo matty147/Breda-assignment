@@ -213,21 +213,28 @@ namespace Tmpl8
         {
             int tx = std::clamp(x / 32, 0, width - 1), ty = std::clamp(y / 32, 0, height - 1);
 
-            //if (tiles[ty][tx] % 100 == (int)TileType::Water && currentDay == Summer || tiles[ty][tx] % 100 == (int)TileType::Spike)
-            //{
-            //    printf("%d\n", tiles[ty][tx]);
+            int currentTile = tiles[ty][tx] % 100;
 
-            //    return -1;
-            //}
-            if (tiles[ty][tx] % 100 == (int)TileType::Sun)
+            switch (currentTile)
             {
-                currentDay = timeOfDay::Day;
-                return -1;
-            }
-            else if (tiles[ty][tx] % 100 == (int)TileType::Moon)
-            {
-                currentDay = timeOfDay::Night;
-                return -1;
+                case (int)TileType::Sun:
+                    currentDay = timeOfDay::Day;
+                    return -1;
+
+                case (int)TileType::Moon:
+                    currentDay = timeOfDay::Night;
+                    return -1;
+
+                case (int)TileType::Water:
+                    if (currentDay == timeOfDay::Day)
+                    {
+                        return -1;
+                    }
+                    break;
+
+                case (int)TileType::Flag:
+                case (int)TileType::Portal:
+                    return -1;  
             }
 
             return (tiles[ty][tx] % 100);
