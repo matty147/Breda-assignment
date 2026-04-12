@@ -1,11 +1,11 @@
 #pragma once
 #include <vector>
-#include <tuple>s
+#include <tuple>
+#include <string>
 
 namespace Tmpl8
 {
 	class Surface;
-
 
 	enum class TileType {
 		Empty = 0,
@@ -25,7 +25,7 @@ namespace Tmpl8
 	public:
 		Level(int iwidth, int iheight);
 
-		void CreateLevel();
+		void CreateLevel(std::string levelname);
 		void Draw(Surface* gameScreen);
 		void FindFlag(int& outY, int& outX);
 		int Collision(int y, int x);
@@ -33,7 +33,7 @@ namespace Tmpl8
 	private:
 		//double clamp(double d, double min, double max);
 		float sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x);
-		int width, height;
+		int width, height, tileSize = 32;
 		std::vector<std::vector<int>> tiles;
 	};
 }

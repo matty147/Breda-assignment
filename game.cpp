@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 namespace Tmpl8
 {
@@ -26,11 +27,15 @@ namespace Tmpl8
 
 	int PlayerX = 0, PlayerY = 0;
 
+	std::vector<std::string> levelNames = { "level1", "level2", "level3", "level4" };
+
+	int currentLevelId = 0;
+
 	void Game::Init()
 	{
 		ScreenWidth = screen->GetWidth();
 		ScreenHeight = screen->GetHeight();
-		level.CreateLevel();
+		level.CreateLevel(levelNames[currentLevelId]);
 		level.FindFlag(PlayerY,PlayerX);
 
 		myPlayer = Player(PlayerY, PlayerX);

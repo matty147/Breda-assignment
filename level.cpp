@@ -5,6 +5,7 @@
 #include <vector>
 #include <cmath>
 #include <numbers> 
+#include <string>
 
 #include "tinyxml2.h"
 #include <sstream>
@@ -17,7 +18,7 @@ using namespace tinyxml2;
 
 enum timeOfDay {Day, Night};
 
-timeOfDay currentDay= timeOfDay::Day;
+timeOfDay currentDay = timeOfDay::Day;
 
 enum class TileType {
     Empty = 0,
@@ -32,6 +33,8 @@ enum class TileType {
     Sun = 9   
 };
 
+using namespace std;
+
 namespace Tmpl8
 {
 
@@ -45,14 +48,19 @@ namespace Tmpl8
             tiles.resize(height, std::vector<int>(width, 0));
         }
 
-        void Level::CreateLevel()
+        void Level::CreateLevel(string levelname)
         {
             tinyxml2::XMLDocument doc;
 
             int peicemask = 0x1FFFFFFF;
             int rotationmask = 0xE0000000;
 
-            if (doc.LoadFile("levels/map.tmx") != XML_SUCCESS) { // is in the wrong place?
+            // level1.tmx
+            string fullPath = "levels/" + levelname + ".tmx";
+
+            printf("loaded level %s\n", fullPath.c_str());
+
+            if (doc.LoadFile(fullPath.c_str()) != XML_SUCCESS) {
                 printf("Failed to load level file!\n");
                 return;
             }
@@ -115,8 +123,8 @@ namespace Tmpl8
                 for (int x = 0; x < width; x++) {
 
                     if (tiles[y][x] == (int)TileType::Flag) {
-                        outX = x * 32;
-                        outY = y * 32;
+                        outX = x * tileSize;
+                        outY = y * tileSize;
                         break;
                     }
                 }
@@ -132,15 +140,15 @@ namespace Tmpl8
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (x * 32 >= 0 && x * 32 < ScreenWidth && y * 32 >= 0 && y * 32 < ScreenHeight)
+                    if (x * tileSize >= 0 && x * tileSize < ScreenWidth && y * tileSize >= 0 && y * tileSize < ScreenHeight)
                     {
                         if (tiles[y][x] < 100)
                         {
-                            Pixel* src = Tilessprite.GetBuffer() + 1 + tiles[y][x] * 33 + (1 + (int)currentDay * 33) * 595;
-                            Pixel* dst = gameScreen->GetBuffer() + x * 32 + y * 32 * ScreenWidth;
-                            for (int i = 0; i < 32; i++)
+                            Pixel* src = Tilessprite.GetBuffer() + 1 + tiles[y][x] * (tileSize + 1) + (1 + (int)currentDay * (tileSize + 1)) * 595;
+                            Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
+                            for (int i = 0; i < tileSize; i++)
                             {
-                                for (int j = 0; j < 32; j++)
+                                for (int j = 0; j < tileSize; j++)
                                     dst[j] = src[j];
                                 src += 595, dst += ScreenWidth;
                             }
@@ -169,15 +177,15 @@ namespace Tmpl8
                             }
                         }
 
-                        int drawWidth = 32;
-                        int drawHeight = 32;
+                        int drawWidth = tileSize;
+                        int drawHeight = tileSize;
 
-                        if (x * 32 + 32 > ScreenWidth) {
-                            drawWidth = ScreenWidth - x * 32;
+                        if (x * tileSize + tileSize > ScreenWidth) {
+                            drawWidth = ScreenWidth - x * tileSize;
                         }
 
-                        if (y * 32 + 32 > ScreenHeight) {
-                            drawHeight = ScreenHeight - y * 32;
+                        if (y * tileSize + tileSize > ScreenHeight) {
+                            drawHeight = ScreenHeight - y * tileSize;
                         }
 
                         if (tile < 0) continue;
@@ -185,7 +193,7 @@ namespace Tmpl8
                         float cos = std::cos(angle);
                         float sin = std::sin(angle);
 
-                        Pixel* dst = gameScreen->GetBuffer() + x * 32 + y * 32 * ScreenWidth;
+                        Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
                         for (int i = 0; i < drawHeight; i++)
                         {
                             for (int j = 0; j < drawWidth; j++)
@@ -197,7 +205,7 @@ namespace Tmpl8
                                 int newX = (int)((dx * cos) - (dy * sin) + 16);
                                 int newY = (int)((dx * sin) + (dy * cos) + 16);
 
-                                Pixel* src = Tilessprite.GetBuffer() + tile * 33 + newX + ((int)currentDay * 33 + newY) * 595;
+                                Pixel* src = Tilessprite.GetBuffer() + tile * (tileSize + 1) + newX + ((int)currentDay * (tileSize + 1) + newY) * 595;
                                 dst[j] = *src;
                             }
                             dst += ScreenWidth;
@@ -211,12 +219,13 @@ namespace Tmpl8
 
         int Level::Collision(int y, int x)
         {
-            int tx = std::clamp(x / 32, 0, width - 1), ty = std::clamp(y / 32, 0, height - 1);
+            int tx = std::clamp(x / tileSize, 0, width - 1), ty = std::clamp(y / tileSize, 0, height - 1);
 
             int currentTile = tiles[ty][tx] % 100;
 
             switch (currentTile)
             {
+                // move?
                 case (int)TileType::Sun:
                     currentDay = timeOfDay::Day;
                     return -1;
@@ -240,16 +249,17 @@ namespace Tmpl8
             return (tiles[ty][tx] % 100);
         }
 
+        // TODO: needs rotation
         bool Level::SpikeColision(int playerY, int playerX, int gridRow, int gridCol)
         {
             float side1, side2, side3;
             bool has_neg, has_pos;
             int bottomLeftY, bottomLeftX, bottomRightY, bottomRightX, topCenterY, topCenterX;
-            int ty = gridRow * 32, tx = gridCol * 32;
+            int ty = gridRow * tileSize, tx = gridCol * tileSize;
 
-            bottomLeftY = ty + 32, bottomLeftX = tx;
-            bottomRightY = ty + 32, bottomRightX = tx + 32;
-            topCenterY = ty, topCenterX = tx + 16;
+            bottomLeftY = ty + tileSize, bottomLeftX = tx;
+            bottomRightY = ty + tileSize, bottomRightX = tx + tileSize;
+            topCenterY = ty, topCenterX = tx + tileSize / 2;
 
             side1 = sign(playerY, playerX, bottomLeftY, bottomLeftX, bottomRightY, bottomRightX);
             side2 = sign(playerY, playerX, bottomRightY, bottomRightX, topCenterY, topCenterX);

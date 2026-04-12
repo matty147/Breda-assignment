@@ -161,6 +161,10 @@ namespace Tmpl8
                     return false;
                 }
 
+                //if (tileid == (int)TileType::Moon)
+                //{
+                //}
+
                 if (tileid > 0) {
                     return true;
                 }
@@ -172,7 +176,7 @@ namespace Tmpl8
 
     void Player::UpdateTimers(float deltaTime, Level& level)
     {
-        grounded = level.Collision(y + playerHeight * 1.25, x) || level.Collision(y + playerHeight * 1.25, x + playerWidth - 1);
+        grounded =  0 < level.Collision(y + playerHeight * 1.25, x) || 0 < level.Collision(y + playerHeight * 1.25, x + playerWidth - 1);
 
         if (grounded)
         {
