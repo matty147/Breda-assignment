@@ -48,15 +48,17 @@ namespace Tmpl8
             tiles.resize(height, std::vector<int>(width, 0));
         }
 
-        void Level::CreateLevel(string levelname)
+        void Level::CreateLevel(string levelName)
         {
             tinyxml2::XMLDocument doc;
 
             int peicemask = 0x1FFFFFFF;
             int rotationmask = 0xE0000000;
 
+            std::vector<std::string> B = { "level1", "level2", "level3", "level4" };
+
             // level1.tmx
-            string fullPath = "levels/" + levelname + ".tmx";
+            string fullPath = "levels/" + levelName + ".tmx";
 
             printf("loaded level %s\n", fullPath.c_str());
 
@@ -65,56 +67,56 @@ namespace Tmpl8
                 return;
             }
 
-                XMLElement* mapNode = doc.FirstChildElement("map");
-                width = mapNode->IntAttribute("width");
-                height = mapNode->IntAttribute("height");
+            XMLElement* mapNode = doc.FirstChildElement("map");
+            width = mapNode->IntAttribute("width");
+            height = mapNode->IntAttribute("height");
 
-                tiles.resize(height, std::vector<int>(width, 0));
+            tiles.resize(height, std::vector<int>(width, 0));
 
-                XMLElement* layerNode = mapNode->FirstChildElement("layer");
-                XMLElement* dataNode = layerNode->FirstChildElement("data");
+            XMLElement* layerNode = mapNode->FirstChildElement("layer");
+            XMLElement* dataNode = layerNode->FirstChildElement("data");
 
-                if (!dataNode) {
-                    printf("Could not find tile data in XML!\n");
-                    return;
-                }
+            if (!dataNode) {
+                printf("Could not find tile data in XML!\n");
+                return;
+            }
 
-                const char* tileDataText = dataNode->GetText();
-                std::string dataString(tileDataText);
+            const char* tileDataText = dataNode->GetText();
+            std::string dataString(tileDataText);
 
-                std::replace(dataString.begin(), dataString.end(), '\n', ',');
-                std::replace(dataString.begin(), dataString.end(), '\r', ',');
+            std::replace(dataString.begin(), dataString.end(), '\n', ',');
+            std::replace(dataString.begin(), dataString.end(), '\r', ',');
 
-                std::stringstream ss(dataString);
-                std::string token;
+            std::stringstream ss(dataString);
+            std::string token;
 
-                for (int y = 0; y < height; y++) {
-                    for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
 
-                        while (std::getline(ss, token, ',')) {
+                    while (std::getline(ss, token, ',')) {
 
-                            token.erase(0, token.find_first_not_of(" \t\r\n"));
+                        token.erase(0, token.find_first_not_of(" \t\r\n"));
 
-                            if (!token.empty()) {
+                        if (!token.empty()) {
 
-                                if (std::stoul(token) - 1 > 100) // rotation - last 3 bits are the rotation data
-                                {  
-                                    unsigned int rotation = (std::stoul(token) - 1 & rotationmask) >> 29;
+                            if (std::stoul(token) - 1 > 100) // rotation - last 3 bits are the rotation data
+                            {  
+                                unsigned int rotation = (std::stoul(token) - 1 & rotationmask) >> 29;
 
-                                    printf("%d\n", rotation);
+                                printf("%d\n", rotation);
 
-                                    tiles[y][x] = rotation * 100 + std::stoul(token) - 1 & peicemask;
-                                    break;
-                                }
-
-                                tiles[y][x] = std::stoi(token) - 1;
+                                tiles[y][x] = rotation * 100 + std::stoul(token) - 1 & peicemask;
                                 break;
                             }
+
+                            tiles[y][x] = std::stoi(token) - 1;
+                            break;
                         }
                     }
                 }
+            }
 
-                printf("Level loaded successfully from TMX!\n");
+            printf("Level loaded successfully from TMX!\n");
         }
 
         void Level::FindFlag(int& outY, int& outX)
@@ -242,7 +244,7 @@ namespace Tmpl8
                     break;
 
                 case (int)TileType::Flag:
-                case (int)TileType::Portal:
+                //case (int)TileType::Portal:
                     return -1;  
             }
 

@@ -11,6 +11,7 @@
     <ClCompile Include="..\player.cpp" />
     <ClCompile Include="..\level.cpp" />
     <ClCompile Include="..\tinyxml2.cpp" />
+    <ClCompile Include="..\enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="surface.h">
@@ -23,6 +24,7 @@
     <ClInclude Include="..\player.h" />
     <ClInclude Include="..\level.h" />
     <ClInclude Include="..\tinyxml2.h" />
+    <ClInclude Include="..\enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">

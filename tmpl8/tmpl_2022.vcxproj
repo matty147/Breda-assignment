@@ -121,6 +121,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\enemy.cpp" />
     <ClCompile Include="..\game.cpp" />
     <ClCompile Include="..\level.cpp" />
     <ClCompile Include="..\player.cpp" />
@@ -129,6 +130,7 @@
     <ClCompile Include="template.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\enemy.h" />
     <ClInclude Include="..\game.h" />
     <ClInclude Include="..\level.h" />
     <ClInclude Include="..\player.h" />

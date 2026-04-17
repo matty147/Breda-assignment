@@ -6,6 +6,8 @@ class Surface;
 class Game
 {
 public:
+	static int currentLevelID;
+
 	void SetTarget( Surface* surface ) { screen = surface; }
 	void Init();
 	void Shutdown();

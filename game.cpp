@@ -6,6 +6,7 @@
 
 #include "player.h"
 #include "level.h"
+#include "enemy.h"
 
 #include <iostream>
 #include <fstream>
@@ -16,6 +17,7 @@ namespace Tmpl8
 {
 	Sprite Playersprite{ new Surface("assets/sprPlayer.png"), 1 }; // can be either
 	Sprite Tilessprite{ new Surface("assets/nc2tiles.png"), 1 }; // can be either
+	Sprite Enemysprite{ new Surface("assets/sprEnemy.png"), 1 }; // can be either
 	//Sprite Playersprite{ new Surface("tmpl8/assets/sprPlayer.png"), 1 }; // can be either
 
 	int ScreenHeight = 0, ScreenWidth = 0; 
@@ -24,18 +26,19 @@ namespace Tmpl8
 
 	Level level(100, 100);
 	Player myPlayer(0, 0);
+	Enemy myEnemy(100, 100);
 
 	int PlayerX = 0, PlayerY = 0;
 
 	std::vector<std::string> levelNames = { "level1", "level2", "level3", "level4" };
 
-	int currentLevelId = 0;
+	int Game::currentLevelID = 0;
 
 	void Game::Init()
 	{
 		ScreenWidth = screen->GetWidth();
 		ScreenHeight = screen->GetHeight();
-		level.CreateLevel(levelNames[currentLevelId]);
+		level.CreateLevel(levelNames[Game::currentLevelID]);
 		level.FindFlag(PlayerY,PlayerX);
 
 		myPlayer = Player(PlayerY, PlayerX);
@@ -54,6 +57,16 @@ namespace Tmpl8
 		level.Draw(screen);
 
 		myPlayer.Update(deltaTime,level);
+		myEnemy.Update(deltaTime,level);
 		myPlayer.Draw(screen);
+		myEnemy.Draw(screen);
+
+		//if (Game::currentLevelID <= 1)
+		//{
+		//	level.CreateLevel(levelNames[Game::currentLevelID]);
+		//	level.FindFlag(PlayerY,PlayerX);
+		//}
+
+		//printf("%d\n", Game::currentLevelID);
 	}
 };

@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include "level.h"
+#include "game.h"
 
 namespace Tmpl8
 {
@@ -138,34 +139,41 @@ namespace Tmpl8
         for (int r = topTile; r <= bottomTile; r++) {
             for (int c = leftTile; c <= rightTile; c++) {
 
-                int tileid = level.Collision(r * tileSize, c * tileSize);
+                int tileId = level.Collision(r * tileSize, c * tileSize);
 
-                if (tileid == (int)TileType::Spike) // hit spike
+                switch (tileId)
                 {
-                    int leftX = x;
-                    int rightX = x + playerWidth - 1;
-                    int centerX = x + (playerWidth / 2);
-
-                    int bottomY = y + playerHeight - 1;
-                    int centerY = y + (playerHeight / 2);
-
-                    if (level.SpikeColision(bottomY, leftX, r, c) ||  
-                        level.SpikeColision(bottomY, rightX, r, c) || 
-                        level.SpikeColision(bottomY, centerX, r, c) ||
-                        level.SpikeColision(centerY, leftX, r, c) ||
-                        level.SpikeColision(centerY, rightX, r, c))
+                    case (int)TileType::Spike:
                     {
-                        playerStatus = Dead;
+                        int leftX = x;
+                        int rightX = x + playerWidth - 1;
+                        int centerX = x + (playerWidth / 2);
+
+                        int bottomY = y + playerHeight - 1;
+                        int centerY = y + (playerHeight / 2);
+
+                        if (level.SpikeColision(bottomY, leftX, r, c) ||
+                            level.SpikeColision(bottomY, rightX, r, c) ||
+                            level.SpikeColision(bottomY, centerX, r, c) ||
+                            level.SpikeColision(centerY, leftX, r, c) ||
+                            level.SpikeColision(centerY, rightX, r, c))
+                        {
+                            playerStatus = Dead;
+                        }
+                        continue;
                     }
 
-                    return false;
+                    case (int)TileType::Portal:
+                        Game::currentLevelID++;
+                        return false;
+
+                    //case (int)TileType::Water:
+                    //case (int)TileType::Flag:
+                    //    continue;
+
                 }
 
-                //if (tileid == (int)TileType::Moon)
-                //{
-                //}
-
-                if (tileid > 0) {
+                if (tileId > 0) {
                     return true;
                 }
             }
