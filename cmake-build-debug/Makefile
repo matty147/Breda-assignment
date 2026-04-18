@@ -118,6 +118,30 @@ MyGame\fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MyGame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\MyGame.dir\build
 .PHONY : MyGame\fast
 
+enemy.obj: enemy.cpp.obj
+.PHONY : enemy.obj
+
+# target to build an object file
+enemy.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MyGame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\MyGame.dir\enemy.cpp.obj
+.PHONY : enemy.cpp.obj
+
+enemy.i: enemy.cpp.i
+.PHONY : enemy.i
+
+# target to preprocess a source file
+enemy.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MyGame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\MyGame.dir\enemy.cpp.i
+.PHONY : enemy.cpp.i
+
+enemy.s: enemy.cpp.s
+.PHONY : enemy.s
+
+# target to generate assembly for a file
+enemy.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MyGame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\MyGame.dir\enemy.cpp.s
+.PHONY : enemy.cpp.s
+
 game.obj: game.cpp.obj
 .PHONY : game.obj
 
@@ -190,6 +214,30 @@ player.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MyGame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\MyGame.dir\player.cpp.s
 .PHONY : player.cpp.s
 
+tinyxml2.obj: tinyxml2.cpp.obj
+.PHONY : tinyxml2.obj
+
+# target to build an object file
+tinyxml2.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MyGame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\MyGame.dir\tinyxml2.cpp.obj
+.PHONY : tinyxml2.cpp.obj
+
+tinyxml2.i: tinyxml2.cpp.i
+.PHONY : tinyxml2.i
+
+# target to preprocess a source file
+tinyxml2.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MyGame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\MyGame.dir\tinyxml2.cpp.i
+.PHONY : tinyxml2.cpp.i
+
+tinyxml2.s: tinyxml2.cpp.s
+.PHONY : tinyxml2.s
+
+# target to generate assembly for a file
+tinyxml2.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MyGame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\MyGame.dir\tinyxml2.cpp.s
+.PHONY : tinyxml2.cpp.s
+
 tmpl8\surface.obj: tmpl8\surface.cpp.obj
 .PHONY : tmpl8\surface.obj
 
@@ -247,6 +295,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... MyGame
+	@echo ... enemy.obj
+	@echo ... enemy.i
+	@echo ... enemy.s
 	@echo ... game.obj
 	@echo ... game.i
 	@echo ... game.s
@@ -256,6 +307,9 @@ help:
 	@echo ... player.obj
 	@echo ... player.i
 	@echo ... player.s
+	@echo ... tinyxml2.obj
+	@echo ... tinyxml2.i
+	@echo ... tinyxml2.s
 	@echo ... tmpl8/surface.obj
 	@echo ... tmpl8/surface.i
 	@echo ... tmpl8/surface.s

@@ -8,26 +8,22 @@
 #include "level.h"
 #include "game.h"
 
-namespace Tmpl8
-{
-	extern Sprite Enemysprite;
+namespace Tmpl8 {
+    extern Sprite enemySprite;
     extern int ScreenHeight, ScreenWidth;
 
-	Enemy::Enemy(float iy, float ix, float ispeed, int idirection, float igravity)
-	{
-		y = iy;
-		x = ix;
-		speed = ispeed;
-		direction = idirection;
-		gravity = igravity;
-	}
+    Enemy::Enemy(float iy, float ix, float ispeed, int idirection, float igravity) {
+        y = iy;
+        x = ix;
+        speed = ispeed;
+        direction = idirection;
+        gravity = igravity;
+    }
 
-	void Enemy::Update(float deltaTime, Level& level)
-	{
-	}
+    void Enemy::Update(float deltaTime, Level &level) {
+    }
 
-	void Enemy::Draw(Surface* gameScreen)
-	{
-		Enemysprite.Draw(gameScreen, x, y);
-	}
+    void Enemy::Draw(Surface *gameScreen) {
+        enemySprite.Draw(gameScreen, x, y);
+    }
 }

@@ -121,10 +121,50 @@ CMakeFiles\MyGame.dir\level.cpp.s: cmake_force
  /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\MyGame.dir\level.cpp.s /c "C:\Users\matty\Source\c++\video game - transform\level.cpp"
 <<
 
+CMakeFiles\MyGame.dir\enemy.cpp.obj: CMakeFiles\MyGame.dir\flags.make
+CMakeFiles\MyGame.dir\enemy.cpp.obj: "C:\Users\matty\Source\c++\video game - transform\enemy.cpp"
+CMakeFiles\MyGame.dir\enemy.cpp.obj: CMakeFiles\MyGame.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\matty\Source\c++\video game - transform\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/MyGame.dir/enemy.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\MyGame.dir\enemy.cpp.obj.d --working-dir="C:\Users\matty\Source\c++\video game - transform\cmake-build-debug" --filter-prefix="Note: including file: " -- C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\MyGame.dir\enemy.cpp.obj /FdCMakeFiles\MyGame.dir\ /FS -c "C:\Users\matty\Source\c++\video game - transform\enemy.cpp"
+<<
+
+CMakeFiles\MyGame.dir\enemy.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MyGame.dir/enemy.cpp.i"
+	C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\MyGame.dir\enemy.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\matty\Source\c++\video game - transform\enemy.cpp"
+<<
+
+CMakeFiles\MyGame.dir\enemy.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MyGame.dir/enemy.cpp.s"
+	C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\MyGame.dir\enemy.cpp.s /c "C:\Users\matty\Source\c++\video game - transform\enemy.cpp"
+<<
+
+CMakeFiles\MyGame.dir\tinyxml2.cpp.obj: CMakeFiles\MyGame.dir\flags.make
+CMakeFiles\MyGame.dir\tinyxml2.cpp.obj: "C:\Users\matty\Source\c++\video game - transform\tinyxml2.cpp"
+CMakeFiles\MyGame.dir\tinyxml2.cpp.obj: CMakeFiles\MyGame.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\matty\Source\c++\video game - transform\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/MyGame.dir/tinyxml2.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\MyGame.dir\tinyxml2.cpp.obj.d --working-dir="C:\Users\matty\Source\c++\video game - transform\cmake-build-debug" --filter-prefix="Note: including file: " -- C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\MyGame.dir\tinyxml2.cpp.obj /FdCMakeFiles\MyGame.dir\ /FS -c "C:\Users\matty\Source\c++\video game - transform\tinyxml2.cpp"
+<<
+
+CMakeFiles\MyGame.dir\tinyxml2.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MyGame.dir/tinyxml2.cpp.i"
+	C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\MyGame.dir\tinyxml2.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\matty\Source\c++\video game - transform\tinyxml2.cpp"
+<<
+
+CMakeFiles\MyGame.dir\tinyxml2.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MyGame.dir/tinyxml2.cpp.s"
+	C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\MyGame.dir\tinyxml2.cpp.s /c "C:\Users\matty\Source\c++\video game - transform\tinyxml2.cpp"
+<<
+
 CMakeFiles\MyGame.dir\tmpl8\surface.cpp.obj: CMakeFiles\MyGame.dir\flags.make
 CMakeFiles\MyGame.dir\tmpl8\surface.cpp.obj: "C:\Users\matty\Source\c++\video game - transform\tmpl8\surface.cpp"
 CMakeFiles\MyGame.dir\tmpl8\surface.cpp.obj: CMakeFiles\MyGame.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\matty\Source\c++\video game - transform\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/MyGame.dir/tmpl8/surface.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\matty\Source\c++\video game - transform\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/MyGame.dir/tmpl8/surface.cpp.obj"
 	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\MyGame.dir\tmpl8\surface.cpp.obj.d --working-dir="C:\Users\matty\Source\c++\video game - transform\cmake-build-debug" --filter-prefix="Note: including file: " -- C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
  /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\MyGame.dir\tmpl8\surface.cpp.obj /FdCMakeFiles\MyGame.dir\ /FS -c "C:\Users\matty\Source\c++\video game - transform\tmpl8\surface.cpp"
 <<
@@ -144,7 +184,7 @@ CMakeFiles\MyGame.dir\tmpl8\surface.cpp.s: cmake_force
 CMakeFiles\MyGame.dir\tmpl8\template.cpp.obj: CMakeFiles\MyGame.dir\flags.make
 CMakeFiles\MyGame.dir\tmpl8\template.cpp.obj: "C:\Users\matty\Source\c++\video game - transform\tmpl8\template.cpp"
 CMakeFiles\MyGame.dir\tmpl8\template.cpp.obj: CMakeFiles\MyGame.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\matty\Source\c++\video game - transform\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/MyGame.dir/tmpl8/template.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\matty\Source\c++\video game - transform\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/MyGame.dir/tmpl8/template.cpp.obj"
 	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\MyGame.dir\tmpl8\template.cpp.obj.d --working-dir="C:\Users\matty\Source\c++\video game - transform\cmake-build-debug" --filter-prefix="Note: including file: " -- C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
  /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\MyGame.dir\tmpl8\template.cpp.obj /FdCMakeFiles\MyGame.dir\ /FS -c "C:\Users\matty\Source\c++\video game - transform\tmpl8\template.cpp"
 <<
@@ -166,6 +206,8 @@ MyGame_OBJECTS = \
 "CMakeFiles\MyGame.dir\game.cpp.obj" \
 "CMakeFiles\MyGame.dir\player.cpp.obj" \
 "CMakeFiles\MyGame.dir\level.cpp.obj" \
+"CMakeFiles\MyGame.dir\enemy.cpp.obj" \
+"CMakeFiles\MyGame.dir\tinyxml2.cpp.obj" \
 "CMakeFiles\MyGame.dir\tmpl8\surface.cpp.obj" \
 "CMakeFiles\MyGame.dir\tmpl8\template.cpp.obj"
 
@@ -175,6 +217,8 @@ MyGame_EXTERNAL_OBJECTS =
 MyGame.exe: CMakeFiles\MyGame.dir\game.cpp.obj
 MyGame.exe: CMakeFiles\MyGame.dir\player.cpp.obj
 MyGame.exe: CMakeFiles\MyGame.dir\level.cpp.obj
+MyGame.exe: CMakeFiles\MyGame.dir\enemy.cpp.obj
+MyGame.exe: CMakeFiles\MyGame.dir\tinyxml2.cpp.obj
 MyGame.exe: CMakeFiles\MyGame.dir\tmpl8\surface.cpp.obj
 MyGame.exe: CMakeFiles\MyGame.dir\tmpl8\template.cpp.obj
 MyGame.exe: CMakeFiles\MyGame.dir\build.make
@@ -182,7 +226,7 @@ MyGame.exe: "C:\Users\matty\Source\c++\video game - transform\lib\SDL2-2.0.3\lib
 MyGame.exe: "C:\Users\matty\Source\c++\video game - transform\lib\SDL2-2.0.3\lib\x64\SDL2main.lib"
 MyGame.exe: "C:\Users\matty\Source\c++\video game - transform\lib\FreeImage\lib64\FreeImage.lib"
 MyGame.exe: CMakeFiles\MyGame.dir\objects1.rsp
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="C:\Users\matty\Source\c++\video game - transform\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable MyGame.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="C:\Users\matty\Source\c++\video game - transform\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable MyGame.exe"
 	"C:\Program Files\JetBrains\CLion 2025.3.3\bin\cmake\win\x64\bin\cmake.exe" -E vs_link_exe --msvc-ver=1944 --intdir=CMakeFiles\MyGame.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests -- C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo @CMakeFiles\MyGame.dir\objects1.rsp @<<
  /out:MyGame.exe /implib:MyGame.lib /pdb:"C:\Users\matty\Source\c++\video game - transform\cmake-build-debug\MyGame.pdb" /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console  "C:\Users\matty\Source\c++\video game - transform\lib\SDL2-2.0.3\lib\x64\SDL2.lib" "C:\Users\matty\Source\c++\video game - transform\lib\SDL2-2.0.3\lib\x64\SDL2main.lib" "C:\Users\matty\Source\c++\video game - transform\lib\FreeImage\lib64\FreeImage.lib" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib 
 <<

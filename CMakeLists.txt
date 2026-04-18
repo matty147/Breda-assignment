@@ -8,11 +8,13 @@ add_executable(MyGame
         game.cpp
         player.cpp
         level.cpp
+        enemy.cpp
+        tinyxml2.cpp
         tmpl8/surface.cpp
         tmpl8/template.cpp
 )
 
-file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY tmpl8/assets DESTINATION ${CMAKE_BINARY_DIR})
 
 include_directories(tmpl8)
 include_directories(lib/FreeImage/inc)

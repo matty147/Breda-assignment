@@ -1,0 +1,20 @@
+Language: Cpp
+BasedOnStyle: LLVM
+
+# --- Spacing & Indentation ---
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 120
+
+# --- Braces ---
+# "Allman" forces `{}` to always be on a new line for maximum readability.
+BreakBeforeBraces: Allman 
+
+# --- Pointers & References ---
+# Formats as `int* x` and `float& y` (attaches to the type, not the variable)
+PointerAlignment: Left
+
+# --- Switch Statements ---
+# Indents the 'case' inside a 'switch'
+IndentCaseLabels: true

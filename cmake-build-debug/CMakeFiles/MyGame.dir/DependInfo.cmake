@@ -8,9 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "C:/Users/matty/Source/c++/video game - transform/enemy.cpp" "CMakeFiles/MyGame.dir/enemy.cpp.obj" "msvc" "CMakeFiles/MyGame.dir/enemy.cpp.obj.d"
   "C:/Users/matty/Source/c++/video game - transform/game.cpp" "CMakeFiles/MyGame.dir/game.cpp.obj" "msvc" "CMakeFiles/MyGame.dir/game.cpp.obj.d"
   "C:/Users/matty/Source/c++/video game - transform/level.cpp" "CMakeFiles/MyGame.dir/level.cpp.obj" "msvc" "CMakeFiles/MyGame.dir/level.cpp.obj.d"
   "C:/Users/matty/Source/c++/video game - transform/player.cpp" "CMakeFiles/MyGame.dir/player.cpp.obj" "msvc" "CMakeFiles/MyGame.dir/player.cpp.obj.d"
+  "C:/Users/matty/Source/c++/video game - transform/tinyxml2.cpp" "CMakeFiles/MyGame.dir/tinyxml2.cpp.obj" "msvc" "CMakeFiles/MyGame.dir/tinyxml2.cpp.obj.d"
   "C:/Users/matty/Source/c++/video game - transform/tmpl8/surface.cpp" "CMakeFiles/MyGame.dir/tmpl8/surface.cpp.obj" "msvc" "CMakeFiles/MyGame.dir/tmpl8/surface.cpp.obj.d"
   "C:/Users/matty/Source/c++/video game - transform/tmpl8/template.cpp" "CMakeFiles/MyGame.dir/tmpl8/template.cpp.obj" "msvc" "CMakeFiles/MyGame.dir/tmpl8/template.cpp.obj.d"
   )
