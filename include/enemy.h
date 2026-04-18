@@ -4,21 +4,21 @@
 
 namespace Tmpl8
 {
-	class Level;
-	class Surface;
+class Level;
+class Surface;
 
-	class Enemy
-	{
-		public:
-			Enemy(float iy, float ix, float ispeed = 3.0f, int idirection = 1, float igravity = 2.5f);
-			void Update(float deltaTime,Level& level);
-			void Draw(Surface* Gamescreen);
-		private:
-			//void UpdateTimers(float deltaTime, Level& level);
+class Enemy
+{
+  public:
+    Enemy(float iy, float ix, float ispeed = 3.0f, int idirection = 1, float igravity = 2.5f);
+    void Update(float deltaTime, Level& level);
+    void Draw(Surface* Gamescreen);
 
-			float currentGravity = -1;
-			int x, y, speed = 1, direction = 1, gravity = 1, playerWidth, playerHeight, tileSize = 32;
-			bool grounded = false;
-	};
-}
- 
+  private:
+    // void UpdateTimers(float deltaTime, Level& level);
+
+    float currentGravity = -1;
+    int x, y, speed = 1, direction = 1, gravity = 1, playerWidth, playerHeight, tileSize = 32;
+    bool grounded = false;
+};
+} // namespace Tmpl8

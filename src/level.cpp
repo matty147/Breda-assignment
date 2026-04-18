@@ -1,16 +1,16 @@
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <iostream>
 #include <numbers>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <windows.h>
-#include <algorithm>
-#include <iostream>
-#include <sstream>
 
-#include "../tmpl8/surface.h"
 #include "../include/level.h"
 #include "../include/tinyxml2.h"
+#include "../tmpl8/surface.h"
 
 std::vector<std::vector<int>> tiles;
 
