@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../tmpl8/surface.h"
+
 namespace Tmpl8
 {
 	class Level;

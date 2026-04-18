@@ -1,12 +1,12 @@
-#include "player.h"
-#include "tmpl8/surface.h"
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
-#include <windows.h>
 
-#include "game.h"
-#include "level.h"
+#include <windows.h>
+#include "../tmpl8/surface.h"
+#include "../include/player.h"
+#include "../include/game.h"
+#include "../include/level.h"
 
 namespace Tmpl8
 {

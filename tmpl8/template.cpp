@@ -13,14 +13,13 @@
 #define FULLSCREEN
 //#define ADVANCEDGL
 
-#include "../game.h"
-
+#include "../tmpl8/surface.h"
+#include "../include/game.h"
 #include <fcntl.h>
 #include <io.h>
-#include "template.h"
+#include "../tmpl8/template.h"
 #include <corecrt_math.h>
 #include <SDL.h>
-#include "surface.h"
 #include <cstdio>
 #include <iostream>
 #define WIN32_LEAN_AND_MEAN

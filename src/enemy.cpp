@@ -1,12 +1,12 @@
-#include "enemy.h"
-#include "tmpl8/surface.h"
 #include <windows.h>
 #include <cstdio>
 #include <cmath>
 #include <algorithm>
 
-#include "level.h"
-#include "game.h"
+#include "../tmpl8/surface.h"
+#include "../include/enemy.h"
+#include "../include/level.h"
+#include "../include/game.h"
 
 namespace Tmpl8 {
     extern Sprite enemySprite;

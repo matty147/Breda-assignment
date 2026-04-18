@@ -7,11 +7,21 @@
     <ClCompile Include="template.cpp">
       <Filter>template code</Filter>
     </ClCompile>
-    <ClCompile Include="..\game.cpp" />
-    <ClCompile Include="..\player.cpp" />
-    <ClCompile Include="..\level.cpp" />
-    <ClCompile Include="..\tinyxml2.cpp" />
-    <ClCompile Include="..\enemy.cpp" />
+    <ClCompile Include="..\src\enemy.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\game.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\level.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\player.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tinyxml2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="surface.h">
@@ -20,15 +30,31 @@
     <ClInclude Include="template.h">
       <Filter>template code</Filter>
     </ClInclude>
-    <ClInclude Include="..\game.h" />
-    <ClInclude Include="..\player.h" />
-    <ClInclude Include="..\level.h" />
-    <ClInclude Include="..\tinyxml2.h" />
-    <ClInclude Include="..\enemy.h" />
+    <ClInclude Include="..\include\enemy.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\game.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\level.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\player.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tinyxml2.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">
       <UniqueIdentifier>{bf32dd6e-4be7-4889-8ac6-49e7ee163c40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{8a4bf5b5-ab9c-4551-baaf-18873fb717ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{02838c42-9af9-4e58-be57-085e4b27eb36}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

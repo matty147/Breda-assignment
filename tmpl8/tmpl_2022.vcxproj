@@ -57,7 +57,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\lib;..\lib\OpenGL;..\lib\SDL2-2.0.3\include;..\lib\freeimage\inc;$(ProjectDir)/tmpl8;$(ProjectDir)\tmpl8</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\lib;..\lib\OpenGL;..\lib\SDL2-2.0.3\include;..\lib\freeimage\inc;$(ProjectDir)/tmpl8;$(ProjectDir)\tmpl8;$(ProjectDir)include;$(ProjectDir)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -90,7 +90,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\lib;..\lib\OpenGL;..\lib\SDL2-2.0.3\include;..\lib\freeimage\inc;$(ProjectDir)/tmpl8;$(ProjectDir)\tmpl8</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\lib;..\lib\OpenGL;..\lib\SDL2-2.0.3\include;..\lib\freeimage\inc;$(ProjectDir)/tmpl8;$(ProjectDir)\tmpl8;$(ProjectDir)include;$(ProjectDir)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -121,20 +121,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\enemy.cpp" />
-    <ClCompile Include="..\game.cpp" />
-    <ClCompile Include="..\level.cpp" />
-    <ClCompile Include="..\player.cpp" />
-    <ClCompile Include="..\tinyxml2.cpp" />
+    <ClCompile Include="..\src\enemy.cpp" />
+    <ClCompile Include="..\src\game.cpp" />
+    <ClCompile Include="..\src\level.cpp" />
+    <ClCompile Include="..\src\player.cpp" />
+    <ClCompile Include="..\src\tinyxml2.cpp" />
     <ClCompile Include="surface.cpp" />
     <ClCompile Include="template.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\enemy.h" />
-    <ClInclude Include="..\game.h" />
-    <ClInclude Include="..\level.h" />
-    <ClInclude Include="..\player.h" />
-    <ClInclude Include="..\tinyxml2.h" />
+    <ClInclude Include="..\include\enemy.h" />
+    <ClInclude Include="..\include\game.h" />
+    <ClInclude Include="..\include\level.h" />
+    <ClInclude Include="..\include\player.h" />
+    <ClInclude Include="..\include\tinyxml2.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="template.h" />
   </ItemGroup>
