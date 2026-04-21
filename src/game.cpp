@@ -29,6 +29,7 @@ int PlayerX = 0, PlayerY = 0;
 std::vector<std::string> levelNames = {"level1", "level2", "level3", "level4"};
 
 int Game::currentLevelID = 0;
+bool Game::updateLevel = false;
 
 void Game::Init()
 {
@@ -44,6 +45,10 @@ void Game::Init()
 
 void Game::Shutdown() {}
 
+/// <summary>
+///  Main Game loop
+/// </summary>
+/// <param name="deltaTime"></param>
 void Game::Tick(float deltaTime)
 {
     screen->Clear(0);
@@ -55,12 +60,13 @@ void Game::Tick(float deltaTime)
     myPlayer.Draw(screen);
     myEnemy.Draw(screen);
 
-    // if (Game::currentLevelID <= 1)
-    //{
-    //	level.CreateLevel(levelNames[Game::currentLevelID]);
-    //	level.FindFlag(PlayerY,PlayerX);
-    // }
+    if (updateLevel) // cap the levels so it does not crash
+    {
+        updateLevel = false;
+        printf("Loading level: %d\n", Game::currentLevelID);
+        level.CreateLevel(levelNames[Game::currentLevelID]);
+        level.FindFlag(PlayerY, PlayerX);
+    }
 
-    // printf("%d\n", Game::currentLevelID);
 }
 }; // namespace Tmpl8

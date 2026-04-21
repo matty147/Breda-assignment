@@ -7,6 +7,7 @@ class Game
 {
 public:
 	static int currentLevelID;
+	static bool updateLevel;
 
 	void SetTarget( Surface* surface ) { screen = surface; }
 	void Init();

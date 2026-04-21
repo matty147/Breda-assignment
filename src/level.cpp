@@ -52,6 +52,10 @@ Level::Level(int iwidth, int iheight)
     tiles.resize(height, std::vector<int>(width, 0));
 }
 
+/// <summary>
+/// Reads and loads data from a .tmx level file
+/// </summary>
+/// <param name="levelName"></param>
 void Level::CreateLevel(string levelName)
 {
     tinyxml2::XMLDocument doc;
@@ -59,12 +63,12 @@ void Level::CreateLevel(string levelName)
     int peiceMask = 0x1FFFFFFF;
     int rotationMask = 0xE0000000;
 
-    std::vector<std::string> B = {"level1", "level2", "level3", "level4"};
+    //std::vector<std::string> B = {"level1", "level2", "level3", "level4"};
 
     // level1.tmx
     string fullPath = "levels/" + levelName + ".tmx";
 
-    printf("loaded level %s\n", fullPath.c_str());
+    printf("Trying to load level %s\n", fullPath.c_str());
 
     if (doc.LoadFile(fullPath.c_str()) != XML_SUCCESS)
     {
@@ -128,6 +132,11 @@ void Level::CreateLevel(string levelName)
     printf("Level loaded successfully from TMX!\n");
 }
 
+/// <summary>
+/// Finds the Flag - player starting point
+/// </summary>
+/// <param name="outY"></param>
+/// <param name="outX"></param>
 void Level::FindFlag(int& outY, int& outX)
 {
     for (int y = 0; y < height; y++)
@@ -144,6 +153,10 @@ void Level::FindFlag(int& outY, int& outX)
     }
 }
 
+/// <summary>
+/// Draws the tiles with its respective rotations
+/// </summary>
+/// <param name="gameScreen"></param>
 void Level::Draw(Surface* gameScreen)
 {
     int ScreenWidth = gameScreen->GetWidth();
@@ -233,6 +246,12 @@ void Level::Draw(Surface* gameScreen)
     }
 }
 
+/// <summary>
+/// Returns the id the entity is currently on
+/// </summary>
+/// <param name="y"></param>
+/// <param name="x"></param>
+/// <returns></returns>
 int Level::Collision(int y, int x)
 {
     int tx = std::clamp(x / tileSize, 0, width - 1), ty = std::clamp(y / tileSize, 0, height - 1);
@@ -265,8 +284,15 @@ int Level::Collision(int y, int x)
     return (tiles[ty][tx] % 100);
 }
 
-// TODO: needs rotation
-bool Level::SpikeColision(int playerY, int playerX, int gridRow, int gridCol)
+/// <summary>
+/// Detects if a point is in a triangle
+/// </summary>
+/// <param name="playerY"></param>
+/// <param name="playerX"></param>
+/// <param name="gridRow"></param>
+/// <param name="gridCol"></param>
+/// <returns></returns>
+bool Level::SpikeColision(int playerY, int playerX, int gridRow, int gridCol) // TODO: needs rotation
 {
     float side1, side2, side3;
     bool has_neg, has_pos;
@@ -289,6 +315,16 @@ bool Level::SpikeColision(int playerY, int playerX, int gridRow, int gridCol)
     return !(has_neg && has_pos);
 }
 
+/// <summary>
+/// checks on what side ofthe line the point is
+/// </summary>
+/// <param name="p1y"></param>
+/// <param name="p1x"></param>
+/// <param name="p2y"></param>
+/// <param name="p2x"></param>
+/// <param name="p3y"></param>
+/// <param name="p3x"></param>
+/// <returns></returns>
 float Level::sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x)
 {
     return (p1x - p3x) * (p2y - p3y) - (p2x - p3x) * (p1y - p3y);

@@ -32,6 +32,11 @@ Player::Player(float iy, float ix, float ispeed, int idirection, float igravity)
     gravity = igravity;
 }
 
+/// <summary>
+/// Manages the player's overall state, movement, and lifecycle for the current frame.
+/// </summary>
+/// <param name="deltaTime"></param>
+/// <param name="level"></param>
 void Player::Update(float deltaTime, Level& level)
 {
     playerWidth = playerSprite.GetWidth();
@@ -53,11 +58,17 @@ void Player::Update(float deltaTime, Level& level)
     if (playerStatus == Dead)
     {
         playerStatus = Alive;
+        deaths++;
         x = spawnX;
         y = spawnY;
     }
 }
 
+/// <summary>
+/// Reads player input to determine intended movement and actions.
+/// </summary>
+/// <param name="moveX"></param>
+/// <param name="jumpPressed"></param>
 void Player::ProcessInput(float& moveX, bool& jumpPressed)
 {
     int jumpmask = 0X8000;
@@ -70,6 +81,12 @@ void Player::ProcessInput(float& moveX, bool& jumpPressed)
     jumpPressed = GetAsyncKeyState(VK_UP) & jumpmask;
 }
 
+/// <summary>
+/// Handles horizontal movement and prevents moving through walls.
+/// </summary>
+/// <param name="deltaTime"></param>
+/// <param name="level"></param>
+/// <param name="moveX"></param>
 void Player::UpdateX(float deltaTime, Level& level, float moveX)
 {
     float deltaX = moveX * (deltaTime / 10.0f);
@@ -99,6 +116,12 @@ void Player::UpdateX(float deltaTime, Level& level, float moveX)
     }
 }
 
+/// <summary>
+/// Handles vertical movement, gravity, jumping, and floor/ceiling collisions.
+/// </summary>
+/// <param name="deltaTime"></param>
+/// <param name="level"></param>
+/// <param name="jumpPressed"></param>
 void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
 {
     if (jumpPressed)
@@ -152,6 +175,15 @@ void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
     }
 }
 
+/// <summary>
+/// Checks if a specified area intersects with solid or interactive level tiles.
+/// </summary>
+/// <param name="topTile"></param>
+/// <param name="bottomTile"></param>
+/// <param name="leftTile"></param>
+/// <param name="rightTile"></param>
+/// <param name="level"></param>
+/// <returns>True if collision ocures false if not</returns>
 bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level)
 {
     bool hit = false;
@@ -184,6 +216,8 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
 
                 case (int)TileType::Portal:
                     Game::currentLevelID++;
+                    Game::updateLevel = true;
+                    playerStatus = Dead;
                     return false;
 
                     // case (int)TileType::Water:
@@ -200,6 +234,11 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
     return false;
 }
 
+/// <summary>
+/// Updates internal state timers for player mechanics (e.g., jump grace periods).
+/// </summary>
+/// <param name="deltaTime"></param>
+/// <param name="level"></param>
 void Player::UpdateTimers(float deltaTime, Level& level)
 {
     grounded = 0 < level.Collision(y + playerHeight * 1.25, x) ||
@@ -212,5 +251,12 @@ void Player::UpdateTimers(float deltaTime, Level& level)
     coyotetime -= deltaTime / 100;
 }
 
-void Player::Draw(Surface* gameScreen) { playerSprite.Draw(gameScreen, x, y); }
+/// <summary>
+/// Renders the player sprite onto the screen.
+/// </summary>
+/// <param name="gameScreen"></param>
+void Player::Draw(Surface* gameScreen)
+{
+    playerSprite.Draw(gameScreen, x, y); 
+}
 } // namespace Tmpl8
