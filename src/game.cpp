@@ -67,6 +67,5 @@ void Game::Tick(float deltaTime)
         level.CreateLevel(levelNames[Game::currentLevelID]);
         level.FindFlag(PlayerY, PlayerX);
     }
-
 }
 }; // namespace Tmpl8

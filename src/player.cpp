@@ -255,8 +255,5 @@ void Player::UpdateTimers(float deltaTime, Level& level)
 /// Renders the player sprite onto the screen.
 /// </summary>
 /// <param name="gameScreen"></param>
-void Player::Draw(Surface* gameScreen)
-{
-    playerSprite.Draw(gameScreen, x, y); 
-}
+void Player::Draw(Surface* gameScreen) { playerSprite.Draw(gameScreen, x, y); }
 } // namespace Tmpl8

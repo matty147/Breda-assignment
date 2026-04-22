@@ -168,8 +168,9 @@ void Level::Draw(Surface* gameScreen)
                     DrawRotatedSprite(gameScreen, y, x, ScreenHeight, ScreenWidth);
                     continue;
                 }
-                
-                Pixel* src = tilesSprite.GetBuffer() + 1 + tiles[y][x] * (tileSize + 1) + (1 + (int)currentDay * (tileSize + 1)) * 595;
+
+                Pixel* src = tilesSprite.GetBuffer() + 1 + tiles[y][x] * (tileSize + 1) +
+                             (1 + (int)currentDay * (tileSize + 1)) * 595;
                 Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
                 for (int i = 0; i < tileSize; i++)
                 {
@@ -235,7 +236,7 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
 
     Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
     for (int i = 0; i < drawHeight; i++)
-    {   
+    {
         for (int j = 0; j < drawWidth; j++)
         {
             float off = 15.5f;

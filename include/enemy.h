@@ -16,9 +16,11 @@ class Enemy
 
   private:
     // void UpdateTimers(float deltaTime, Level& level);
-
-    float currentGravity = -1;
-    int x, y, speed = 1, direction = 1, gravity = 1, playerWidth, playerHeight, tileSize = 32;
+    bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
+    void UpdateY(float deltaTime, Level& level);
+    void UpdateX(float deltaTime, Level& level, float moveX);
+    float currentGravity = -1, x, y;
+    int speed = 1, direction = 1, gravity = 1, playerWidth, playerHeight, tileSize = 32;
     bool grounded = false;
 };
 } // namespace Tmpl8
