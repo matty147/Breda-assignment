@@ -34,6 +34,7 @@ class Level
 
   private:
     // double clamp(double d, double min, double max);
+    void DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeight, int ScreenWidth);
     float sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x);
     int width, height, tileSize = 32;
     std::vector<std::vector<int>> tiles;

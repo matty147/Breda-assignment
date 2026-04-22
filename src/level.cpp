@@ -60,12 +60,9 @@ void Level::CreateLevel(string levelName)
 {
     tinyxml2::XMLDocument doc;
 
-    int peiceMask = 0x1FFFFFFF;
+    int pieceMask = 0x1FFFFFFF;
     int rotationMask = 0xE0000000;
 
-    //std::vector<std::string> B = {"level1", "level2", "level3", "level4"};
-
-    // level1.tmx
     string fullPath = "levels/" + levelName + ".tmx";
 
     printf("Trying to load level %s\n", fullPath.c_str());
@@ -116,9 +113,7 @@ void Level::CreateLevel(string levelName)
                     {
                         unsigned int rotation = (std::stoul(token) - 1 & rotationMask) >> 29;
 
-                        printf("%d\n", rotation);
-
-                        tiles[y][x] = rotation * 100 + std::stoul(token) - 1 & peiceMask;
+                        tiles[y][x] = rotation * 100 + std::stoul(token) - 1 & pieceMask;
                         break;
                     }
 
@@ -154,7 +149,7 @@ void Level::FindFlag(int& outY, int& outX)
 }
 
 /// <summary>
-/// Draws the tiles with its respective rotations
+/// Draws the tiles on the game screen
 /// </summary>
 /// <param name="gameScreen"></param>
 void Level::Draw(Surface* gameScreen)
@@ -168,81 +163,96 @@ void Level::Draw(Surface* gameScreen)
         {
             if (x * tileSize >= 0 && x * tileSize < ScreenWidth && y * tileSize >= 0 && y * tileSize < ScreenHeight)
             {
-                if (tiles[y][x] < 100)
-                {
-                    Pixel* src = tilesSprite.GetBuffer() + 1 + tiles[y][x] * (tileSize + 1) +
-                                 (1 + (int)currentDay * (tileSize + 1)) * 595;
-                    Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
-                    for (int i = 0; i < tileSize; i++)
-                    {
-                        for (int j = 0; j < tileSize; j++)
-                            dst[j] = src[j];
-                        src += 595, dst += ScreenWidth;
-                    }
-                    continue;
-                }
-
-                int tile = tiles[y][x] % 100;
-
-                float angle = 0;
-
-                int tilesid = (tiles[y][x] / 100);
-
                 if (tiles[y][x] > 100)
                 {
-                    switch (tilesid)
-                    {
-                        case 3:
-                            angle = 90.0f * (std::numbers::pi / 180.f);
-                            break;
-                        case 5:
-                            angle = 270.0f * (std::numbers::pi / 180.f);
-                            break;
-                        default:
-                            angle = 180.0f * (std::numbers::pi / 180.f);
-                            break;
-                    }
-                }
-
-                int drawWidth = tileSize;
-                int drawHeight = tileSize;
-
-                if (x * tileSize + tileSize > ScreenWidth)
-                {
-                    drawWidth = ScreenWidth - x * tileSize;
-                }
-
-                if (y * tileSize + tileSize > ScreenHeight)
-                {
-                    drawHeight = ScreenHeight - y * tileSize;
-                }
-
-                if (tile < 0)
+                    DrawRotatedSprite(gameScreen, y, x, ScreenHeight, ScreenWidth);
                     continue;
-
-                float cos = std::cos(angle);
-                float sin = std::sin(angle);
-
+                }
+                
+                Pixel* src = tilesSprite.GetBuffer() + 1 + tiles[y][x] * (tileSize + 1) + (1 + (int)currentDay * (tileSize + 1)) * 595;
                 Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
-                for (int i = 0; i < drawHeight; i++)
+                for (int i = 0; i < tileSize; i++)
                 {
-                    for (int j = 0; j < drawWidth; j++)
-                    {
-                        float off = 15.5f;
-
-                        int dx = j - off, dy = i - off;
-
-                        int newX = (int)((dx * cos) - (dy * sin) + 16);
-                        int newY = (int)((dx * sin) + (dy * cos) + 16);
-
-                        Pixel* src = tilesSprite.GetBuffer() + tile * (tileSize + 1) + newX +
-                                     ((int)currentDay * (tileSize + 1) + newY) * 595;
-                        dst[j] = *src;
-                    }
-                    dst += ScreenWidth;
+                    for (int j = 0; j < tileSize; j++)
+                        dst[j] = src[j];
+                    src += 595, dst += ScreenWidth;
                 }
             }
         }
+    }
+}
+
+/// <summary>
+/// Calculates and draws the correctly rotated sprite
+/// </summary>
+/// <param name="gameScreen"></param>
+/// <param name="y"> - Tile Y position</param>
+/// <param name="x"> - Tile X position</param>
+/// <param name="ScreenHeight"></param>
+/// <param name="ScreenWidth"></param>
+void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeight, int ScreenWidth)
+{
+    int tile = tiles[y][x] % 100;
+
+    float angle = 0;
+
+    int tilesid = (tiles[y][x] / 100);
+
+    if (tiles[y][x] > 100)
+    {
+        switch (tilesid)
+        {
+            case 3:
+                angle = std::numbers::pi_v<float> / 2.0f; // 90 degrees
+                break;
+            case 5:
+                angle = 3.0f * std::numbers::pi_v<float> / 2.0f; // 270 degrees
+                break;
+            default:
+                angle = std::numbers::pi_v<float>; // 180 degrees
+                break;
+        }
+    }
+
+    int drawWidth = tileSize;
+    int drawHeight = tileSize;
+
+    if (x * tileSize + tileSize > ScreenWidth)
+    {
+        drawWidth = ScreenWidth - x * tileSize;
+    }
+
+    if (y * tileSize + tileSize > ScreenHeight)
+    {
+        drawHeight = ScreenHeight - y * tileSize;
+    }
+
+    if (tile < 0)
+        return;
+
+    float cos = std::cos(angle);
+    float sin = std::sin(angle);
+
+    Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
+    for (int i = 0; i < drawHeight; i++)
+    {   
+        for (int j = 0; j < drawWidth; j++)
+        {
+            float off = 15.5f;
+
+            int dx = j - off, dy = i - off;
+
+            int newX = std::round((dx * cos) - (dy * sin) + 16.0f);
+            int newY = std::round((dx * sin) + (dy * cos) + 16.0f);
+
+            newX = std::clamp(newX, 0, tileSize - 1);
+            newY = std::clamp(newY, 0, tileSize - 1);
+
+            Pixel* src = tilesSprite.GetBuffer() + tile * (tileSize + 1) + newX +
+                         ((int)currentDay * (tileSize + 1) + newY) * 595;
+            dst[j] = *src;
+        }
+        dst += ScreenWidth;
     }
 }
 

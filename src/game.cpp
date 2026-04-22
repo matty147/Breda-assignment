@@ -26,7 +26,7 @@ Enemy myEnemy(100, 100);
 
 int PlayerX = 0, PlayerY = 0;
 
-std::vector<std::string> levelNames = {"level1", "level2", "level3", "level4"};
+std::vector<std::string> levelNames = {"level1", "level2"};
 
 int Game::currentLevelID = 0;
 bool Game::updateLevel = false;
