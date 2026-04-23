@@ -2,7 +2,6 @@
 #include <cmath>
 #include <cstdio>
 #include <windows.h>
-#include <algorithm> 
 
 #include "../include/enemy.h"
 #include "../include/game.h"
@@ -51,7 +50,22 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
 
     bool hitX = TileCollision(topTile, bottomTile, leftTile, rightTile, level);
 
-    if (0 < hitX)
+    bool edgeHitX = 1;
+
+    if (level.currentDay == timeOfDay::Day)
+    {
+
+        if (direction == 1)
+        {
+            edgeHitX = TileCollision(bottomTile + 1, bottomTile + 1, leftTile + direction, leftTile + direction, level);
+        }
+        else edgeHitX = TileCollision(bottomTile + 1, bottomTile + 1, rightTile + direction, rightTile + direction, level);
+    }
+
+    if (0 < hitX || nextX < 0)
+    {
+        direction *= -1;
+    }else if (0 >= edgeHitX)
     {
         direction *= -1;
     }
@@ -108,7 +122,6 @@ void Enemy::UpdateY(float deltaTime, Level& level)
     }
 }
 
-
 bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level)
 {
     bool hit = false;
@@ -130,19 +143,19 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
                     int bottomY = y + playerHeight - 1;
                     int centerY = y + (playerHeight / 2);
 
-                    //if (level.SpikeColision(bottomY, leftX, r, c) || level.SpikeColision(bottomY, rightX, r, c) ||
-                    //    level.SpikeColision(bottomY, centerX, r, c) || level.SpikeColision(centerY, leftX, r, c) ||
-                    //    level.SpikeColision(centerY, rightX, r, c))
+                    // if (level.SpikeColision(bottomY, leftX, r, c) || level.SpikeColision(bottomY, rightX, r, c) ||
+                    //     level.SpikeColision(bottomY, centerX, r, c) || level.SpikeColision(centerY, leftX, r, c) ||
+                    //     level.SpikeColision(centerY, rightX, r, c))
                     //{
-                    //    playerStatus = Dead;
-                    //}
+                    //     playerStatus = Dead;
+                    // }
                     continue;
                 }
 
                 case (int)TileType::Portal:
                     Game::currentLevelID++;
                     Game::updateLevel = true;
-                    //playerStatus = Dead;
+                    // playerStatus = Dead;
                     return false;
 
                     // case (int)TileType::Water:

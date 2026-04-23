@@ -15,7 +15,6 @@ class Player
     void Kill();
 
     float x, y;
-
   private:
     void UpdateTimers(float deltaTime, Level& level);
     void UpdateY(float deltaTime, Level& level, bool& jumpjumpPressed);
@@ -24,7 +23,7 @@ class Player
     bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
 
     float speed, gravity, currentGravity = -1, jumptime = 0.3f, coyotetime;
-    int direction, jumpAmount = 0, playerWidth, playerHeight, tileSize = 32, spawnY = 0, spawnX = 0,deaths = 0;
+    int direction, jumpAmount = 0, playerWidth, playerHeight, tileSize = 32, spawnY = 0, spawnX = 0, deaths = 0;
     bool grounded = false, jumplastframe = false;
 };
 } // namespace Tmpl8

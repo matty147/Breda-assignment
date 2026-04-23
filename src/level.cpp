@@ -22,7 +22,8 @@ enum timeOfDay
     Night
 };
 
-timeOfDay currentDay = timeOfDay::Day;
+//// should rename to current time of day?
+//timeOfDay currentDay = timeOfDay::Day;
 
 enum class TileType
 {
@@ -169,8 +170,7 @@ void Level::Draw(Surface* gameScreen)
                     continue;
                 }
 
-                Pixel* src = tilesSprite.GetBuffer() + 1 + tiles[y][x] * (tileSize + 1) +
-                             (1 + (int)currentDay * (tileSize + 1)) * 595;
+                Pixel* src = tilesSprite.GetBuffer() + 1 + tiles[y][x] * (tileSize + 1) + (1 + (int)currentDay * (tileSize + 1)) * 595;
                 Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
                 for (int i = 0; i < tileSize; i++)
                 {
@@ -249,8 +249,7 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
             newX = std::clamp(newX, 0, tileSize - 1);
             newY = std::clamp(newY, 0, tileSize - 1);
 
-            Pixel* src = tilesSprite.GetBuffer() + tile * (tileSize + 1) + newX +
-                         ((int)currentDay * (tileSize + 1) + newY) * 595;
+            Pixel* src = tilesSprite.GetBuffer() + tile * (tileSize + 1) + newX + ((int)currentDay * (tileSize + 1) + newY) * 595;
             dst[j] = *src;
         }
         dst += ScreenWidth;

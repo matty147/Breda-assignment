@@ -21,6 +21,12 @@ enum class TileType
     Sun = 9
 };
 
+enum timeOfDay
+{
+    Day,
+    Night
+};
+
 class Level
 {
   public:
@@ -32,6 +38,7 @@ class Level
     int Collision(int y, int x);
     bool SpikeColision(int py, int px, int sy, int sx);
 
+    timeOfDay currentDay = timeOfDay::Day;
   private:
     // double clamp(double d, double min, double max);
     void DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeight, int ScreenWidth);

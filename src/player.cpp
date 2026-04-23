@@ -251,11 +251,15 @@ void Player::UpdateTimers(float deltaTime, Level& level)
     coyotetime -= deltaTime / 100;
 }
 
-void Player::Kill() { playerStatus = Dead; }
-
 /// <summary>
 /// Renders the player sprite onto the screen.
 /// </summary>
 /// <param name="gameScreen"></param>
-void Player::Draw(Surface* gameScreen) { playerSprite.Draw(gameScreen, x, y); }
+void Player::Draw(Surface* gameScreen)
+{
+    playerSprite.Draw(gameScreen, x, y);
+}
+
+void Player::Kill() { playerStatus = Dead; }
+
 } // namespace Tmpl8

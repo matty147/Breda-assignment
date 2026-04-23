@@ -5,7 +5,9 @@ BasedOnStyle: LLVM
 IndentWidth: 4
 TabWidth: 4
 UseTab: Never
-ColumnLimit: 120
+ColumnLimit: 0
+PenaltyBreakAssignment: 100
+PenaltyBreakBeforeFirstCallParameter: 100
 
 # --- Braces ---
 # "Allman" forces `{}` to always be on a new line for maximum readability.

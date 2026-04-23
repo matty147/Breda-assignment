@@ -3,7 +3,6 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <algorithm> 
 
 #include "../include/enemy.h"
 #include "../include/game.h"
@@ -36,6 +35,9 @@ std::vector<std::string> levelNames = {"level1", "level2"};
 int Game::currentLevelID = 0;
 bool Game::updateLevel = false;
 
+int seperateX = 5;
+int seperateY = 5;
+
 void Game::Init()
 {
     for (int i = 0; i < numberOfEntities; i++)
@@ -44,6 +46,8 @@ void Game::Init()
 
         entities.push_back(newEnemy);
     }
+
+    grid.resize(seperateX, std::vector<Bucket>(seperateY));
 
     screenWidth = screen->GetWidth();
     screenHeight = screen->GetHeight();
@@ -97,8 +101,6 @@ void Game::Tick(float deltaTime)
 /// <param name="gameScreen"></param>
 void Game::SpatialHashing(Surface* gameScreen)
 {
-    int seperateX = 5;
-    int seperateY = 5;
 
     int ScreenWidth = gameScreen->GetWidth();
     int ScreenHeight = gameScreen->GetHeight();
@@ -106,23 +108,33 @@ void Game::SpatialHashing(Surface* gameScreen)
     int bucketXSize = ScreenWidth / seperateX;
     int bucketYSize = ScreenHeight / seperateY;
 
-    grid.clear();
-
-    grid.resize(seperateX, std::vector<Bucket>(seperateY));
+    for (int y = 0; y < seperateY; y++)
+    {
+        for (int x = 0; x < seperateX; x++)
+        {
+            grid[y][x].entityIDs.clear();
+        }
+    }
 
     for (int i = 0; i < entities.size(); i++)
     {
         int x = std::clamp((int)entities[i].x / bucketXSize, 0, seperateX - 1);
         int y = std::clamp((int)entities[i].y / bucketYSize, 0, seperateY - 1);
 
-        //printf("(%d) sector: [%d],[%d]\n", i, x, y);
-
         grid[y][x].entityIDs.push_back(i);
     }
 
-    CheckEntityCollision(bucketYSize, bucketXSize);
+    if (!entities.empty())
+    {
+        CheckEntityCollision(bucketYSize, bucketXSize);
+    }
 }
 
+/// <summary>
+/// check for collision
+/// </summary>
+/// <param name="bucketYSize"></param>
+/// <param name="bucketXSize"></param>
 void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
 {
     // todo: also clamp
@@ -137,42 +149,54 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
 
             if (sizeOfBucket >= 2)
             {
-                //printf("size: %d\n", sizeOfBucket);
-            }
+                // mabey put into a function
+                for (auto& firstEntity : currentBucket.entityIDs)
+                {
+                    for (auto& secondEntity : currentBucket.entityIDs)
+                    {
+                        int firstEnemyX = entities[firstEntity].x;
+                        int firstEnemyY = entities[firstEntity].y;
 
+                        int secondEnemyX = entities[secondEntity].x;
+                        int secondEnemyY = entities[secondEntity].y;
+
+                        float xdist = secondEnemyX - firstEnemyX;
+                        float ydist = secondEnemyY - firstEnemyY;
+
+                        float distSq = (xdist * xdist) + (ydist * ydist);
+                        float radiusSum = 12.0f + 12.0f; // no magic numbers actualy fetch the player and entity sprite sizes
+                        if (distSq < (radiusSum * radiusSum))
+                        {
+
+                        }
+                    }
+                }
+            }
         }
     }
 
-    //rename
     auto& EntitiesInPlayersBucket = grid[playerGridY][playerGridX].entityIDs;
 
     if (EntitiesInPlayersBucket.size() >= 1)
     {
-        //printf("Multiple objects in bucket!!!\n");
 
         for (auto& entityId : EntitiesInPlayersBucket)
         {
-            //printf("x: %.2f, y: %.2f\n", entities[entityId].x, entities[entityId].y);
-
             int enemyX = entities[entityId].x;
             int enemyY = entities[entityId].y;
 
             float xdist = enemyX - myPlayer.x;
             float ydist = enemyY - myPlayer.y;
 
-            //printf("%.2f, %.2f\n", xdist, ydist);
-
-            float distance = sqrtf(xdist * xdist + ydist * ydist);
-            //printf("distance %.2f\n", distance);
-
-            if (distance < (16 + 16)) // no magic numbers
+            float distSq = (xdist * xdist) + (ydist * ydist);
+            float radiusSum = 12.0f + 12.0f; // no magic numbers actualy fetch the player and entity sprite sizes
+            if (distSq < (radiusSum * radiusSum))
             {
                 printf("collision with object"); // call player to deal with it
-                myPlayer.Kill();
+                myPlayer.Kill();                 // temp function
             }
         }
     }
-
 }
 
 }; // namespace Tmpl8
