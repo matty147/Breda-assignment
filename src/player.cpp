@@ -251,6 +251,8 @@ void Player::UpdateTimers(float deltaTime, Level& level)
     coyotetime -= deltaTime / 100;
 }
 
+void Player::Kill() { playerStatus = Dead; }
+
 /// <summary>
 /// Renders the player sprite onto the screen.
 /// </summary>

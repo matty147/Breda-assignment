@@ -1,8 +1,16 @@
 #pragma once
 
+#include <vector>
+
 namespace Tmpl8 {
 
 class Surface;
+
+struct Bucket
+{
+    std::vector<int> entityIDs;
+};
+
 class Game
 {
 public:
@@ -18,7 +26,13 @@ public:
 	void MouseMove( int x, int y ) { /* implement if you want to detect mouse movement */ }
 	void KeyUp( int key ) { /* implement if you want to handle keys */ }
 	void KeyDown( int key ) { /* implement if you want to handle keys */ }
-private:
+
+	void SpatialHashing(Surface* gameScreen);
+    void CheckEntityCollision(int bucketYSize, int bucketXSize);
+
+  private:
 	Surface* screen;
+
+	std::vector<std::vector<Bucket>> grid;
 };
 }; // namespace Tmpl8

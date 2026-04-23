@@ -12,6 +12,9 @@ class Player
 
     void Update(float deltaTime, Level& level);
     void Draw(Surface* gameScreen);
+    void Kill();
+
+    float x, y;
 
   private:
     void UpdateTimers(float deltaTime, Level& level);
@@ -20,7 +23,7 @@ class Player
     void ProcessInput(float& moveX, bool& jumpPressed);
     bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
 
-    float x, y, speed, gravity, currentGravity = -1, jumptime = 0.3f, coyotetime;
+    float speed, gravity, currentGravity = -1, jumptime = 0.3f, coyotetime;
     int direction, jumpAmount = 0, playerWidth, playerHeight, tileSize = 32, spawnY = 0, spawnX = 0,deaths = 0;
     bool grounded = false, jumplastframe = false;
 };
