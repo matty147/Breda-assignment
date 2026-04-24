@@ -158,9 +158,20 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
                     // playerStatus = Dead;
                     return false;
 
-                    // case (int)TileType::Water:
-                    // case (int)TileType::Flag:
-                    //     continue;
+                     case (int)TileType::Water:
+                     {
+                         if (level.currentDay == timeOfDay::Day)
+                         {
+                             continue;
+                         }
+                         break;
+                     }
+
+
+                     case (int)TileType::Flag:
+                     case (int)TileType::Sun:
+                     case (int)TileType::Moon:
+                         continue;
             }
 
             if (tileId > 0)

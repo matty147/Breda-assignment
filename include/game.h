@@ -33,6 +33,8 @@ public:
   private:
 	Surface* screen;
 
+	bool isOverlapping(int box1X, int box1Y, int box1Width, int box1Height, int box2X, int box2Y, int box2Width, int box2Height);
+
 	std::vector<std::vector<Bucket>> grid;
 };
 }; // namespace Tmpl8

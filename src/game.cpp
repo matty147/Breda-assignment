@@ -28,8 +28,6 @@ int numberOfEntities = 5;
 
 std::vector<Enemy> entities;
 
-int playerX = 0, playerY = 0;
-
 std::vector<std::string> levelNames = {"level1", "level2"};
 
 int Game::currentLevelID = 0;
@@ -51,6 +49,9 @@ void Game::Init()
 
     screenWidth = screen->GetWidth();
     screenHeight = screen->GetHeight();
+
+    int playerX = 0, playerY = 0;
+
     level.CreateLevel(levelNames[Game::currentLevelID]);
     level.FindFlag(playerY, playerX);
 
@@ -89,9 +90,18 @@ void Game::Tick(float deltaTime)
         updateLevel = false;
         Game::currentLevelID = std::clamp(Game::currentLevelID, 0, (int)levelNames.size() - 1);
 
+        int newY = 0, newX = 0;
+
         printf("Loading level: %d\n", Game::currentLevelID);
         level.CreateLevel(levelNames[Game::currentLevelID]);
-        level.FindFlag(playerY, playerX);
+        level.FindFlag(newY, newX);
+
+        level.currentDay = timeOfDay::Day;
+
+        // reset the level
+        myPlayer.ResetPlayerValues(newY, newX);
+        entities.clear();
+
     }
 }
 
@@ -182,8 +192,27 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
 
         for (auto& entityId : EntitiesInPlayersBucket)
         {
-            int enemyX = entities[entityId].x;
-            int enemyY = entities[entityId].y;
+            float& enemyX = entities[entityId].x;
+            float& enemyY = entities[entityId].y;
+
+            int hitboxWidth = 24;
+            int hitboxHeight = 3;
+
+            int playerFeetY = myPlayer.y + 30;
+            int playerWidth = 24;
+            int playerFeetHeight = 2;
+
+            // is buggy
+            //if (isOverlapping(myPlayer.x, playerFeetY, playerWidth, playerFeetHeight,
+            //                  enemyX - 5, enemyY, hitboxWidth, hitboxHeight))
+            //{
+            //    printf("touched him\n");
+            //    
+            //    enemyX = -100;
+            //    enemyY = -100;
+            //    continue;
+
+            //}
 
             float xdist = enemyX - myPlayer.x;
             float ydist = enemyY - myPlayer.y;
@@ -192,11 +221,19 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
             float radiusSum = 12.0f + 12.0f; // no magic numbers actualy fetch the player and entity sprite sizes
             if (distSq < (radiusSum * radiusSum))
             {
-                printf("collision with object"); // call player to deal with it
                 myPlayer.Kill();                 // temp function
             }
         }
     }
+}
+
+bool Game::isOverlapping(int box1X, int box1Y, int box1Width, int box1Height,
+                         int box2X, int box2Y, int box2Width, int box2Height)
+{
+    return (box1X < box2X + box2Width &&  // Box 1's Left edge is left of Box 2's Right edge
+            box1X + box1Width > box2X &&  // Box 1's Right edge is right of Box 2's Left edge
+            box1Y < box2Y + box2Height && // Box 1's Top edge is above Box 2's Bottom edge
+            box1Y + box1Height > box2Y);  // Box 1's Bottom edge is below Box 2's Top edge
 }
 
 }; // namespace Tmpl8

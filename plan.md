@@ -1,4 +1,4 @@
-May 15th - 22 days
+edMay 15th - 22 days
 
 - 14 days for implementation - finish by May 7th at latest
 	- Try to finish by the end of April
@@ -7,8 +7,8 @@ May 15th - 22 days
 ## Must do
 
 1. basic enemy functionality
-	- movement
-	- interaction with player
+	- movement - [x]
+	- interaction with player - []
 
 ## Should do
 

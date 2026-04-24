@@ -214,6 +214,14 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
                     continue;
                 }
 
+                case (int)TileType::Sun:
+                    level.currentDay = timeOfDay::Day;
+                    return false;
+
+                case (int)TileType::Moon:
+                    level.currentDay = timeOfDay::Night;
+                    return false;
+
                 case (int)TileType::Portal:
                     Game::currentLevelID++;
                     Game::updateLevel = true;
@@ -258,6 +266,17 @@ void Player::UpdateTimers(float deltaTime, Level& level)
 void Player::Draw(Surface* gameScreen)
 {
     playerSprite.Draw(gameScreen, x, y);
+}
+
+/// <summary>
+///
+/// </summary>
+
+void Player::ResetPlayerValues(float newY, float newX)
+{
+    currentGravity = -1;
+    y = newY;
+    x = newX;
 }
 
 void Player::Kill() { playerStatus = Dead; }

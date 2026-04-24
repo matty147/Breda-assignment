@@ -270,14 +270,14 @@ int Level::Collision(int y, int x)
 
     switch (currentTile)
     {
-        // move?
-        case (int)TileType::Sun:
-            currentDay = timeOfDay::Day;
-            return -1;
+        //// move?
+        //case (int)TileType::Sun:
+        //    currentDay = timeOfDay::Day;
+        //    return -1;
 
-        case (int)TileType::Moon:
-            currentDay = timeOfDay::Night;
-            return -1;
+        //case (int)TileType::Moon:
+        //    currentDay = timeOfDay::Night;
+        //    return -1;
 
         case (int)TileType::Water:
             if (currentDay == timeOfDay::Day)

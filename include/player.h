@@ -13,8 +13,9 @@ class Player
     void Update(float deltaTime, Level& level);
     void Draw(Surface* gameScreen);
     void Kill();
-
+    void ResetPlayerValues(float newY, float newX);
     float x, y;
+
   private:
     void UpdateTimers(float deltaTime, Level& level);
     void UpdateY(float deltaTime, Level& level, bool& jumpjumpPressed);
