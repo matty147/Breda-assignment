@@ -41,6 +41,8 @@ enum class TileType
 
 using namespace std;
 
+float changeTileSetCoordinate = 0;
+
 namespace Tmpl8
 {
 extern Sprite tilesSprite;
@@ -158,19 +160,36 @@ void Level::Draw(Surface* gameScreen)
     int ScreenWidth = gameScreen->GetWidth();
     int ScreenHeight = gameScreen->GetHeight();
 
+    if (currentDay == timeOfDay::Day)
+    {
+        changeTileSetCoordinate -= 1.0f;
+    }
+    else changeTileSetCoordinate += 1.0f;
+
+    changeTileSetCoordinate = std::clamp(changeTileSetCoordinate, 0.0f, (float)width);
+
+    printf("fc %.2f\n", changeTileSetCoordinate);
+
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
         {
             if (x * tileSize >= 0 && x * tileSize < ScreenWidth && y * tileSize >= 0 && y * tileSize < ScreenHeight)
             {
+                int backgroundTileSet = 0;
+
+                if (std::floor(changeTileSetCoordinate) > x)
+                {
+                    backgroundTileSet = 1;
+                }
+
                 if (tiles[y][x] > 100)
                 {
-                    DrawRotatedSprite(gameScreen, y, x, ScreenHeight, ScreenWidth);
+                    DrawRotatedSprite(gameScreen, y, x, ScreenHeight, ScreenWidth, backgroundTileSet);
                     continue;
                 }
 
-                Pixel* src = tilesSprite.GetBuffer() + 1 + tiles[y][x] * (tileSize + 1) + (1 + (int)currentDay * (tileSize + 1)) * 595;
+                Pixel* src = tilesSprite.GetBuffer() + 1 + tiles[y][x] * (tileSize + 1) + (1 + backgroundTileSet * (tileSize + 1)) * 595;
                 Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
                 for (int i = 0; i < tileSize; i++)
                 {
@@ -191,7 +210,8 @@ void Level::Draw(Surface* gameScreen)
 /// <param name="x"> - Tile X position</param>
 /// <param name="ScreenHeight"></param>
 /// <param name="ScreenWidth"></param>
-void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeight, int ScreenWidth)
+/// <param name="backgroundType"></param>
+void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeight, int ScreenWidth, int backgroundTileSet)
 {
     int tile = tiles[y][x] % 100;
 
@@ -249,7 +269,7 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
             newX = std::clamp(newX, 0, tileSize - 1);
             newY = std::clamp(newY, 0, tileSize - 1);
 
-            Pixel* src = tilesSprite.GetBuffer() + tile * (tileSize + 1) + newX + ((int)currentDay * (tileSize + 1) + newY) * 595;
+            Pixel* src = tilesSprite.GetBuffer() + tile * (tileSize + 1) + newX + (backgroundTileSet * (tileSize + 1) + newY) * 595;
             dst[j] = *src;
         }
         dst += ScreenWidth;

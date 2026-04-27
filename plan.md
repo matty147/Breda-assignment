@@ -16,7 +16,7 @@ edMay 15th - 22 days
 	- https://github.com/catchorg/Catch2
 2. Make sun and moon easier to see (DO NOT SPEND MORE THAN FIVE MINUTES WITH THIS!)
 	- e.g., black outline, saturated colors
-	- spikes/rays around sun so it doesn't look like a coin
+	- spikes/rays around sun so it doesn't look like a coin - [x]
 3. More transformation objects
 	- day/night spikes (like thorns)
 	- day/night platforms
@@ -37,3 +37,5 @@ edMay 15th - 22 days
 5. One-way platforms
 6. Screenshots
 7. Death counter
+
+bucket check neighbors
