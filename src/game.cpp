@@ -152,7 +152,7 @@ void Game::SpatialHashing(Surface* gameScreen)
     }
 }
 
- /// <summary>
+/// <summary>
 /// check for collision
 /// </summary>
 /// <param name="bucketYSize"></param>
@@ -185,15 +185,20 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     auto& CurrentBucket = grid[c][r].entityIDs;
                     for (int currentID : CurrentBucket)
                     {
-                        int firstEnemyX = entities[currentID].x;
-                        int firstEnemyY = entities[currentID].y;
-                        float xdist = firstEnemyX - myPlayer.x;
-                        float ydist = firstEnemyY - myPlayer.y;
-                        float distSq = (xdist * xdist) + (ydist * ydist);
-                        float radiusSum = 12.0f + 12.0f; // no magic numbers actualy fetch the player and entity sprite sizes
-                        if (distSq < (radiusSum * radiusSum))
+                        for (int neighborID : neighborBucket)
                         {
-                            myPlayer.Kill(); // temp function
+                            int firstEnemyX = entities[currentID].x;
+                            int firstEnemyY = entities[currentID].y;
+                            int secondEnemyX = entities[neighborID].x;
+                            int secondEnemyY = entities[neighborID].y;
+                            float xdist = secondEnemyX - firstEnemyX;
+                            float ydist = secondEnemyY - firstEnemyY;
+                            float distSq = (xdist * xdist) + (ydist * ydist);
+                            float radiusSum = 12.0f + 12.0f; // no magic numbers actualy fetch the player and entity sprite sizes
+                            if (distSq < (radiusSum * radiusSum))
+                            {
+                                // do smthing
+                            }
                         }
                     }
                 }
@@ -201,76 +206,47 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
         }
     }
 
-    for (int i = 0; i < 4; i++)
+    for (int i = -1; i <= 1; i++)
     {
-        int neighborX = playerGridX + neighborOffsets[i][0];
-        int neighborY = playerGridY + neighborOffsets[i][1];
-
-        if (neighborX >= 0 && neighborX < seperateX && neighborY >= 0 && neighborY < seperateY)
+        for (int j = -1; j <= 1; j++)
         {
-            auto& neighborBucket = grid[neighborY][neighborX].entityIDs;
+            int neighborX = playerGridX + i;
+            int neighborY = playerGridY + j;
 
-            for (int currentID : neighborBucket)
+            if (neighborX >= 0 && neighborX < seperateX && neighborY >= 0 && neighborY < seperateY)
             {
-                float& enemyX = entities[currentID].x;
-                float& enemyY = entities[currentID].y;
-                int hitboxWidth = 24;
-                int hitboxHeight = 3;
-                int playerFeetY = myPlayer.y + 30;
-                int playerWidth = 24;
-                int playerFeetHeight = 2;
+                auto& neighborBucket = grid[neighborY][neighborX].entityIDs;
 
-                if (isOverlapping(myPlayer.x, playerFeetY, playerWidth, playerFeetHeight,
-                                  enemyX - 5, enemyY, hitboxWidth, hitboxHeight))
+                for (int currentID : neighborBucket)
                 {
-                    printf("touched him\n");
-                    enemyX = -100;
-                    enemyY = -100;
-                    continue;
-                }
-                float xdist = enemyX - myPlayer.x;
-                float ydist = enemyY - myPlayer.y;
-                float distSq = (xdist * xdist) + (ydist * ydist);
-                float radiusSum = 12.0f + 12.0f; // no magic numbers actualy fetch the player and entity sprite sizes
-                if (distSq < (radiusSum * radiusSum))
-                {
-                    myPlayer.Kill(); // temp function
+                    float& enemyX = entities[currentID].x;
+                    float& enemyY = entities[currentID].y;
+                    int hitboxWidth = 24;
+                    int hitboxHeight = 3;
+                    int playerFeetY = myPlayer.y + 24;
+                    int playerWidth = 24;
+                    int playerFeetHeight = 2;
+
+                    if (isOverlapping(myPlayer.x, playerFeetY, playerWidth, playerFeetHeight,
+                                      enemyX - 5, enemyY, hitboxWidth, hitboxHeight))
+                    {
+                        enemyX = -100;
+                        enemyY = -100;
+                        continue;
+                    }
+                    float xdist = enemyX - myPlayer.x;
+                    float ydist = enemyY - myPlayer.y;
+                    float distSq = (xdist * xdist) + (ydist * ydist);
+                    float radiusSum = 12.0f + 12.0f; // no magic numbers actualy fetch the player and entity sprite sizes
+                    if (distSq < (radiusSum * radiusSum))
+                    {
+                        myPlayer.Kill(); // temp function
+                    }
                 }
             }
         }
     }
-
-    auto& CurrentBucket = grid[playerGridY][playerGridX].entityIDs;
-
-    for (int currentID : CurrentBucket)
-    {
-        float& enemyX = entities[currentID].x;
-        float& enemyY = entities[currentID].y;
-        int hitboxWidth = 24;
-        int hitboxHeight = 3;
-        int playerFeetY = myPlayer.y + 30;
-        int playerWidth = 24;
-        int playerFeetHeight = 2;
-
-        if (isOverlapping(myPlayer.x, playerFeetY, playerWidth, playerFeetHeight,
-                          enemyX - 5, enemyY, hitboxWidth, hitboxHeight))
-        {
-            printf("touched him\n");
-            enemyX = -100;
-            enemyY = -100;
-            continue;
-        }
-        float xdist = enemyX - myPlayer.x;
-        float ydist = enemyY - myPlayer.y;
-        float distSq = (xdist * xdist) + (ydist * ydist);
-        float radiusSum = 12.0f + 12.0f; // no magic numbers actualy fetch the player and entity sprite sizes
-        if (distSq < (radiusSum * radiusSum))
-        {
-            myPlayer.Kill(); // temp function
-        }
-    }
 }
-
 
 bool Game::isOverlapping(int box1X, int box1Y, int box1Width, int box1Height,
                          int box2X, int box2Y, int box2Width, int box2Height)
