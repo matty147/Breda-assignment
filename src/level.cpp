@@ -198,21 +198,20 @@ void Level::UpdateVines(std::vector<std::vector<int>>& listOfVines)
             continue;
         }
 
-        int height = 1;
+        int vineHeight = 1;
 
         tiles[vineY][vineX] = (int)TileType::VineBody;
 
-        while (tiles[vineY - height][vineX] == 0)
+        while (tiles[vineY - vineHeight][vineX] == 0)
         {
-            tiles[vineY - height][vineX] = (int)TileType::VineBody;
-            height++;
+            tiles[vineY - vineHeight][vineX] = (int)TileType::VineBody;
+            vineHeight++;
 
-            if (vineY - height < 0)
+            if (vineY - vineHeight < 0)
             {
                 break;
             }
-        }
-            
+        }            
     }
 }
 

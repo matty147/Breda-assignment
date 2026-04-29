@@ -229,6 +229,9 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
                     }
                     continue;
 
+                case (int)TileType::VineStump:
+                    continue;
+
                 case (int)TileType::Portal:
                     Game::currentLevelID++;
                     Game::updateLevel = true;
