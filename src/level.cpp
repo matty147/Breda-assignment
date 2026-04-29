@@ -36,7 +36,10 @@ enum class TileType
     Water = 6,
     Cement = 7,
     Moon = 8,
-    Sun = 9
+    Sun = 9,
+    MoonBlock = 10,
+    VineStump = 11,
+    VineBody = 12
 };
 
 using namespace std;
@@ -135,7 +138,7 @@ void Level::CreateLevel(string levelName)
 /// </summary>
 /// <param name="outY"></param>
 /// <param name="outX"></param>
-void Level::FindFlag(int& outY, int& outX)
+void Level::FindFlag(int& outY, int& outX) //this is probably not really needed and can use the fun under it
 {
     for (int y = 0; y < height; y++)
     {
@@ -148,6 +151,68 @@ void Level::FindFlag(int& outY, int& outX)
                 break;
             }
         }
+    }
+}
+
+/// <summary>
+/// Locate all instances of a block in the curent room
+/// </summary>
+/// <param name="listOfTilesInstances"></param>
+/// <param name="tileId"></param>
+void Level::FindTileInstances(std::vector<std::vector<int>>& listOfTilesInstances, int tileId)
+{
+    listOfTilesInstances.clear();
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            if (tiles[y][x] == tileId)
+            {
+                listOfTilesInstances.push_back({y,x});
+            }
+        }
+    }
+}
+
+void Level::UpdateVines(std::vector<std::vector<int>>& listOfVines)
+{
+
+    // destroy them all
+    std::vector<std::vector<int>> vineDestroy;
+
+    FindTileInstances(vineDestroy, (int)TileType::VineBody);
+
+    for (std::vector<int> vine : vineDestroy)
+    {
+        tiles[vine[0]][vine[1]] = 0;
+    }
+
+    for (int i = 0; i < listOfVines.size(); i++)
+    {
+        int vineY = listOfVines[i][0];
+        int vineX = listOfVines[i][1];
+
+        if (currentDay == timeOfDay::Night)
+        {
+            tiles[vineY][vineX] = (int)TileType::VineStump;
+            continue;
+        }
+
+        int height = 1;
+
+        tiles[vineY][vineX] = (int)TileType::VineBody;
+
+        while (tiles[vineY - height][vineX] == 0)
+        {
+            tiles[vineY - height][vineX] = (int)TileType::VineBody;
+            height++;
+
+            if (vineY - height < 0)
+            {
+                break;
+            }
+        }
+            
     }
 }
 
@@ -167,8 +232,6 @@ void Level::Draw(Surface* gameScreen)
     else changeTileSetCoordinate += 1.0f;
 
     changeTileSetCoordinate = std::clamp(changeTileSetCoordinate, 0.0f, (float)width);
-
-    printf("fc %.2f\n", changeTileSetCoordinate);
 
     for (int y = 0; y < height; y++)
     {

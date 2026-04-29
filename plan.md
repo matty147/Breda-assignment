@@ -8,13 +8,13 @@ edMay 15th - 22 days
 
 1. basic enemy functionality
 	- movement - [x]
-	- interaction with player - []
+	- interaction with player - [x]
 
 ## Should do
 
 1. Unit tests - prubezne when fixing a function
 	- https://github.com/catchorg/Catch2
-2. Make sun and moon easier to see (DO NOT SPEND MORE THAN FIVE MINUTES WITH THIS!)
+2. Make sun and moon easier to see (DO NOT SPEND MORE THAN FIVE MINUTES WITH THIS!) - [x]
 	- e.g., black outline, saturated colors
 	- spikes/rays around sun so it doesn't look like a coin - [x]
 3. More transformation objects

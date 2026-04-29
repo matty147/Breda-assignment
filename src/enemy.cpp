@@ -65,7 +65,8 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
     if (0 < hitX || nextX < 0)
     {
         direction *= -1;
-    }else if (0 >= edgeHitX)
+    }
+    else if (0 >= edgeHitX)
     {
         direction *= -1;
     }
@@ -158,20 +159,26 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
                     // playerStatus = Dead;
                     return false;
 
-                     case (int)TileType::Water:
-                     {
-                         if (level.currentDay == timeOfDay::Day)
-                         {
-                             continue;
-                         }
-                         break;
-                     }
+                case (int)TileType::Water:
+                {
+                    if (level.currentDay == timeOfDay::Day)
+                    {
+                        continue;
+                    }
+                    break;
+                }
 
+                case (int)TileType::MoonBlock:
+                    if (level.currentDay == timeOfDay::Night)
+                    {
+                        return true;
+                    }
+                    continue;
 
-                     case (int)TileType::Flag:
-                     case (int)TileType::Sun:
-                     case (int)TileType::Moon:
-                         continue;
+                case (int)TileType::Flag:
+                case (int)TileType::Sun:
+                case (int)TileType::Moon:
+                    continue;
             }
 
             if (tileId > 0)

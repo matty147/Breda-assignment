@@ -18,7 +18,10 @@ enum class TileType
     Water = 6,
     Cement = 7,
     Moon = 8,
-    Sun = 9
+    Sun = 9,
+    MoonBlock = 10,
+    VineStump = 11,
+    VineBody = 12
 };
 
 enum timeOfDay
@@ -35,10 +38,13 @@ class Level
     void CreateLevel(std::string levelname);
     void Draw(Surface* gameScreen);
     void FindFlag(int& outY, int& outX);
+    void FindTileInstances(std::vector<std::vector<int>>& listOfTilesInstances, int tileId);
+    void UpdateVines(std::vector<std::vector<int>>& listOfVines);
     int Collision(int y, int x);
     bool SpikeColision(int py, int px, int sy, int sx);
 
     timeOfDay currentDay = timeOfDay::Day;
+
   private:
     // double clamp(double d, double min, double max);
     void DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeight, int ScreenWidth, int backgroundTileSet);

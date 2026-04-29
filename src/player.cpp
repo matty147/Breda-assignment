@@ -216,17 +216,24 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
 
                 case (int)TileType::Sun:
                     level.currentDay = timeOfDay::Day;
-                    return false;
+                    continue;
 
                 case (int)TileType::Moon:
                     level.currentDay = timeOfDay::Night;
-                    return false;
+                    continue;
+
+                case (int)TileType::MoonBlock:
+                    if (level.currentDay == timeOfDay::Night)
+                    {
+                        return true;
+                    }
+                    continue;
 
                 case (int)TileType::Portal:
                     Game::currentLevelID++;
                     Game::updateLevel = true;
                     playerStatus = Dead;
-                    return false;
+                    continue;
 
                     // case (int)TileType::Water:
                     // case (int)TileType::Flag:

@@ -33,8 +33,10 @@ std::vector<std::string> levelNames = {"level1", "level2"};
 int Game::currentLevelID = 0;
 bool Game::updateLevel = false;
 
-int seperateX = 5;
-int seperateY = 5;
+int seperateX = 10;
+int seperateY = 10;
+
+std::vector<std::vector<int>> vineList;
 
 void Game::Init()
 {
@@ -54,10 +56,11 @@ void Game::Init()
 
     level.CreateLevel(levelNames[Game::currentLevelID]);
     level.FindFlag(playerY, playerX);
+    level.FindTileInstances(vineList, (int)TileType::VineStump);
 
     myPlayer = Player(playerY, playerX);
 
-    printf("Y: %d. X: %d", playerY, playerX);
+    //printf("Y: %d. X: %d", playerY, playerX);
 }
 
 void Game::Shutdown() {}
@@ -71,6 +74,8 @@ void Game::Tick(float deltaTime)
     deltaTime = std::min(deltaTime, 33.0f); // stop the objects from going through the floor
 
     screen->Clear(0);
+
+    level.UpdateVines(vineList);
 
     level.Draw(screen);
 
@@ -95,6 +100,7 @@ void Game::Tick(float deltaTime)
         printf("Loading level: %d\n", Game::currentLevelID);
         level.CreateLevel(levelNames[Game::currentLevelID]);
         level.FindFlag(newY, newX);
+        level.FindTileInstances(vineList, (int)TileType::Sun);
 
         level.currentDay = timeOfDay::Day;
 
@@ -110,11 +116,6 @@ void Game::Tick(float deltaTime)
     int bucketXSize = ScreenWidth / seperateX;
     int bucketYSize = ScreenHeight / seperateY;
 
-    for (int i = 0; i < seperateX; i++)
-    {
-        screen->Line(i * bucketXSize, 0, i * bucketXSize, screenHeight, 0X00ff0);
-        screen->Line(0, i * bucketYSize, ScreenWidth, i * bucketYSize, 0X00ff0);
-    }
 }
 
 /// <summary>
@@ -159,10 +160,12 @@ void Game::SpatialHashing(Surface* gameScreen)
 /// <param name="bucketXSize"></param>
 void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
 {
-    int playerGridX = myPlayer.x / bucketXSize;
-    int playerGridY = myPlayer.y / bucketYSize;
+    int playerGridX = std::clamp((int)myPlayer.x / bucketXSize, 0, seperateX - 1);
+    int playerGridY = std::clamp((int)myPlayer.y / bucketYSize, 0, seperateY - 1);
 
     auto& EntitiesInPlayersBucket = grid[playerGridY][playerGridX].entityIDs;
+
+    std::vector<int> deadEntities;
 
     int neighborOffsets[4][2] = {
         {1, 0},
@@ -182,7 +185,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                 {
                     // collision for enemies
                     auto& neighborBucket = grid[neighborY][neighborX].entityIDs;
-                    auto& CurrentBucket = grid[c][r].entityIDs;
+                    auto& CurrentBucket = grid[r][c].entityIDs;
                     for (int currentID : CurrentBucket)
                     {
                         for (int neighborID : neighborBucket)
@@ -225,13 +228,12 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     int hitboxHeight = 3;
                     int playerFeetY = myPlayer.y + 24;
                     int playerWidth = 24;
-                    int playerFeetHeight = 2;
+                    int playerFeetHeight = 6;
 
                     if (isOverlapping(myPlayer.x, playerFeetY, playerWidth, playerFeetHeight,
                                       enemyX - 5, enemyY, hitboxWidth, hitboxHeight))
                     {
-                        enemyX = -100;
-                        enemyY = -100;
+                        deadEntities.push_back(currentID);
                         continue;
                     }
                     float xdist = enemyX - myPlayer.x;
@@ -240,12 +242,23 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     float radiusSum = 12.0f + 12.0f; // no magic numbers actualy fetch the player and entity sprite sizes
                     if (distSq < (radiusSum * radiusSum))
                     {
-                        myPlayer.Kill(); // temp function
+                        myPlayer.Kill();
                     }
                 }
             }
         }
     }
+
+    std::sort(deadEntities.rbegin(), deadEntities.rend());
+    deadEntities.erase(std::unique(deadEntities.begin(), deadEntities.end()), deadEntities.end());
+
+    // destroy enemies marked for death
+    for (int d = 0; d < deadEntities.size(); d++)
+    {
+        entities[deadEntities[d]] = entities.back();
+        entities.pop_back();
+    }
+
 }
 
 bool Game::isOverlapping(int box1X, int box1Y, int box1Width, int box1Height,
