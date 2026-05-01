@@ -24,9 +24,10 @@ Level level(100, 100);
 Player myPlayer(0, 0);
 Enemy myEnemy(100, 100);
 
-int numberOfEntities = 5;
+int numberOfEntities = 0;
 
 std::vector<Enemy> entities;
+std::vector<std::vector<int>> entitySpawnPoints;
 
 std::vector<std::string> levelNames = {"level1", "level2"};
 
@@ -40,13 +41,6 @@ std::vector<std::vector<int>> vineList;
 
 void Game::Init()
 {
-    for (int i = 0; i < numberOfEntities; i++)
-    {
-        Enemy newEnemy(100, 100 + i * 50);
-
-        entities.push_back(newEnemy);
-    }
-
     grid.resize(seperateX, std::vector<Bucket>(seperateY));
 
     screenWidth = screen->GetWidth();
@@ -54,9 +48,16 @@ void Game::Init()
 
     int playerX = 0, playerY = 0;
 
-    level.CreateLevel(levelNames[Game::currentLevelID]);
+    level.CreateLevel(levelNames[Game::currentLevelID], entitySpawnPoints);
     level.FindFlag(playerY, playerX);
     level.FindTileInstances(vineList, (int)TileType::VineStump);
+
+    for (auto& spawnPoint: entitySpawnPoints)
+    {
+        Enemy newEnemy(spawnPoint[0], spawnPoint[1]);
+
+        entities.push_back(newEnemy);
+    }
 
     myPlayer = Player(playerY, playerX);
 
@@ -98,15 +99,22 @@ void Game::Tick(float deltaTime)
         int newY = 0, newX = 0;
 
         printf("Loading level: %d\n", Game::currentLevelID);
-        level.CreateLevel(levelNames[Game::currentLevelID]);
+        level.CreateLevel(levelNames[Game::currentLevelID], entitySpawnPoints);
         level.FindFlag(newY, newX);
-        level.FindTileInstances(vineList, (int)TileType::Sun);
-
+        level.FindTileInstances(vineList, (int)TileType::VineStump);
         level.currentDay = timeOfDay::Day;
 
         // reset the level
         myPlayer.ResetPlayerValues(newY, newX);
         entities.clear();
+
+        for (auto& spawnPoint : entitySpawnPoints)
+        {
+            Enemy newEnemy(spawnPoint[0], spawnPoint[1]);
+
+            entities.push_back(newEnemy);
+        }
+
     }
 
     // see buckets
@@ -233,6 +241,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     if (isOverlapping(myPlayer.x, playerFeetY, playerWidth, playerFeetHeight,
                                       enemyX - 5, enemyY, hitboxWidth, hitboxHeight))
                     {
+                        myPlayer.currentGravity = -6;
                         deadEntities.push_back(currentID);
                         continue;
                     }

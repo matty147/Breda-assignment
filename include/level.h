@@ -20,8 +20,9 @@ enum class TileType
     Moon = 8,
     Sun = 9,
     MoonBlock = 10,
-    VineStump = 11,
-    VineBody = 12
+    SunBlock = 11,
+    VineStump = 12,
+    VineBody = 13
 };
 
 enum timeOfDay
@@ -35,7 +36,7 @@ class Level
   public:
     Level(int iwidth, int iheight);
 
-    void CreateLevel(std::string levelname);
+    void CreateLevel(std::string levelname, std::vector<std::vector<int>>& entities);
     void Draw(Surface* gameScreen);
     void FindFlag(int& outY, int& outX);
     void FindTileInstances(std::vector<std::vector<int>>& listOfTilesInstances, int tileId);

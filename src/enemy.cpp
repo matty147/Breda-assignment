@@ -59,7 +59,8 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
         {
             edgeHitX = TileCollision(bottomTile + 1, bottomTile + 1, leftTile + direction, leftTile + direction, level);
         }
-        else edgeHitX = TileCollision(bottomTile + 1, bottomTile + 1, rightTile + direction, rightTile + direction, level);
+        else
+            edgeHitX = TileCollision(bottomTile + 1, bottomTile + 1, rightTile + direction, rightTile + direction, level);
     }
 
     if (0 < hitX || nextX < 0)
@@ -175,9 +176,24 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
                     }
                     continue;
 
-                case (int)TileType::Flag:
+                case (int)TileType::SunBlock:
+                    if (level.currentDay == timeOfDay::Night)
+                    {
+                        return true;
+                    }
+                    continue;
+
                 case (int)TileType::Sun:
+                    level.currentDay = timeOfDay::Day;
+                    continue;
+
                 case (int)TileType::Moon:
+                    level.currentDay = timeOfDay::Night;
+                    continue;
+
+                case (int)TileType::Flag:
+                //case (int)TileType::Sun:
+                //case (int)TileType::Moon:
                     continue;
             }
 

@@ -38,8 +38,9 @@ enum class TileType
     Moon = 8,
     Sun = 9,
     MoonBlock = 10,
-    VineStump = 11,
-    VineBody = 12
+    SunBlock = 11,
+    VineStump = 12,
+    VineBody = 13
 };
 
 using namespace std;
@@ -62,7 +63,7 @@ Level::Level(int iwidth, int iheight)
 /// Reads and loads data from a .tmx level file
 /// </summary>
 /// <param name="levelName"></param>
-void Level::CreateLevel(string levelName)
+void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entities)
 {
     tinyxml2::XMLDocument doc;
 
@@ -89,6 +90,26 @@ void Level::CreateLevel(string levelName)
 
     XMLElement* layerNode = mapNode->FirstChildElement("layer");
     XMLElement* dataNode = layerNode->FirstChildElement("data");
+
+    XMLElement* entityNode = mapNode->FirstChildElement("objectgroup");
+    XMLElement* objectNode = entityNode->FirstChildElement("object");
+
+    entities.clear();
+
+    while (objectNode != nullptr)
+    {
+        int spawnX = 0;
+        int spawnY = 0;
+
+        objectNode->QueryIntAttribute("x", &spawnX);
+        objectNode->QueryIntAttribute("y", &spawnY);
+
+        printf("Spawn Enemy at X: %d, Y: %d\n", spawnX, spawnY);
+
+        entities.push_back({spawnY, spawnX});
+
+        objectNode = objectNode->NextSiblingElement("object");
+    }
 
     if (!dataNode)
     {

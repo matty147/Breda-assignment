@@ -229,6 +229,13 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
                     }
                     continue;
 
+                case (int)TileType::SunBlock:
+                    if (level.currentDay == timeOfDay::Day)
+                    {
+                        return true;
+                    }
+                    continue;
+
                 case (int)TileType::VineStump:
                     continue;
 
