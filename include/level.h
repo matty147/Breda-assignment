@@ -25,7 +25,7 @@ enum class TileType
     VineBody = 13
 };
 
-enum class timeOfDay
+enum class timeOfDay // rename
 {
     Day,
     Night

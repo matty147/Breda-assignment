@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <iostream>
 #include <numbers>
 #include <sstream>
@@ -15,33 +16,6 @@
 std::vector<std::vector<int>> tiles;
 
 using namespace tinyxml2;
-
-enum timeOfDay
-{
-    Day,
-    Night
-};
-
-//// should rename to current time of day?
-// timeOfDay currentDay = timeOfDay::Day;
-
-enum class TileType
-{
-    Empty = 0,
-    Grass = 1,
-    Ground = 2,
-    Spike = 3,
-    Flag = 4,
-    Portal = 5,
-    Water = 6,
-    Cement = 7,
-    Moon = 8,
-    Sun = 9,
-    MoonBlock = 10,
-    SunBlock = 11,
-    VineStump = 12,
-    VineBody = 13
-};
 
 using namespace std;
 
@@ -118,36 +92,49 @@ void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entitie
     }
 
     const char* tileDataText = dataNode->GetText();
-    std::string dataString(tileDataText);
+    // printf("%s", tileDataText);
 
-    std::replace(dataString.begin(), dataString.end(), '\n', ',');
-    std::replace(dataString.begin(), dataString.end(), '\r', ',');
+    const char* text = dataNode->GetText();
+    const char* start = text;
+    char* end;
 
-    std::stringstream ss(dataString);
-    std::string token;
+    int nextLine = 0;
 
-    for (int y = 0; y < height; y++)
+    int checkX = 0;
+    int checkY = 0;
+
+    while (*start != '\0')
     {
-        for (int x = 0; x < width; x++)
+        unsigned long number = std::strtoul(start, &end, 10);
+
+        if (start == end)
         {
-            while (std::getline(ss, token, ','))
-            {
-                token.erase(0, token.find_first_not_of(" \t\r\n"));
+            break;
+        }
 
-                if (!token.empty())
-                {
-                    if (std::stoul(token) - 1 > 100) // rotation - last 3 bits are the rotation data
-                    {
-                        unsigned int rotation = (std::stoul(token) - 1 & rotationMask) >> 29;
+        start = end;
 
-                        tiles[y][x] = rotation * 100 + std::stoul(token) - 1 & pieceMask;
-                        break;
-                    }
+        if (*start != '\0')
+        {
+            start++;
+        }
 
-                    tiles[y][x] = std::stoi(token) - 1;
-                    break;
-                }
-            }
+        if (number - 1 > 100) // rotation - last 3 bits are the rotation data
+        {
+            unsigned int rotation = (number - 1 & rotationMask) >> 29;
+
+            tiles[checkY][checkX] = rotation * 100 + number - 1 & pieceMask;
+        }
+        else
+        {
+            tiles[checkY][checkX] = number - 1;
+        }
+
+        checkX++;
+        if (checkX >= width)
+        {
+            checkX = 0;
+            checkY++;
         }
     }
 
@@ -176,7 +163,7 @@ void Level::FindFlag(int& outY, int& outX) // this is probably not really needed
 }
 
 /// <summary>
-/// Locate all instances of a block in the curent room
+/// Locate all instances of a block in the curent room  
 /// </summary>
 /// <param name="listOfTilesInstances"></param>
 /// <param name="tileId"></param>
@@ -197,40 +184,31 @@ void Level::FindTileInstances(std::vector<std::vector<int>>& listOfTilesInstance
 
 void Level::UpdateVines(std::vector<std::vector<int>>& listOfVines)
 {
-
-    // destroy them all
-    std::vector<std::vector<int>> vineDestroy;
-
-    FindTileInstances(vineDestroy, (int)TileType::VineBody);
-
-    for (std::vector<int> vine : vineDestroy)
-    {
-        tiles[vine[0]][vine[1]] = 0;
-    }
-
     for (int i = 0; i < listOfVines.size(); i++)
     {
         int vineY = listOfVines[i][0];
         int vineX = listOfVines[i][1];
 
-        if (currentDay == timeOfDay::Night)
-        {
-            tiles[vineY][vineX] = (int)TileType::VineStump;
-            continue;
-        }
-
         int vineHeight = 1;
 
-        tiles[vineY][vineX] = (int)TileType::VineBody;
-
-        while (tiles[vineY - vineHeight][vineX] == 0)
+        if (currentDay == timeOfDay::Day)
         {
-            tiles[vineY - vineHeight][vineX] = (int)TileType::VineBody;
-            vineHeight++;
+            tiles[vineY][vineX] = (int)TileType::VineBody;
 
-            if (vineY - vineHeight < 0)
+            while (vineY - vineHeight >= 0 && tiles[vineY - vineHeight][vineX] == 0)
             {
-                break;
+                tiles[vineY - vineHeight][vineX] = (int)TileType::VineBody;
+                vineHeight++;
+            }
+        }
+        else
+        {
+            tiles[vineY][vineX] = (int)TileType::VineStump;
+
+            while (vineY - vineHeight >= 0 && tiles[vineY - vineHeight][vineX] == (int)TileType::VineBody)
+            {
+                tiles[vineY - vineHeight][vineX] = 0;
+                vineHeight++;
             }
         }
     }
