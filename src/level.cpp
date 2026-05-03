@@ -23,7 +23,7 @@ enum timeOfDay
 };
 
 //// should rename to current time of day?
-//timeOfDay currentDay = timeOfDay::Day;
+// timeOfDay currentDay = timeOfDay::Day;
 
 enum class TileType
 {
@@ -159,7 +159,7 @@ void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entitie
 /// </summary>
 /// <param name="outY"></param>
 /// <param name="outX"></param>
-void Level::FindFlag(int& outY, int& outX) //this is probably not really needed and can use the fun under it
+void Level::FindFlag(int& outY, int& outX) // this is probably not really needed and can use the fun under it
 {
     for (int y = 0; y < height; y++)
     {
@@ -189,7 +189,7 @@ void Level::FindTileInstances(std::vector<std::vector<int>>& listOfTilesInstance
         {
             if (tiles[y][x] == tileId)
             {
-                listOfTilesInstances.push_back({y,x});
+                listOfTilesInstances.push_back({y, x});
             }
         }
     }
@@ -232,7 +232,7 @@ void Level::UpdateVines(std::vector<std::vector<int>>& listOfVines)
             {
                 break;
             }
-        }            
+        }
     }
 }
 
@@ -249,7 +249,8 @@ void Level::Draw(Surface* gameScreen)
     {
         changeTileSetCoordinate -= 1.0f;
     }
-    else changeTileSetCoordinate += 1.0f;
+    else
+        changeTileSetCoordinate += 1.0f;
 
     changeTileSetCoordinate = std::clamp(changeTileSetCoordinate, 0.0f, (float)width);
 
@@ -365,7 +366,7 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
 /// <param name="y"></param>
 /// <param name="x"></param>
 /// <returns></returns>
-int Level::Collision(int y, int x)
+int Tmpl8::Level::getTileID(int y, int x)
 {
     int tx = std::clamp(x / tileSize, 0, width - 1), ty = std::clamp(y / tileSize, 0, height - 1);
 
@@ -373,25 +374,30 @@ int Level::Collision(int y, int x)
 
     switch (currentTile)
     {
-        //// move?
-        //case (int)TileType::Sun:
-        //    currentDay = timeOfDay::Day;
-        //    return -1;
-
-        //case (int)TileType::Moon:
-        //    currentDay = timeOfDay::Night;
-        //    return -1;
-
         case (int)TileType::Water:
             if (currentDay == timeOfDay::Day)
             {
-                return -1;
+                return -currentTile;
             }
             break;
 
+        case (int)TileType::MoonBlock:
+            if (currentDay == timeOfDay::Day)
+            {
+                return -currentTile;
+            }
+            break;
+
+        case (int)TileType::SunBlock:
+            if (currentDay == timeOfDay::Night)
+            {
+                return -currentTile;
+            }
+            break;
+
+        case (int)TileType::VineStump:
         case (int)TileType::Flag:
-            // case (int)TileType::Portal:
-            return -1;
+            return -currentTile;
     }
 
     return (tiles[ty][tx] % 100);

@@ -24,12 +24,10 @@ Level level(100, 100);
 Player myPlayer(0, 0);
 Enemy myEnemy(100, 100);
 
-int numberOfEntities = 0;
-
 std::vector<Enemy> entities;
 std::vector<std::vector<int>> entitySpawnPoints;
 
-std::vector<std::string> levelNames = {"level1", "level2"};
+std::vector<std::string> levelNames = {"level1", "level2", "level3"};
 
 int Game::currentLevelID = 0;
 bool Game::updateLevel = false;
@@ -52,7 +50,9 @@ void Game::Init()
     level.FindFlag(playerY, playerX);
     level.FindTileInstances(vineList, (int)TileType::VineStump);
 
-    for (auto& spawnPoint: entitySpawnPoints)
+    entities.reserve(entitySpawnPoints.size());
+
+    for (auto& spawnPoint : entitySpawnPoints)
     {
         Enemy newEnemy(spawnPoint[0], spawnPoint[1]);
 
@@ -61,7 +61,7 @@ void Game::Init()
 
     myPlayer = Player(playerY, playerX);
 
-    //printf("Y: %d. X: %d", playerY, playerX);
+    // printf("Y: %d. X: %d", playerY, playerX);
 }
 
 void Game::Shutdown() {}
@@ -72,7 +72,7 @@ void Game::Shutdown() {}
 /// <param name="deltaTime"></param>
 void Game::Tick(float deltaTime)
 {
-    deltaTime = std::min(deltaTime, 33.0f); // stop the objects from going through the floor
+    deltaTime = std::min(deltaTime, 33.0f); // stop the objects from lagging through the floor
 
     screen->Clear(0);
 
@@ -94,27 +94,9 @@ void Game::Tick(float deltaTime)
     if (updateLevel) // cap the levels so it does not crash
     {
         updateLevel = false;
-        Game::currentLevelID = std::clamp(Game::currentLevelID, 0, (int)levelNames.size() - 1);
 
-        int newY = 0, newX = 0;
-
-        printf("Loading level: %d\n", Game::currentLevelID);
-        level.CreateLevel(levelNames[Game::currentLevelID], entitySpawnPoints);
-        level.FindFlag(newY, newX);
-        level.FindTileInstances(vineList, (int)TileType::VineStump);
-        level.currentDay = timeOfDay::Day;
-
-        // reset the level
-        myPlayer.ResetPlayerValues(newY, newX);
-        entities.clear();
-
-        for (auto& spawnPoint : entitySpawnPoints)
-        {
-            Enemy newEnemy(spawnPoint[0], spawnPoint[1]);
-
-            entities.push_back(newEnemy);
-        }
-
+        GoToNextLevel();
+        ResetLevel();
     }
 
     // see buckets
@@ -123,7 +105,34 @@ void Game::Tick(float deltaTime)
 
     int bucketXSize = ScreenWidth / seperateX;
     int bucketYSize = ScreenHeight / seperateY;
+}
 
+void Game::GoToNextLevel()
+{
+    Game::currentLevelID++;
+    Game::currentLevelID = std::clamp(Game::currentLevelID, 0, (int)levelNames.size() - 1);
+    printf("Loading level: %d\n", Game::currentLevelID);
+    level.CreateLevel(levelNames[Game::currentLevelID], entitySpawnPoints);
+}
+
+void Game::ResetLevel()
+{
+    int newY = 0, newX = 0;
+
+    level.FindFlag(newY, newX);
+    level.FindTileInstances(vineList, (int)TileType::VineStump);
+    level.currentDay = timeOfDay::Day;
+
+    // reset the level
+    myPlayer.ResetPlayerValues(newY, newX);
+    entities.clear();
+
+    for (auto& spawnPoint : entitySpawnPoints)
+    {
+        Enemy newEnemy(spawnPoint[0], spawnPoint[1]);
+
+        entities.push_back(newEnemy);
+    }
 }
 
 /// <summary>
@@ -149,8 +158,8 @@ void Game::SpatialHashing(Surface* gameScreen)
 
     for (int i = 0; i < entities.size(); i++)
     {
-        int x = std::clamp((int)entities[i].x / bucketXSize, 0, seperateX - 1);
-        int y = std::clamp((int)entities[i].y / bucketYSize, 0, seperateY - 1);
+        int x = std::clamp((int)entities[i].GetX() / bucketXSize, 0, seperateX - 1);
+        int y = std::clamp((int)entities[i].GetY() / bucketYSize, 0, seperateY - 1);
 
         grid[y][x].entityIDs.push_back(i);
     }
@@ -168,8 +177,8 @@ void Game::SpatialHashing(Surface* gameScreen)
 /// <param name="bucketXSize"></param>
 void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
 {
-    int playerGridX = std::clamp((int)myPlayer.x / bucketXSize, 0, seperateX - 1);
-    int playerGridY = std::clamp((int)myPlayer.y / bucketYSize, 0, seperateY - 1);
+    int playerGridX = std::clamp((int)myPlayer.GetX() / bucketXSize, 0, seperateX - 1);
+    int playerGridY = std::clamp((int)myPlayer.GetY() / bucketYSize, 0, seperateY - 1);
 
     auto& EntitiesInPlayersBucket = grid[playerGridY][playerGridX].entityIDs;
 
@@ -198,10 +207,10 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     {
                         for (int neighborID : neighborBucket)
                         {
-                            int firstEnemyX = entities[currentID].x;
-                            int firstEnemyY = entities[currentID].y;
-                            int secondEnemyX = entities[neighborID].x;
-                            int secondEnemyY = entities[neighborID].y;
+                            int firstEnemyX = entities[currentID].GetX();
+                            int firstEnemyY = entities[currentID].GetY();
+                            int secondEnemyX = entities[neighborID].GetX();
+                            int secondEnemyY = entities[neighborID].GetY();
                             float xdist = secondEnemyX - firstEnemyX;
                             float ydist = secondEnemyY - firstEnemyY;
                             float distSq = (xdist * xdist) + (ydist * ydist);
@@ -230,23 +239,23 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
 
                 for (int currentID : neighborBucket)
                 {
-                    float& enemyX = entities[currentID].x;
-                    float& enemyY = entities[currentID].y;
+                    float enemyX = entities[currentID].GetX();
+                    float enemyY = entities[currentID].GetY();
                     int hitboxWidth = 24;
                     int hitboxHeight = 3;
-                    int playerFeetY = myPlayer.y + 24;
+                    int playerFeetY = myPlayer.GetY() + 24;
                     int playerWidth = 24;
                     int playerFeetHeight = 6;
 
-                    if (isOverlapping(myPlayer.x, playerFeetY, playerWidth, playerFeetHeight,
+                    if (isOverlapping(myPlayer.GetX(), playerFeetY, playerWidth, playerFeetHeight,
                                       enemyX - 5, enemyY, hitboxWidth, hitboxHeight))
                     {
-                        myPlayer.currentGravity = -6;
+                        myPlayer.BounceOffObject();
                         deadEntities.push_back(currentID);
                         continue;
                     }
-                    float xdist = enemyX - myPlayer.x;
-                    float ydist = enemyY - myPlayer.y;
+                    float xdist = enemyX - myPlayer.GetX();
+                    float ydist = enemyY - myPlayer.GetY();
                     float distSq = (xdist * xdist) + (ydist * ydist);
                     float radiusSum = 12.0f + 12.0f; // no magic numbers actualy fetch the player and entity sprite sizes
                     if (distSq < (radiusSum * radiusSum))
@@ -267,7 +276,6 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
         entities[deadEntities[d]] = entities.back();
         entities.pop_back();
     }
-
 }
 
 bool Game::isOverlapping(int box1X, int box1Y, int box1Width, int box1Height,

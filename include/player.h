@@ -14,7 +14,10 @@ class Player
     void Draw(Surface* gameScreen);
     void Kill();
     void ResetPlayerValues(float newY, float newX);
-    float x, y, currentGravity = -1;
+    void BounceOffObject();
+
+    float GetX() const { return x; }
+    float GetY() const { return y; }
 
   private:
     void UpdateTimers(float deltaTime, Level& level);
@@ -23,7 +26,7 @@ class Player
     void ProcessInput(float& moveX, bool& jumpPressed);
     bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
 
-    float speed, gravity, jumptime = 0.3f, coyotetime;
+    float x, y, currentGravity = -1, speed, gravity, jumptime = 0.3f, coyotetime;
     int direction, jumpAmount = 0, playerWidth, playerHeight, tileSize = 32, spawnY = 0, spawnX = 0, deaths = 0;
     bool grounded = false, jumplastframe = false;
 };

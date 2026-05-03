@@ -192,9 +192,10 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
         for (int c = leftTile; c <= rightTile; c++)
         {
 
-            int tileId = level.Collision(r * tileSize, c * tileSize);
+            int tileId = level.getTileID(r * tileSize, c * tileSize);
 
-            switch (tileId)
+
+            switch (std::abs(tileId))
             {
                 case (int)TileType::Spike:
                 {
@@ -240,7 +241,6 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
                     continue;
 
                 case (int)TileType::Portal:
-                    Game::currentLevelID++;
                     Game::updateLevel = true;
                     playerStatus = Dead;
                     continue;
@@ -266,8 +266,8 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
 /// <param name="level"></param>
 void Player::UpdateTimers(float deltaTime, Level& level)
 {
-    grounded = 0 < level.Collision(y + playerHeight * 1.25, x) ||
-               0 < level.Collision(y + playerHeight * 1.25, x + playerWidth - 1);
+    grounded = 0 < level.getTileID(y + playerHeight * 1.25, x) ||
+               0 < level.getTileID(y + playerHeight * 1.25, x + playerWidth - 1);
 
     if (grounded)
     {
@@ -294,6 +294,12 @@ void Player::ResetPlayerValues(float newY, float newX)
     currentGravity = -1;
     y = newY;
     x = newX;
+}
+
+void Player::BounceOffObject()
+{
+    currentGravity = -6;
+    jumpAmount = 1;
 }
 
 void Player::Kill() { playerStatus = Dead; }

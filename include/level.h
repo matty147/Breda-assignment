@@ -25,7 +25,7 @@ enum class TileType
     VineBody = 13
 };
 
-enum timeOfDay
+enum class timeOfDay
 {
     Day,
     Night
@@ -41,7 +41,7 @@ class Level
     void FindFlag(int& outY, int& outX);
     void FindTileInstances(std::vector<std::vector<int>>& listOfTilesInstances, int tileId);
     void UpdateVines(std::vector<std::vector<int>>& listOfVines);
-    int Collision(int y, int x);
+    int getTileID(int y, int x);
     bool SpikeColision(int py, int px, int sy, int sx);
 
     timeOfDay currentDay = timeOfDay::Day;

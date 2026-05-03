@@ -131,10 +131,9 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
     {
         for (int c = leftTile; c <= rightTile; c++)
         {
+            int tileId = level.getTileID(r * tileSize, c * tileSize);
 
-            int tileId = level.Collision(r * tileSize, c * tileSize);
-
-            switch (tileId)
+            switch (std::abs(tileId))
             {
                 case (int)TileType::Spike:
                 {
@@ -144,20 +143,11 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
 
                     int bottomY = y + playerHeight - 1;
                     int centerY = y + (playerHeight / 2);
-
-                    // if (level.SpikeColision(bottomY, leftX, r, c) || level.SpikeColision(bottomY, rightX, r, c) ||
-                    //     level.SpikeColision(bottomY, centerX, r, c) || level.SpikeColision(centerY, leftX, r, c) ||
-                    //     level.SpikeColision(centerY, rightX, r, c))
-                    //{
-                    //     playerStatus = Dead;
-                    // }
                     continue;
                 }
 
                 case (int)TileType::Portal:
-                    Game::currentLevelID++;
                     Game::updateLevel = true;
-                    // playerStatus = Dead;
                     return false;
 
                 case (int)TileType::Water:
@@ -192,8 +182,8 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
                     continue;
 
                 case (int)TileType::Flag:
-                //case (int)TileType::Sun:
-                //case (int)TileType::Moon:
+                    // case (int)TileType::Sun:
+                    // case (int)TileType::Moon:
                     continue;
             }
 

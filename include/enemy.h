@@ -15,14 +15,15 @@ class Enemy
     void Update(float deltaTime, Level& level);
     void Draw(Surface* Gamescreen);
 
-    float x, y;
+    float GetX() const { return x; }
+    float GetY() const { return y; }
 
   private:
     // void UpdateTimers(float deltaTime, Level& level);
     bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
     void UpdateY(float deltaTime, Level& level);
     void UpdateX(float deltaTime, Level& level, float moveX);
-    float currentGravity = -1;
+    float x, y,  currentGravity = -1;
     int speed = 1, direction = 1, gravity = 1, playerWidth, playerHeight, tileSize = 32;
     bool grounded = false;
 };
