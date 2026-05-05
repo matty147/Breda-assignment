@@ -3,6 +3,8 @@
 #include <tuple>
 #include <vector>
 
+#include "../include/tinyxml2.h"
+
 namespace Tmpl8
 {
 class Surface;
@@ -42,12 +44,15 @@ class Level
     void FindTileInstances(std::vector<std::vector<int>>& listOfTilesInstances, int tileId);
     void UpdateVines(std::vector<std::vector<int>>& listOfVines);
     int getTileID(int y, int x);
-    bool SpikeColision(int py, int px, int sy, int sx);
+    bool SpikeCollision(int py, int px, int sy, int sx);
 
     timeOfDay currentDay = timeOfDay::Day;
 
   private:
-    // double clamp(double d, double min, double max);
+    int DecodeTileGID(unsigned long gid);
+    void ParseEntities(tinyxml2::XMLElement* objectNode, std::vector<std::vector<int>>& entities);
+    void ParseTileCSV(const char* csvText, int width, int height);
+
     void DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeight, int ScreenWidth, int backgroundTileSet);
     float sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x);
     int width, height, tileSize = 32;

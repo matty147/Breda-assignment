@@ -32,14 +32,14 @@ std::vector<std::string> levelNames = {"level1", "level2", "level3"};
 int Game::currentLevelID = 0;
 bool Game::updateLevel = false;
 
-int seperateX = 10;
-int seperateY = 10;
+int separateX = 10;
+int separateY = 10;
 
 std::vector<std::vector<int>> vineList;
 
 void Game::Init()
 {
-    grid.resize(seperateX, std::vector<Bucket>(seperateY));
+    grid.resize(separateY, std::vector<Bucket>(separateX));
 
     screenWidth = screen->GetWidth();
     screenHeight = screen->GetHeight();
@@ -103,8 +103,8 @@ void Game::Tick(float deltaTime)
     int ScreenWidth = screen->GetWidth();
     int ScreenHeight = screen->GetHeight();
 
-    int bucketXSize = ScreenWidth / seperateX;
-    int bucketYSize = ScreenHeight / seperateY;
+    int bucketXSize = ScreenWidth / separateX;
+    int bucketYSize = ScreenHeight / separateY;
 }
 
 void Game::GoToNextLevel()
@@ -145,12 +145,12 @@ void Game::SpatialHashing(Surface* gameScreen)
     int ScreenWidth = gameScreen->GetWidth();
     int ScreenHeight = gameScreen->GetHeight();
 
-    int bucketXSize = ScreenWidth / seperateX;
-    int bucketYSize = ScreenHeight / seperateY;
+    int bucketXSize = ScreenWidth / separateX;
+    int bucketYSize = ScreenHeight / separateY;
 
-    for (int y = 0; y < seperateY; y++)
+    for (int y = 0; y < separateY; y++)
     {
-        for (int x = 0; x < seperateX; x++)
+        for (int x = 0; x < separateX; x++)
         {
             grid[y][x].entityIDs.clear();
         }
@@ -158,13 +158,13 @@ void Game::SpatialHashing(Surface* gameScreen)
 
     for (int i = 0; i < entities.size(); i++)
     {
-        int x = std::clamp((int)entities[i].GetX() / bucketXSize, 0, seperateX - 1);
-        int y = std::clamp((int)entities[i].GetY() / bucketYSize, 0, seperateY - 1);
+        int x = std::clamp((int)entities[i].GetX() / bucketXSize, 0, separateX - 1);
+        int y = std::clamp((int)entities[i].GetY() / bucketYSize, 0, separateY - 1);
 
         grid[y][x].entityIDs.push_back(i);
     }
 
-    if (!entities.empty() || entities.size() > 1)
+    if (!entities.empty())
     {
         CheckEntityCollision(bucketYSize, bucketXSize);
     }
@@ -177,8 +177,8 @@ void Game::SpatialHashing(Surface* gameScreen)
 /// <param name="bucketXSize"></param>
 void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
 {
-    int playerGridX = std::clamp((int)myPlayer.GetX() / bucketXSize, 0, seperateX - 1);
-    int playerGridY = std::clamp((int)myPlayer.GetY() / bucketYSize, 0, seperateY - 1);
+    int playerGridX = std::clamp((int)myPlayer.GetX() / bucketXSize, 0, separateX - 1);
+    int playerGridY = std::clamp((int)myPlayer.GetY() / bucketYSize, 0, separateY - 1);
 
     auto& EntitiesInPlayersBucket = grid[playerGridY][playerGridX].entityIDs;
 
@@ -190,15 +190,15 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
         {0, 1},
         {1, 1}};
 
-    for (int r = 0; r < seperateX; r++)
+    for (int r = 0; r < separateX; r++)
     {
-        for (int c = 0; c < seperateY; c++)
+        for (int c = 0; c < separateY; c++)
         {
             for (int i = 0; i < 4; i++)
             {
                 int neighborX = r + neighborOffsets[i][0];
                 int neighborY = c + neighborOffsets[i][1];
-                if (neighborX >= 0 && neighborX < seperateX && neighborY >= 0 && neighborY < seperateY)
+                if (neighborX >= 0 && neighborX < separateX && neighborY >= 0 && neighborY < separateY)
                 {
                     // collision for enemies
                     auto& neighborBucket = grid[neighborY][neighborX].entityIDs;
@@ -233,7 +233,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
             int neighborX = playerGridX + i;
             int neighborY = playerGridY + j;
 
-            if (neighborX >= 0 && neighborX < seperateX && neighborY >= 0 && neighborY < seperateY)
+            if (neighborX >= 0 && neighborX < separateX && neighborY >= 0 && neighborY < separateY)
             {
                 auto& neighborBucket = grid[neighborY][neighborX].entityIDs;
 

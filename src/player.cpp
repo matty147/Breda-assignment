@@ -206,9 +206,9 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
                     int bottomY = y + playerHeight - 1;
                     int centerY = y + (playerHeight / 2);
 
-                    if (level.SpikeColision(bottomY, leftX, r, c) || level.SpikeColision(bottomY, rightX, r, c) ||
-                        level.SpikeColision(bottomY, centerX, r, c) || level.SpikeColision(centerY, leftX, r, c) ||
-                        level.SpikeColision(centerY, rightX, r, c))
+                    if (level.SpikeCollision(bottomY, leftX, r, c) || level.SpikeCollision(bottomY, rightX, r, c) ||
+                        level.SpikeCollision(bottomY, centerX, r, c) || level.SpikeCollision(centerY, leftX, r, c) ||
+                        level.SpikeCollision(centerY, rightX, r, c))
                     {
                         playerStatus = Dead;
                     }

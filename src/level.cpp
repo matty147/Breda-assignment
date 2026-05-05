@@ -13,8 +13,6 @@
 #include "../include/tinyxml2.h"
 #include "../tmpl8/surface.h"
 
-std::vector<std::vector<int>> tiles;
-
 using namespace tinyxml2;
 
 using namespace std;
@@ -34,40 +32,27 @@ Level::Level(int iwidth, int iheight)
 }
 
 /// <summary>
-/// Reads and loads data from a .tmx level file
+/// Decodes a raw Tiled GID into a tile index, packing rotation into the hundreds digit
 /// </summary>
-/// <param name="levelName"></param>
-void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entities)
+int Level::DecodeTileGID(unsigned long gid)
 {
-    tinyxml2::XMLDocument doc;
-
     int pieceMask = 0x1FFFFFFF;
     int rotationMask = 0xE0000000;
 
-    string fullPath = "levels/" + levelName + ".tmx";
-
-    printf("Trying to load level %s\n", fullPath.c_str());
-
-    if (doc.LoadFile(fullPath.c_str()) != XML_SUCCESS)
+    unsigned long id = gid - 1;
+    if (id > 100)
     {
-        printf("Failed to load level file!\n %s\n", fullPath.c_str());
-        return;
+        unsigned int rotation = (id & rotationMask) >> 29;
+        return (int)((rotation * 100 + id) & pieceMask);
     }
-    else
-        printf("loaded level");
+    return (int)id;
+}
 
-    XMLElement* mapNode = doc.FirstChildElement("map");
-    width = mapNode->IntAttribute("width");
-    height = mapNode->IntAttribute("height");
-
-    tiles.resize(height, std::vector<int>(width, 0));
-
-    XMLElement* layerNode = mapNode->FirstChildElement("layer");
-    XMLElement* dataNode = layerNode->FirstChildElement("data");
-
-    XMLElement* entityNode = mapNode->FirstChildElement("objectgroup");
-    XMLElement* objectNode = entityNode->FirstChildElement("object");
-
+/// <summary>
+/// Reads entity spawn points from the objectgroup layer
+/// </summary>
+void Level::ParseEntities(XMLElement* objectNode, vector<vector<int>>& entities)
+{
     entities.clear();
 
     while (objectNode != nullptr)
@@ -84,33 +69,26 @@ void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entitie
 
         objectNode = objectNode->NextSiblingElement("object");
     }
+}
 
-    if (!dataNode)
-    {
-        printf("Could not find tile data in XML!\n");
-        return;
-    }
-
-    const char* tileDataText = dataNode->GetText();
-    // printf("%s", tileDataText);
-
-    const char* text = dataNode->GetText();
-    const char* start = text;
+/// <summary>
+/// Parses the CSV tile data from a TMX data node into the tiles array
+/// </summary>
+void Level::ParseTileCSV(const char* csvText, int width, int height)
+{
+    const char* start = csvText;
     char* end;
 
     int nextLine = 0;
 
-    int checkX = 0;
-    int checkY = 0;
+    int x = 0, y = 0;
 
     while (*start != '\0')
     {
-        unsigned long number = std::strtoul(start, &end, 10);
+        unsigned long gid = std::strtoul(start, &end, 10);
 
         if (start == end)
-        {
             break;
-        }
 
         start = end;
 
@@ -119,25 +97,53 @@ void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entitie
             start++;
         }
 
-        if (number - 1 > 100) // rotation - last 3 bits are the rotation data
-        {
-            unsigned int rotation = (number - 1 & rotationMask) >> 29;
+        tiles[y][x] = DecodeTileGID(gid);
 
-            tiles[checkY][checkX] = rotation * 100 + number - 1 & pieceMask;
-        }
-        else
-        {
-            tiles[checkY][checkX] = number - 1;
-        }
+        start = end;
+        while (*start == ',' || *start == '\r')
+            start++;
 
-        checkX++;
-        if (checkX >= width)
+        if (++x >= width)
         {
-            checkX = 0;
-            checkY++;
+            x = 0;
+            ++y;
         }
     }
+}
 
+/// <summary>
+/// Reads and loads data from a .tmx level file
+/// </summary>
+/// <param name="levelName"></param>
+void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entities)
+{
+    tinyxml2::XMLDocument doc;
+    string fullPath = "levels/" + levelName + ".tmx";
+
+    printf("Trying to load level %s\n", fullPath.c_str());
+
+    if (doc.LoadFile(fullPath.c_str()) != XML_SUCCESS)
+    {
+        printf("Failed to load level file!\n %s\n", fullPath.c_str());
+        return;
+    }
+
+    XMLElement* mapNode = doc.FirstChildElement("map");
+    width = mapNode->IntAttribute("width");
+    height = mapNode->IntAttribute("height");
+    tiles.resize(height, std::vector<int>(width, 0));
+
+    XMLElement* entityNode = mapNode->FirstChildElement("objectgroup");
+    ParseEntities(entityNode->FirstChildElement("object"), entities);
+
+    XMLElement* dataNode = mapNode->FirstChildElement("layer")->FirstChildElement("data");
+    if (!dataNode)
+    {
+        printf("Could not find tile data in XML!\n");
+        return;
+    }
+
+    ParseTileCSV(dataNode->GetText(), width, height);
     printf("Level loaded successfully from TMX!\n");
 }
 
@@ -163,7 +169,7 @@ void Level::FindFlag(int& outY, int& outX) // this is probably not really needed
 }
 
 /// <summary>
-/// Locate all instances of a block in the curent room  
+/// Locate all instances of a block in the curent room
 /// </summary>
 /// <param name="listOfTilesInstances"></param>
 /// <param name="tileId"></param>
@@ -389,7 +395,7 @@ int Tmpl8::Level::getTileID(int y, int x)
 /// <param name="gridRow"></param>
 /// <param name="gridCol"></param>
 /// <returns></returns>
-bool Level::SpikeColision(int playerY, int playerX, int gridRow, int gridCol) // TODO: needs rotation
+bool Level::SpikeCollision(int playerY, int playerX, int gridRow, int gridCol) // TODO: needs rotation
 {
     float side1, side2, side3;
     bool has_neg, has_pos;
