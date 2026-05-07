@@ -350,7 +350,7 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
 /// <param name="y"></param>
 /// <param name="x"></param>
 /// <returns></returns>
-int Tmpl8::Level::getTileID(int y, int x)
+int Level::GetTileID(int y, int x)
 {
     int tx = std::clamp(x / tileSize, 0, width - 1), ty = std::clamp(y / tileSize, 0, height - 1);
 
@@ -406,9 +406,9 @@ bool Level::SpikeCollision(int playerY, int playerX, int gridRow, int gridCol) /
     bottomRightY = ty + tileSize, bottomRightX = tx + tileSize;
     topCenterY = ty, topCenterX = tx + tileSize / 2;
 
-    side1 = sign(playerY, playerX, bottomLeftY, bottomLeftX, bottomRightY, bottomRightX);
-    side2 = sign(playerY, playerX, bottomRightY, bottomRightX, topCenterY, topCenterX);
-    side3 = sign(playerY, playerX, topCenterY, topCenterX, bottomLeftY, bottomLeftX);
+    side1 = Sign(playerY, playerX, bottomLeftY, bottomLeftX, bottomRightY, bottomRightX);
+    side2 = Sign(playerY, playerX, bottomRightY, bottomRightX, topCenterY, topCenterX);
+    side3 = Sign(playerY, playerX, topCenterY, topCenterX, bottomLeftY, bottomLeftX);
 
     has_neg = (side1 < 0) || (side2 < 0) || (side3 < 0);
     has_pos = (side1 > 0) || (side2 > 0) || (side3 > 0);
@@ -428,7 +428,7 @@ bool Level::SpikeCollision(int playerY, int playerX, int gridRow, int gridCol) /
 /// <param name="p3y"></param>
 /// <param name="p3x"></param>
 /// <returns></returns>
-float Level::sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x)
+float Tmpl8::Level::Sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x)
 {
     return (p1x - p3x) * (p2y - p3y) - (p2x - p3x) * (p1y - p3y);
 }

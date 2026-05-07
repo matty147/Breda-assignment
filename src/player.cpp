@@ -192,7 +192,7 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
         for (int c = leftTile; c <= rightTile; c++)
         {
 
-            int tileId = level.getTileID(r * tileSize, c * tileSize);
+            int tileId = level.GetTileID(r * tileSize, c * tileSize);
 
 
             switch (std::abs(tileId))
@@ -266,8 +266,8 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
 /// <param name="level"></param>
 void Player::UpdateTimers(float deltaTime, Level& level)
 {
-    grounded = 0 < level.getTileID(y + playerHeight * 1.25, x) ||
-               0 < level.getTileID(y + playerHeight * 1.25, x + playerWidth - 1);
+    grounded = 0 < level.GetTileID(y + playerHeight * 1.25, x) ||
+               0 < level.GetTileID(y + playerHeight * 1.25, x + playerWidth - 1);
 
     if (grounded)
     {

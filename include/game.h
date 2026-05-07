@@ -12,6 +12,19 @@ struct Bucket
     std::vector<int> entityIDs;
 };
 
+#pragma pack(push, 1)
+struct TGAHeader
+{
+    unsigned char ID, colmapt;
+    unsigned char type;
+    unsigned char colmap[5];
+    unsigned short xorigin, yorigin;
+    unsigned short width, height;
+    unsigned char bpp;
+    unsigned char idesc;
+};
+#pragma pack(pop)
+
 class Game
 {
   public:
@@ -34,10 +47,11 @@ class Game
     void CheckEntityCollision(int bucketYSize, int bucketXSize);
 
   private:
+    void DefineScreenshotParameters(Surface* gameScreen);
+    void TakeScreenshot(Surface* gameScreen);
+    bool IsOverlapping(int box1X, int box1Y, int box1Width, int box1Height, int box2X, int box2Y, int box2Width, int box2Height);
+
     Surface* screen;
-
-    bool isOverlapping(int box1X, int box1Y, int box1Width, int box1Height, int box2X, int box2Y, int box2Width, int box2Height);
-
     std::vector<std::vector<Bucket>> grid;
 };
 }; // namespace Tmpl8

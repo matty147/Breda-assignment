@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <windows.h>
 
 #include "../include/enemy.h"
 #include "../include/game.h"
@@ -37,6 +38,8 @@ int separateY = 10;
 
 std::vector<std::vector<int>> vineList;
 
+TGAHeader header;
+
 void Game::Init()
 {
     grid.resize(separateY, std::vector<Bucket>(separateX));
@@ -45,6 +48,8 @@ void Game::Init()
     screenHeight = screen->GetHeight();
 
     int playerX = 0, playerY = 0;
+
+    DefineScreenshotParameters(screen);
 
     level.CreateLevel(levelNames[Game::currentLevelID], entitySpawnPoints);
     level.FindFlag(playerY, playerX);
@@ -72,7 +77,7 @@ void Game::Shutdown() {}
 /// <param name="deltaTime"></param>
 void Game::Tick(float deltaTime)
 {
-    deltaTime = std::min(deltaTime, 33.0f); // stop the objects from lagging through the floor
+    deltaTime = (std::min)(deltaTime, 33.0f); // stop the objects from lagging through the floor
 
     screen->Clear(0);
 
@@ -99,12 +104,10 @@ void Game::Tick(float deltaTime)
         ResetLevel();
     }
 
-    // see buckets
-    int ScreenWidth = screen->GetWidth();
-    int ScreenHeight = screen->GetHeight();
-
-    int bucketXSize = ScreenWidth / separateX;
-    int bucketYSize = ScreenHeight / separateY;
+    if (GetAsyncKeyState(VK_F12))
+    {
+        TakeScreenshot(screen);
+    }
 }
 
 void Game::GoToNextLevel()
@@ -141,12 +144,8 @@ void Game::ResetLevel()
 /// <param name="gameScreen"></param>
 void Game::SpatialHashing(Surface* gameScreen)
 {
-
-    int ScreenWidth = gameScreen->GetWidth();
-    int ScreenHeight = gameScreen->GetHeight();
-
-    int bucketXSize = ScreenWidth / separateX;
-    int bucketYSize = ScreenHeight / separateY;
+    int bucketXSize = screenWidth / separateX;
+    int bucketYSize = screenHeight / separateY;
 
     for (int y = 0; y < separateY; y++)
     {
@@ -177,6 +176,9 @@ void Game::SpatialHashing(Surface* gameScreen)
 /// <param name="bucketXSize"></param>
 void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
 {
+    int playerSpriteWidth = playerSprite.GetWidth();
+    int enemySpriteWidth = enemySprite.GetWidth();
+
     int playerGridX = std::clamp((int)myPlayer.GetX() / bucketXSize, 0, separateX - 1);
     int playerGridY = std::clamp((int)myPlayer.GetY() / bucketYSize, 0, separateY - 1);
 
@@ -214,7 +216,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                             float xdist = secondEnemyX - firstEnemyX;
                             float ydist = secondEnemyY - firstEnemyY;
                             float distSq = (xdist * xdist) + (ydist * ydist);
-                            float radiusSum = 12.0f + 12.0f; // no magic numbers actualy fetch the player and entity sprite sizes
+                            float radiusSum = enemySpriteWidth + enemySpriteWidth; // no magic numbers actualy fetch the player and entity sprite sizes
                             if (distSq < (radiusSum * radiusSum))
                             {
                                 // do smthing
@@ -225,6 +227,12 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
             }
         }
     }
+
+    int hitboxWidth = 24;
+    int hitboxHeight = 3;
+    int playerFeetY = myPlayer.GetY() + 24;
+    int playerWidth = 24;
+    int playerFeetHeight = 6;
 
     for (int i = -1; i <= 1; i++)
     {
@@ -241,13 +249,8 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                 {
                     float enemyX = entities[currentID].GetX();
                     float enemyY = entities[currentID].GetY();
-                    int hitboxWidth = 24;
-                    int hitboxHeight = 3;
-                    int playerFeetY = myPlayer.GetY() + 24;
-                    int playerWidth = 24;
-                    int playerFeetHeight = 6;
 
-                    if (isOverlapping(myPlayer.GetX(), playerFeetY, playerWidth, playerFeetHeight,
+                    if (IsOverlapping(myPlayer.GetX(), playerFeetY, playerWidth, playerFeetHeight,
                                       enemyX - 5, enemyY, hitboxWidth, hitboxHeight))
                     {
                         myPlayer.BounceOffObject();
@@ -257,7 +260,10 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     float xdist = enemyX - myPlayer.GetX();
                     float ydist = enemyY - myPlayer.GetY();
                     float distSq = (xdist * xdist) + (ydist * ydist);
-                    float radiusSum = 12.0f + 12.0f; // no magic numbers actualy fetch the player and entity sprite sizes
+
+                    printf("psh: %d\n", playerSpriteWidth);
+
+                    float radiusSum = playerSpriteWidth / 2 + enemySpriteWidth / 2; // no magic numbers actualy fetch the player and entity sprite sizes
                     if (distSq < (radiusSum * radiusSum))
                     {
                         myPlayer.Kill();
@@ -278,13 +284,74 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
     }
 }
 
-bool Game::isOverlapping(int box1X, int box1Y, int box1Width, int box1Height,
-                         int box2X, int box2Y, int box2Width, int box2Height)
+bool Tmpl8::Game::IsOverlapping(int box1X, int box1Y, int box1Width, int box1Height,
+                                int box2X, int box2Y, int box2Width, int box2Height)
 {
     return (box1X < box2X + box2Width &&  // Box 1's Left edge is left of Box 2's Right edge
             box1X + box1Width > box2X &&  // Box 1's Right edge is right of Box 2's Left edge
             box1Y < box2Y + box2Height && // Box 1's Top edge is above Box 2's Bottom edge
             box1Y + box1Height > box2Y);  // Box 1's Bottom edge is below Box 2's Top edge
+}
+
+void Game::DefineScreenshotParameters(Surface* gameScreen)
+{
+    // i have no clue why this is here
+    // FILE* f = fopen("bindat.bin", "wb");
+    // fwrite(&x, 4, sizeof(x), f);
+    // fwrite(&y, 4, sizeof(y), f);
+    // fclose(f);
+
+    header.ID = header.colmapt = 0;
+    header.type = 2;
+
+    for (int i = 0; i < 5; i++)
+    {
+        header.colmap[i] = 0;
+    }
+
+    header.xorigin = header.yorigin = 0;
+    header.width = screenWidth;
+    header.height = screenHeight;
+    header.bpp = 32;
+    header.idesc = 0x28;
+}
+
+void Game::TakeScreenshot(Surface* gameScreen)
+{
+    FILE* f = fopen("screenshot.tga", "wb");
+
+    if (sizeof(TGAHeader) != 18)
+    {
+        printf("Error: TGA header is %zu bytes instead of 18!\n", sizeof(TGAHeader));
+        fclose(f);
+        return;
+    }
+
+    printf("header=%d", sizeof(TGAHeader));
+    fwrite(&header, sizeof(TGAHeader), 1, f);
+
+    unsigned int* buffer = gameScreen->GetBuffer();
+
+    const int buffer_size = screenWidth * screenHeight * 4; 
+
+    int* colorBuffer = new int[buffer_size]; 
+
+    for (int i = 0; i < screenWidth * screenHeight; i++)
+    {
+        unsigned int c = buffer[i];
+
+        unsigned char pixel[4];
+        pixel[2] = (c >> 16) & 255; // R
+        pixel[1] = (c >> 8) & 255;  // G
+        pixel[0] = c & 255;         // B
+        pixel[3] = 255;             // A
+
+        //colorBuffer[i] = pixel[4];
+    }
+
+    //fwrite(colorBuffer, buffer_size, 1, f);
+
+    fclose(f);
 }
 
 }; // namespace Tmpl8

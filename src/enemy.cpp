@@ -131,7 +131,7 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
     {
         for (int c = leftTile; c <= rightTile; c++)
         {
-            int tileId = level.getTileID(r * tileSize, c * tileSize);
+            int tileId = level.GetTileID(r * tileSize, c * tileSize);
 
             switch (std::abs(tileId))
             {

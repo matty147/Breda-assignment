@@ -43,7 +43,7 @@ class Level
     void FindFlag(int& outY, int& outX);
     void FindTileInstances(std::vector<std::vector<int>>& listOfTilesInstances, int tileId);
     void UpdateVines(std::vector<std::vector<int>>& listOfVines);
-    int getTileID(int y, int x);
+    int GetTileID(int y, int x);
     bool SpikeCollision(int py, int px, int sy, int sx);
 
     timeOfDay currentDay = timeOfDay::Day;
@@ -54,7 +54,7 @@ class Level
     void ParseTileCSV(const char* csvText, int width, int height);
 
     void DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeight, int ScreenWidth, int backgroundTileSet);
-    float sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x);
+    float Sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x);
     int width, height, tileSize = 32;
     std::vector<std::vector<int>> tiles;
 };
