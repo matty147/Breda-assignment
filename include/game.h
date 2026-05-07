@@ -48,7 +48,7 @@ class Game
 
   private:
     void DefineScreenshotParameters(Surface* gameScreen);
-    void TakeScreenshot(Surface* gameScreen);
+    void TakeScreenshot();
     bool IsOverlapping(int box1X, int box1Y, int box1Width, int box1Height, int box2X, int box2Y, int box2Width, int box2Height);
 
     Surface* screen;

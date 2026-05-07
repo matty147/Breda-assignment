@@ -104,10 +104,16 @@ void Game::Tick(float deltaTime)
         ResetLevel();
     }
 
-    if (GetAsyncKeyState(VK_F12))
+    static bool f12WasPressed = false;
+    bool f12IsPressed = GetAsyncKeyState('P') & 0x8000;
+
+    if (f12IsPressed && !f12WasPressed)
     {
-        TakeScreenshot(screen);
+        TakeScreenshot();
     }
+
+    f12WasPressed = f12IsPressed;
+
 }
 
 void Game::GoToNextLevel()
@@ -316,40 +322,29 @@ void Game::DefineScreenshotParameters(Surface* gameScreen)
     header.idesc = 0x28;
 }
 
-void Game::TakeScreenshot(Surface* gameScreen)
+void Game::TakeScreenshot()
 {
     FILE* f = fopen("screenshot.tga", "wb");
-
-    if (sizeof(TGAHeader) != 18)
-    {
-        printf("Error: TGA header is %zu bytes instead of 18!\n", sizeof(TGAHeader));
-        fclose(f);
-        return;
-    }
-
-    printf("header=%d", sizeof(TGAHeader));
+    printf("header=%x", sizeof(TGAHeader));
     fwrite(&header, sizeof(TGAHeader), 1, f);
 
-    unsigned int* buffer = gameScreen->GetBuffer();
+    unsigned int* buffer = screen->GetBuffer();
 
-    const int buffer_size = screenWidth * screenHeight * 4; 
+    int buffer_size = screenWidth * screenHeight * 4;
 
-    int* colorBuffer = new int[buffer_size]; 
+    std::vector<unsigned char> colorBuffer(buffer_size, 0);
 
     for (int i = 0; i < screenWidth * screenHeight; i++)
     {
         unsigned int c = buffer[i];
 
-        unsigned char pixel[4];
-        pixel[2] = (c >> 16) & 255; // R
-        pixel[1] = (c >> 8) & 255;  // G
-        pixel[0] = c & 255;         // B
-        pixel[3] = 255;             // A
-
-        //colorBuffer[i] = pixel[4];
+        colorBuffer[i * 4 + 2] = (c >> 16) & 255; // R
+        colorBuffer[i * 4 + 1] = (c >> 8) & 255;  // G
+        colorBuffer[i * 4 + 0] = c & 255;         // B
+        colorBuffer[i * 4 + 3] = 255;             // A
     }
 
-    //fwrite(colorBuffer, buffer_size, 1, f);
+     fwrite(colorBuffer.data(), buffer_size, 1, f);  
 
     fclose(f);
 }
