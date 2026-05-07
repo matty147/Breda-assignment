@@ -73,12 +73,12 @@ void Player::ProcessInput(float& moveX, bool& jumpPressed)
 {
     int jumpmask = 0X8000;
 
-    if (GetAsyncKeyState(VK_LEFT))
+    if (GetAsyncKeyState('A'))
         moveX = -speed;
-    if (GetAsyncKeyState(VK_RIGHT))
+    if (GetAsyncKeyState('D'))
         moveX = speed;
 
-    jumpPressed = GetAsyncKeyState(VK_UP) & jumpmask;
+    jumpPressed = GetAsyncKeyState('W') & jumpmask;
 }
 
 /// <summary>

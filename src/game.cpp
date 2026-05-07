@@ -301,12 +301,6 @@ bool Tmpl8::Game::IsOverlapping(int box1X, int box1Y, int box1Width, int box1Hei
 
 void Game::DefineScreenshotParameters(Surface* gameScreen)
 {
-    // i have no clue why this is here
-    // FILE* f = fopen("bindat.bin", "wb");
-    // fwrite(&x, 4, sizeof(x), f);
-    // fwrite(&y, 4, sizeof(y), f);
-    // fclose(f);
-
     header.ID = header.colmapt = 0;
     header.type = 2;
 
