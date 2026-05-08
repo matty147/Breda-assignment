@@ -83,7 +83,7 @@ void Game::Tick(float deltaTime)
 
     level.UpdateVines(vineList);
 
-    level.Draw(screen);
+    level.Draw(screen, deltaTime);
 
     myPlayer.Update(deltaTime, level);
     myPlayer.Draw(screen);
@@ -237,7 +237,6 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
     int hitboxWidth = 24;
     int hitboxHeight = 3;
     int playerFeetY = myPlayer.GetY() + 24;
-    int playerWidth = 24;
     int playerFeetHeight = 6;
 
     for (int i = -1; i <= 1; i++)
@@ -256,7 +255,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     float enemyX = entities[currentID].GetX();
                     float enemyY = entities[currentID].GetY();
 
-                    if (IsOverlapping(myPlayer.GetX(), playerFeetY, playerWidth, playerFeetHeight,
+                    if (IsOverlapping(myPlayer.GetX(), playerFeetY, playerSpriteWidth, playerFeetHeight,
                                       enemyX - 5, enemyY, hitboxWidth, hitboxHeight))
                     {
                         myPlayer.BounceOffObject();
@@ -319,7 +318,7 @@ void Game::DefineScreenshotParameters(Surface* gameScreen)
 void Game::TakeScreenshot()
 {
     FILE* f = fopen("screenshot.tga", "wb");
-    printf("header=%x", sizeof(TGAHeader));
+    printf("header=%zx", sizeof(TGAHeader));
     fwrite(&header, sizeof(TGAHeader), 1, f);
 
     unsigned int* buffer = screen->GetBuffer();

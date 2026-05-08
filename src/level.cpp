@@ -40,10 +40,10 @@ int Level::DecodeTileGID(unsigned long gid)
     int rotationMask = 0xE0000000;
 
     unsigned long id = gid - 1;
-    if (id > 100)
+    if (id > rotatedIdValue)
     {
         unsigned int rotation = (id & rotationMask) >> 29;
-        return (int)((rotation * 100 + id) & pieceMask);
+        return (int)((rotation * rotatedIdValue + id) & pieceMask);
     }
     return (int)id;
 }
@@ -224,17 +224,19 @@ void Level::UpdateVines(std::vector<std::vector<int>>& listOfVines)
 /// Draws the tiles on the game screen
 /// </summary>
 /// <param name="gameScreen"></param>
-void Level::Draw(Surface* gameScreen)
+void Level::Draw(Surface* gameScreen, float deltaTime)
 {
     int ScreenWidth = gameScreen->GetWidth();
     int ScreenHeight = gameScreen->GetHeight();
 
+    int screenShiftSize = 595;
+
     if (currentDay == timeOfDay::Day)
     {
-        changeTileSetCoordinate -= 1.0f;
+        changeTileSetCoordinate -= 1.0f * deltaTime / 10;
     }
     else
-        changeTileSetCoordinate += 1.0f;
+        changeTileSetCoordinate += 1.0f * deltaTime / 10;
 
     changeTileSetCoordinate = std::clamp(changeTileSetCoordinate, 0.0f, (float)width);
 
@@ -251,19 +253,19 @@ void Level::Draw(Surface* gameScreen)
                     backgroundTileSet = 1;
                 }
 
-                if (tiles[y][x] > 100)
+                if (tiles[y][x] > rotatedIdValue)
                 {
                     DrawRotatedSprite(gameScreen, y, x, ScreenHeight, ScreenWidth, backgroundTileSet);
                     continue;
                 }
 
-                Pixel* src = tilesSprite.GetBuffer() + 1 + tiles[y][x] * (tileSize + 1) + (1 + backgroundTileSet * (tileSize + 1)) * 595;
+                Pixel* src = tilesSprite.GetBuffer() + 1 + tiles[y][x] * (tileSize + 1) + (1 + backgroundTileSet * (tileSize + 1)) * screenShiftSize;
                 Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
                 for (int i = 0; i < tileSize; i++)
                 {
                     for (int j = 0; j < tileSize; j++)
                         dst[j] = src[j];
-                    src += 595, dst += ScreenWidth;
+                    src += screenShiftSize, dst += ScreenWidth;
                 }
             }
         }
@@ -281,13 +283,13 @@ void Level::Draw(Surface* gameScreen)
 /// <param name="backgroundType"></param>
 void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeight, int ScreenWidth, int backgroundTileSet)
 {
-    int tile = tiles[y][x] % 100;
+    int tile = tiles[y][x] % rotatedIdValue;
 
     float angle = 0;
 
-    int tilesid = (tiles[y][x] / 100);
+    int tilesid = (tiles[y][x] / rotatedIdValue);
 
-    if (tiles[y][x] > 100)
+    if (tiles[y][x] > rotatedIdValue)
     {
         switch (tilesid)
         {
@@ -327,12 +329,12 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
     {
         for (int j = 0; j < drawWidth; j++)
         {
-            float off = 15.5f;
+            float off = tileSize / 2 - 0.5f;
 
             int dx = j - off, dy = i - off;
 
-            int newX = std::round((dx * cos) - (dy * sin) + 16.0f);
-            int newY = std::round((dx * sin) + (dy * cos) + 16.0f);
+            int newX = std::round((dx * cos) - (dy * sin) + tileSize / 2);
+            int newY = std::round((dx * sin) + (dy * cos) + tileSize / 2);
 
             newX = std::clamp(newX, 0, tileSize - 1);
             newY = std::clamp(newY, 0, tileSize - 1);
@@ -354,7 +356,7 @@ int Level::GetTileID(int y, int x)
 {
     int tx = std::clamp(x / tileSize, 0, width - 1), ty = std::clamp(y / tileSize, 0, height - 1);
 
-    int currentTile = tiles[ty][tx] % 100;
+    int currentTile = tiles[ty][tx] % rotatedIdValue;
 
     switch (currentTile)
     {
@@ -384,7 +386,7 @@ int Level::GetTileID(int y, int x)
             return -currentTile;
     }
 
-    return (tiles[ty][tx] % 100);
+    return (tiles[ty][tx] % rotatedIdValue);
 }
 
 /// <summary>
