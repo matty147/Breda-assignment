@@ -10,7 +10,7 @@ class Player
   public:
     Player(float iy, float ix, float ispeed = 3.0f, int idirection = 0, float igravity = 2.5f);
 
-    void Update(float deltaTime, Level& level);
+    void Update(float deltaTime, Level& level, bool& leftPressed, bool& rightPressed, bool& upPressed);
     void Draw(Surface* gameScreen);
     void Kill();
     void ResetPlayerValues(float newY, float newX);
@@ -23,7 +23,7 @@ class Player
     void UpdateTimers(float deltaTime, Level& level);
     void UpdateY(float deltaTime, Level& level, bool& jumpjumpPressed);
     void UpdateX(float deltaTime, Level& level, float moveX);
-    void ProcessInput(float& moveX, bool& jumpPressed);
+    void ProcessInput(float& moveX, bool& jumpPressed, bool& leftPressed, bool& rightPressed, bool& upPressed);
     bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
 
     float x, y, currentGravity = -1, speed, gravity, jumptime = 0.3f, coyotetime;

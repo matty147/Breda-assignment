@@ -91,9 +91,11 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
 
 void Enemy::UpdateY(float deltaTime, Level& level)
 {
+    int maxGravity = 15.0f;
+
     currentGravity += gravity * (deltaTime / 100.0f);
-    if (currentGravity > 15.0f)
-        currentGravity = 15.0f;
+    if (currentGravity > maxGravity)
+        currentGravity = maxGravity;
 
     float deltaY = currentGravity * (deltaTime / 10.0f);
     float nextY = y + deltaY;

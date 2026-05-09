@@ -107,6 +107,9 @@ void Level::ParseTileCSV(const char* csvText, int width, int height)
         {
             x = 0;
             ++y;
+
+            if (y >= height)
+                break;
         }
     }
 }
@@ -226,10 +229,10 @@ void Level::UpdateVines(std::vector<std::vector<int>>& listOfVines)
 /// <param name="gameScreen"></param>
 void Level::Draw(Surface* gameScreen, float deltaTime)
 {
+    int screenShiftSize = 595;
+
     int ScreenWidth = gameScreen->GetWidth();
     int ScreenHeight = gameScreen->GetHeight();
-
-    int screenShiftSize = 595;
 
     if (currentDay == timeOfDay::Day)
     {
@@ -283,9 +286,10 @@ void Level::Draw(Surface* gameScreen, float deltaTime)
 /// <param name="backgroundType"></param>
 void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeight, int ScreenWidth, int backgroundTileSet)
 {
-    int tile = tiles[y][x] % rotatedIdValue;
-
+    int screenShiftSize = 595;
     float angle = 0;
+
+    int tile = tiles[y][x] % rotatedIdValue;
 
     int tilesid = (tiles[y][x] / rotatedIdValue);
 
@@ -324,13 +328,15 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
     float cos = std::cos(angle);
     float sin = std::sin(angle);
 
+    //printf("ts:%d, 1:%.2f, 2:%.2f\n",tileSize, (tileSize) / 2 - 0.5f,(float)(tileSize - 1) / 2);
+
+    float off = (float)(tileSize - 1) / 2;
+
     Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
     for (int i = 0; i < drawHeight; i++)
     {
         for (int j = 0; j < drawWidth; j++)
         {
-            float off = tileSize / 2 - 0.5f;
-
             int dx = j - off, dy = i - off;
 
             int newX = std::round((dx * cos) - (dy * sin) + tileSize / 2);
@@ -339,7 +345,7 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
             newX = std::clamp(newX, 0, tileSize - 1);
             newY = std::clamp(newY, 0, tileSize - 1);
 
-            Pixel* src = tilesSprite.GetBuffer() + tile * (tileSize + 1) + newX + (backgroundTileSet * (tileSize + 1) + newY) * 595;
+            Pixel* src = tilesSprite.GetBuffer() + tile * (tileSize + 1) + newX + (backgroundTileSet * (tileSize + 1) + newY) * screenShiftSize;
             dst[j] = *src;
         }
         dst += ScreenWidth;
@@ -415,7 +421,7 @@ bool Level::SpikeCollision(int playerY, int playerX, int gridRow, int gridCol) /
     has_neg = (side1 < 0) || (side2 < 0) || (side3 < 0);
     has_pos = (side1 > 0) || (side2 > 0) || (side3 > 0);
 
-    printf("%d\n", (has_neg && has_pos));
+    //printf("%d\n", (has_neg && has_pos));
 
     return !(has_neg && has_pos);
 }

@@ -19,8 +19,6 @@ Sprite enemySprite{new Surface("assets/sprEnemy.png"), 1};
 
 int screenHeight = 0, screenWidth = 0;
 
-int currentScreen = 0;
-
 Level level(100, 100);
 Player myPlayer(0, 0);
 Enemy myEnemy(100, 100);
@@ -28,13 +26,13 @@ Enemy myEnemy(100, 100);
 std::vector<Enemy> entities;
 std::vector<std::vector<int>> entitySpawnPoints;
 
-std::vector<std::string> levelNames = {"level1", "level2", "level3"};
+const std::vector<std::string> levelNames = {"level1", "level2", "level3"};
 
 int Game::currentLevelID = 0;
 bool Game::updateLevel = false;
 
-int separateX = 10;
-int separateY = 10;
+const int separateX = 10;
+const int separateY = 10;
 
 std::vector<std::vector<int>> vineList;
 
@@ -77,7 +75,9 @@ void Game::Shutdown() {}
 /// <param name="deltaTime"></param>
 void Game::Tick(float deltaTime)
 {
-    deltaTime = (std::min)(deltaTime, 33.0f); // stop the objects from lagging through the floor
+    const float deltaTimeMaximumDelay = 33.0f;
+
+    deltaTime = (std::min)(deltaTime, deltaTimeMaximumDelay); // stop the objects from lagging through the floor
 
     screen->Clear(0);
 
@@ -85,9 +85,13 @@ void Game::Tick(float deltaTime)
 
     level.Draw(screen, deltaTime);
 
-    myPlayer.Update(deltaTime, level);
+    myPlayer.Update(deltaTime, level, leftPressed, rightPressed, upPressed);
     myPlayer.Draw(screen);
 
+    if (leftPressed || rightPressed || upPressed)
+    {
+        printf("l:%d, r:%d, u: %d [game::92]\n", leftPressed, rightPressed, upPressed);
+    }
     for (auto& entity : entities)
     {
         entity.Update(deltaTime, level);
@@ -104,16 +108,10 @@ void Game::Tick(float deltaTime)
         ResetLevel();
     }
 
-    static bool f12WasPressed = false;
-    bool f12IsPressed = GetAsyncKeyState('P') & 0x8000;
-
-    if (f12IsPressed && !f12WasPressed)
+    if (screenshotPressed)
     {
         TakeScreenshot();
     }
-
-    f12WasPressed = f12IsPressed;
-
 }
 
 void Game::GoToNextLevel()
@@ -265,9 +263,6 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     float xdist = enemyX - myPlayer.GetX();
                     float ydist = enemyY - myPlayer.GetY();
                     float distSq = (xdist * xdist) + (ydist * ydist);
-
-                    printf("psh: %d\n", playerSpriteWidth);
-
                     float radiusSum = playerSpriteWidth / 2 + enemySpriteWidth / 2; // no magic numbers actualy fetch the player and entity sprite sizes
                     if (distSq < (radiusSum * radiusSum))
                     {
@@ -318,7 +313,6 @@ void Game::DefineScreenshotParameters(Surface* gameScreen)
 void Game::TakeScreenshot()
 {
     FILE* f = fopen("screenshot.tga", "wb");
-    printf("header=%zx", sizeof(TGAHeader));
     fwrite(&header, sizeof(TGAHeader), 1, f);
 
     unsigned int* buffer = screen->GetBuffer();
@@ -337,9 +331,45 @@ void Game::TakeScreenshot()
         colorBuffer[i * 4 + 3] = 255;             // A
     }
 
-     fwrite(colorBuffer.data(), buffer_size, 1, f);  
+    fwrite(colorBuffer.data(), buffer_size, 1, f);
 
     fclose(f);
+}
+
+// 26 - W 82
+//  22 - S 81
+//  4 - A 80
+//  7 - D 79
+// 19 - P
+
+void Game::KeyUp(int key)
+{
+    // player movement
+    if (key == 26 || key == 82)
+        upPressed = false;
+    if (key == 4 || key == 80) // 'A' and left arrow key
+        leftPressed = false;
+    if (key == 7 || key == 79) // 'D' and right arrow key
+        rightPressed = false;
+
+    // screenshot button
+    if (key == 19)
+        screenshotPressed = false;
+}
+
+void Game::KeyDown(int key)
+{
+    // player movement
+    if (key == 26 || key == 82) // 'W' and up arrow key
+        upPressed = true;
+    if (key == 4 || key == 80) // 'A' and left arrow key
+        leftPressed = true;
+    if (key == 7 || key == 79) // 'D' and right arrow key
+        rightPressed = true;
+    
+    // screenshot button
+    if (key == 19)
+        screenshotPressed = true;
 }
 
 }; // namespace Tmpl8

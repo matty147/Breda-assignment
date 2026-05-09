@@ -37,7 +37,7 @@ Player::Player(float iy, float ix, float ispeed, int idirection, float igravity)
 /// </summary>
 /// <param name="deltaTime"></param>
 /// <param name="level"></param>
-void Player::Update(float deltaTime, Level& level)
+void Player::Update(float deltaTime, Level& level, bool& leftPressed, bool& rightPressed, bool& upPressed)
 {
     playerWidth = playerSprite.GetWidth();
     playerHeight = playerSprite.GetHeight();
@@ -45,7 +45,7 @@ void Player::Update(float deltaTime, Level& level)
     bool jumpPressed = false;
     float moveX = 0;
 
-    ProcessInput(moveX, jumpPressed);
+    ProcessInput(moveX, jumpPressed, leftPressed, rightPressed, upPressed);
 
     UpdateX(deltaTime, level, moveX);
 
@@ -69,16 +69,14 @@ void Player::Update(float deltaTime, Level& level)
 /// </summary>
 /// <param name="moveX"></param>
 /// <param name="jumpPressed"></param>
-void Player::ProcessInput(float& moveX, bool& jumpPressed)
+void Player::ProcessInput(float& moveX, bool& jumpPressed, bool& leftPressed, bool& rightPressed, bool& upPressed)
 {
-    int jumpmask = 0X8000;
-
-    if (GetAsyncKeyState('A'))
+    if (leftPressed)
         moveX = -speed;
-    if (GetAsyncKeyState('D'))
+    if (rightPressed)
         moveX = speed;
 
-    jumpPressed = GetAsyncKeyState('W') & jumpmask;
+    jumpPressed = upPressed;
 }
 
 /// <summary>
@@ -124,11 +122,14 @@ void Player::UpdateX(float deltaTime, Level& level, float moveX)
 /// <param name="jumpPressed"></param>
 void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
 {
+    int jumpGravity = -6.0f;
+    int maxGravity = 15.0f;
+
     if (jumpPressed)
     {
         if (!jumplastframe && (grounded || jumpAmount > 0))
         {
-            currentGravity = -6.0f;
+            currentGravity = jumpGravity;
             if (!(grounded || coyotetime >= 0))
                 jumpAmount--;
             grounded = false;
@@ -141,8 +142,8 @@ void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
     }
 
     currentGravity += gravity * (deltaTime / 100.0f);
-    if (currentGravity > 15.0f)
-        currentGravity = 15.0f;
+    if (currentGravity > maxGravity)
+        currentGravity = maxGravity;
 
     float deltaY = currentGravity * (deltaTime / 10.0f);
     float nextY = y + deltaY;
@@ -193,7 +194,6 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
         {
 
             int tileId = level.GetTileID(r * tileSize, c * tileSize);
-
 
             switch (std::abs(tileId))
             {
@@ -266,8 +266,10 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
 /// <param name="level"></param>
 void Player::UpdateTimers(float deltaTime, Level& level)
 {
-    grounded = 0 < level.GetTileID(y + playerHeight * 1.25, x) ||
-               0 < level.GetTileID(y + playerHeight * 1.25, x + playerWidth - 1);
+    float raycastLenght = 1.25;
+
+    grounded = 0 < level.GetTileID(y + playerHeight * raycastLenght, x) ||
+               0 < level.GetTileID(y + playerHeight * raycastLenght, x + playerWidth - 1);
 
     if (grounded)
     {
