@@ -13,14 +13,6 @@ namespace Tmpl8
 extern Sprite playerSprite;
 extern int screenHeight, screenWidth;
 
-enum PlayerState
-{
-    Alive,
-    Dead
-};
-
-PlayerState playerStatus = Alive;
-
 Player::Player(float iy, float ix, float ispeed, int idirection, float igravity)
 {
     y = iy;
@@ -54,14 +46,6 @@ void Player::Update(float deltaTime, Level& level, bool& leftPressed, bool& righ
     UpdateY(deltaTime, level, jumpPressed);
 
     UpdateTimers(deltaTime, level);
-
-    if (playerStatus == Dead)
-    {
-        playerStatus = Alive;
-        deaths++;
-        x = spawnX;
-        y = spawnY;
-    }
 }
 
 /// <summary>
@@ -293,6 +277,13 @@ void Player::Draw(Surface* gameScreen)
 
 void Player::ResetPlayerValues(float newY, float newX)
 {
+     if (playerStatus == Dead)
+    {
+         totalDeaths++;
+    }
+
+    playerStatus = Alive;
+
     currentGravity = -1;
     y = newY;
     x = newX;
@@ -305,5 +296,11 @@ void Player::BounceOffObject()
 }
 
 void Player::Kill() { playerStatus = Dead; }
+
+void Player::ChangeSpawnPosition(float newY, float newX)
+{
+    spawnY = newY;
+    spawnX = newX;
+}
 
 } // namespace Tmpl8

@@ -148,10 +148,6 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
                     continue;
                 }
 
-                case (int)TileType::Portal:
-                    Game::updateLevel = true;
-                    return false;
-
                 case (int)TileType::Water:
                 {
                     if (level.currentDay == timeOfDay::Day)

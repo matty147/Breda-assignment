@@ -5,6 +5,12 @@ namespace Tmpl8
 class Surface;
 class Level;
 
+enum PlayerState
+{
+    Alive,
+    Dead
+};
+
 class Player
 {
   public:
@@ -15,9 +21,12 @@ class Player
     void Kill();
     void ResetPlayerValues(float newY, float newX);
     void BounceOffObject();
+    void ChangeSpawnPosition(float newY, float newX);
 
     float GetX() const { return x; }
     float GetY() const { return y; }
+    bool IsDead() const { return (playerStatus == PlayerState::Dead);}
+    int DeadthAmout() { return totalDeaths; }
 
   private:
     void UpdateTimers(float deltaTime, Level& level);
@@ -27,7 +36,9 @@ class Player
     bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
 
     float x, y, currentGravity = -1, speed, gravity, jumptime = 0.3f, coyotetime;
-    int direction, jumpAmount = 0, playerWidth, playerHeight, tileSize = 32, spawnY = 0, spawnX = 0, deaths = 0;
+    int direction, jumpAmount = 0, playerWidth, playerHeight, tileSize = 32, spawnY = 0, spawnX = 0, totalDeaths = 0;
     bool grounded = false, jumplastframe = false;
+
+    PlayerState playerStatus = Alive;
 };
 } // namespace Tmpl8

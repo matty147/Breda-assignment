@@ -5,9 +5,12 @@
 #include <vector>
 #include <windows.h>
 
+#define MINIAUDIO_IMPLEMENTATION
+
 #include "../include/enemy.h"
 #include "../include/game.h"
 #include "../include/level.h"
+#include "../include/miniaudio.h"
 #include "../include/player.h"
 #include "../tmpl8/surface.h"
 
@@ -40,6 +43,17 @@ TGAHeader header;
 
 void Game::Init()
 {
+    if (ma_engine_init(NULL, &audioEngine) != MA_SUCCESS)
+    {
+        printf("Failed to initialize audio engine.\n");
+    }
+
+    ma_sound_init_from_file(&audioEngine, "hitHurt.wav", 0, NULL, NULL, &deathSound);
+    ma_sound_init_from_file(&audioEngine, "jump.wav", 0, NULL, NULL, &jumpSound);
+
+    //ma_sound_seek_to_pcm_frame(&deathSound, 0);
+    //ma_sound_start(&deathSound);
+
     grid.resize(separateY, std::vector<Bucket>(separateX));
 
     screenWidth = screen->GetWidth();
@@ -63,11 +77,14 @@ void Game::Init()
     }
 
     myPlayer = Player(playerY, playerX);
-
-    // printf("Y: %d. X: %d", playerY, playerX);
+    myPlayer.ChangeSpawnPosition(playerY, playerX);
 }
 
-void Game::Shutdown() {}
+void Game::Shutdown()
+{
+    ma_sound_uninit(&deathSound);
+    ma_engine_uninit(&audioEngine);
+}
 
 /// <summary>
 ///  Main Game loop
@@ -88,10 +105,6 @@ void Game::Tick(float deltaTime)
     myPlayer.Update(deltaTime, level, leftPressed, rightPressed, upPressed);
     myPlayer.Draw(screen);
 
-    if (leftPressed || rightPressed || upPressed)
-    {
-        printf("l:%d, r:%d, u: %d [game::92]\n", leftPressed, rightPressed, upPressed);
-    }
     for (auto& entity : entities)
     {
         entity.Update(deltaTime, level);
@@ -99,6 +112,13 @@ void Game::Tick(float deltaTime)
     }
 
     SpatialHashing(screen);
+
+    if (myPlayer.IsDead())
+    {
+        ma_sound_seek_to_pcm_frame(&deathSound, 0);
+        ma_sound_start(&deathSound);
+        ResetLevel();
+    }
 
     if (updateLevel) // cap the levels so it does not crash
     {
@@ -120,18 +140,27 @@ void Game::GoToNextLevel()
     Game::currentLevelID = std::clamp(Game::currentLevelID, 0, (int)levelNames.size() - 1);
     printf("Loading level: %d\n", Game::currentLevelID);
     level.CreateLevel(levelNames[Game::currentLevelID], entitySpawnPoints);
+
+    vineList.clear();
 }
 
 void Game::ResetLevel()
 {
     int newY = 0, newX = 0;
 
-    level.FindFlag(newY, newX);
-    level.FindTileInstances(vineList, (int)TileType::VineStump);
+    level.currentDay = timeOfDay::Night;
+    level.UpdateVines(vineList);
     level.currentDay = timeOfDay::Day;
+
+    level.FindTileInstances(vineList, (int)TileType::VineStump);
+
+    level.UpdateVines(vineList);
+
+    level.FindFlag(newY, newX);
 
     // reset the level
     myPlayer.ResetPlayerValues(newY, newX);
+    myPlayer.ChangeSpawnPosition(newY, newX);
     entities.clear();
 
     for (auto& spawnPoint : entitySpawnPoints)
@@ -220,7 +249,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                             float xdist = secondEnemyX - firstEnemyX;
                             float ydist = secondEnemyY - firstEnemyY;
                             float distSq = (xdist * xdist) + (ydist * ydist);
-                            float radiusSum = enemySpriteWidth + enemySpriteWidth; // no magic numbers actualy fetch the player and entity sprite sizes
+                            float radiusSum = enemySpriteWidth + enemySpriteWidth;
                             if (distSq < (radiusSum * radiusSum))
                             {
                                 // do smthing
@@ -263,7 +292,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     float xdist = enemyX - myPlayer.GetX();
                     float ydist = enemyY - myPlayer.GetY();
                     float distSq = (xdist * xdist) + (ydist * ydist);
-                    float radiusSum = playerSpriteWidth / 2 + enemySpriteWidth / 2; // no magic numbers actualy fetch the player and entity sprite sizes
+                    float radiusSum = playerSpriteWidth / 2 + enemySpriteWidth / 2;
                     if (distSq < (radiusSum * radiusSum))
                     {
                         myPlayer.Kill();
@@ -345,7 +374,7 @@ void Game::TakeScreenshot()
 void Game::KeyUp(int key)
 {
     // player movement
-    if (key == 26 || key == 82)
+    if (key == 26 || key == 82) // 'W' and up arrow key
         upPressed = false;
     if (key == 4 || key == 80) // 'A' and left arrow key
         leftPressed = false;
@@ -366,7 +395,7 @@ void Game::KeyDown(int key)
         leftPressed = true;
     if (key == 7 || key == 79) // 'D' and right arrow key
         rightPressed = true;
-    
+
     // screenshot button
     if (key == 19)
         screenshotPressed = true;
