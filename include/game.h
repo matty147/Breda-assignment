@@ -48,10 +48,6 @@ class Game
     void CheckEntityCollision(int bucketYSize, int bucketXSize);
 
   private:
-    ma_engine audioEngine;
-    ma_sound deathSound;
-    ma_sound jumpSound;
-
     void DefineScreenshotParameters(Surface* gameScreen);
     void TakeScreenshot();
     bool IsOverlapping(int box1X, int box1Y, int box1Width, int box1Height, int box2X, int box2Y, int box2Width, int box2Height);

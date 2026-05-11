@@ -13,6 +13,12 @@ namespace Tmpl8
 extern Sprite playerSprite;
 extern int screenHeight, screenWidth;
 
+extern const char* deathSound;
+extern const char* jumpSound;
+extern const char* timeChangeSound;
+extern const char* enemyDeathSound;
+extern ma_engine audioEngine;
+
 Player::Player(float iy, float ix, float ispeed, int idirection, float igravity)
 {
     y = iy;
@@ -114,6 +120,7 @@ void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
         if (!jumplastframe && (grounded || jumpAmount > 0))
         {
             currentGravity = jumpGravity;
+            ma_engine_play_sound(&audioEngine, jumpSound, NULL);
             if (!(grounded || coyotetime >= 0))
                 jumpAmount--;
             grounded = false;
@@ -277,9 +284,11 @@ void Player::Draw(Surface* gameScreen)
 
 void Player::ResetPlayerValues(float newY, float newX)
 {
-     if (playerStatus == Dead)
+    if (playerStatus == Dead)
     {
-         totalDeaths++;
+        ma_engine_play_sound(&audioEngine, deathSound, NULL);
+
+        totalDeaths++;
     }
 
     playerStatus = Alive;

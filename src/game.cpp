@@ -5,6 +5,8 @@
 #include <vector>
 #include <windows.h>
 
+#include <filesystem>
+
 #define MINIAUDIO_IMPLEMENTATION
 
 #include "../include/enemy.h"
@@ -19,6 +21,15 @@ namespace Tmpl8
 Sprite playerSprite{new Surface("assets/sprPlayer.png"), 1};
 Sprite tilesSprite{new Surface("assets/nc2tiles.png"), 1};
 Sprite enemySprite{new Surface("assets/sprEnemy.png"), 1};
+
+ma_engine audioEngine;
+// const char* backgroundMusicSound = "audio/backgroundMusicSound.wav";
+const char* deathSound = "audio/deathSound.wav";
+const char* jumpSound = "audio/jumpSound.wav";
+const char* timeChangeSound = "audio/timeChangeSound.wav";
+const char* enemyDeathSound = "audio/enemyDeathSound.wav";
+const char* levelClearedSound = "audio/levelClearedSound.wav";
+const char* screenshotSound = "audio/screenshotSound.wav";
 
 int screenHeight = 0, screenWidth = 0;
 
@@ -48,11 +59,10 @@ void Game::Init()
         printf("Failed to initialize audio engine.\n");
     }
 
-    ma_sound_init_from_file(&audioEngine, "hitHurt.wav", 0, NULL, NULL, &deathSound);
-    ma_sound_init_from_file(&audioEngine, "jump.wav", 0, NULL, NULL, &jumpSound);
+    //ma_data_source_set_looping(&audioEngine, MA_TRUE); hard to do i think
 
-    //ma_sound_seek_to_pcm_frame(&deathSound, 0);
-    //ma_sound_start(&deathSound);
+    bool exists = std::filesystem::exists("audio/");
+    printf("file path is existent: %d\n",exists);
 
     grid.resize(separateY, std::vector<Bucket>(separateX));
 
@@ -82,7 +92,6 @@ void Game::Init()
 
 void Game::Shutdown()
 {
-    ma_sound_uninit(&deathSound);
     ma_engine_uninit(&audioEngine);
 }
 
@@ -115,13 +124,13 @@ void Game::Tick(float deltaTime)
 
     if (myPlayer.IsDead())
     {
-        ma_sound_seek_to_pcm_frame(&deathSound, 0);
-        ma_sound_start(&deathSound);
         ResetLevel();
     }
 
-    if (updateLevel) // cap the levels so it does not crash
+    if (updateLevel)
     {
+        ma_engine_play_sound(&audioEngine, levelClearedSound, NULL);
+
         updateLevel = false;
 
         GoToNextLevel();
@@ -130,6 +139,7 @@ void Game::Tick(float deltaTime)
 
     if (screenshotPressed)
     {
+        ma_engine_play_sound(&audioEngine, screenshotSound, NULL);
         TakeScreenshot();
     }
 }
@@ -308,6 +318,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
     // destroy enemies marked for death
     for (int d = 0; d < deadEntities.size(); d++)
     {
+        ma_engine_play_sound(&audioEngine, enemyDeathSound, NULL); // move this to the enemy at least add a kill() function;
         entities[deadEntities[d]] = entities.back();
         entities.pop_back();
     }
@@ -341,7 +352,7 @@ void Game::DefineScreenshotParameters(Surface* gameScreen)
 
 void Game::TakeScreenshot()
 {
-    FILE* f = fopen("screenshot.tga", "wb");
+    FILE* f = fopen("screenshot.tga", "wb"); // TODO: add uniqe name to this
     fwrite(&header, sizeof(TGAHeader), 1, f);
 
     unsigned int* buffer = screen->GetBuffer();
