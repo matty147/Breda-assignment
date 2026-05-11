@@ -27,7 +27,7 @@ enum class TileType
     VineBody = 13
 };
 
-enum class timeOfDay // rename
+enum class TimeOfDay // rename
 {
     Day,
     Night
@@ -46,7 +46,7 @@ class Level
     int GetTileID(int y, int x);
     bool SpikeCollision(int py, int px, int sy, int sx);
 
-    timeOfDay currentDay = timeOfDay::Day;
+    TimeOfDay currentTime = TimeOfDay::Day;
 
   private:
     int DecodeTileGID(unsigned long gid);

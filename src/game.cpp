@@ -35,7 +35,6 @@ int screenHeight = 0, screenWidth = 0;
 
 Level level(100, 100);
 Player myPlayer(0, 0);
-Enemy myEnemy(100, 100);
 
 std::vector<Enemy> entities;
 std::vector<std::vector<int>> entitySpawnPoints;
@@ -45,8 +44,8 @@ const std::vector<std::string> levelNames = {"level1", "level2", "level3"};
 int Game::currentLevelID = 0;
 bool Game::updateLevel = false;
 
-const int separateX = 10;
-const int separateY = 10;
+const int bucketCountX = 10;
+const int bucketCountY = 10;
 
 std::vector<std::vector<int>> vineList;
 
@@ -64,7 +63,7 @@ void Game::Init()
     bool exists = std::filesystem::exists("audio/");
     printf("file path is existent: %d\n",exists);
 
-    grid.resize(separateY, std::vector<Bucket>(separateX));
+    grid.resize(bucketCountY, std::vector<Bucket>(bucketCountX));
 
     screenWidth = screen->GetWidth();
     screenHeight = screen->GetHeight();
@@ -158,9 +157,9 @@ void Game::ResetLevel()
 {
     int newY = 0, newX = 0;
 
-    level.currentDay = timeOfDay::Night;
+    level.currentTime = TimeOfDay::Night;
     level.UpdateVines(vineList);
-    level.currentDay = timeOfDay::Day;
+    level.currentTime = TimeOfDay::Day;
 
     level.FindTileInstances(vineList, (int)TileType::VineStump);
 
@@ -187,12 +186,12 @@ void Game::ResetLevel()
 /// <param name="gameScreen"></param>
 void Game::SpatialHashing(Surface* gameScreen)
 {
-    int bucketXSize = screenWidth / separateX;
-    int bucketYSize = screenHeight / separateY;
+    int bucketXSize = screenWidth / bucketCountX;
+    int bucketYSize = screenHeight / bucketCountY;
 
-    for (int y = 0; y < separateY; y++)
+    for (int y = 0; y < bucketCountY; y++)
     {
-        for (int x = 0; x < separateX; x++)
+        for (int x = 0; x < bucketCountX; x++)
         {
             grid[y][x].entityIDs.clear();
         }
@@ -200,8 +199,8 @@ void Game::SpatialHashing(Surface* gameScreen)
 
     for (int i = 0; i < entities.size(); i++)
     {
-        int x = std::clamp((int)entities[i].GetX() / bucketXSize, 0, separateX - 1);
-        int y = std::clamp((int)entities[i].GetY() / bucketYSize, 0, separateY - 1);
+        int x = std::clamp((int)entities[i].GetX() / bucketXSize, 0, bucketCountX - 1);
+        int y = std::clamp((int)entities[i].GetY() / bucketYSize, 0, bucketCountY - 1);
 
         grid[y][x].entityIDs.push_back(i);
     }
@@ -220,12 +219,13 @@ void Game::SpatialHashing(Surface* gameScreen)
 void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
 {
     int playerSpriteWidth = playerSprite.GetWidth();
+    int playerSpriteHeight = playerSprite.GetHeight();
     int enemySpriteWidth = enemySprite.GetWidth();
 
-    int playerGridX = std::clamp((int)myPlayer.GetX() / bucketXSize, 0, separateX - 1);
-    int playerGridY = std::clamp((int)myPlayer.GetY() / bucketYSize, 0, separateY - 1);
+    int playerGridX = std::clamp((int)myPlayer.GetX() / bucketXSize, 0, bucketCountX - 1);
+    int playerGridY = std::clamp((int)myPlayer.GetY() / bucketYSize, 0, bucketCountY - 1);
 
-    auto& EntitiesInPlayersBucket = grid[playerGridY][playerGridX].entityIDs;
+    auto& entitiesInPlayersBucket = grid[playerGridY][playerGridX].entityIDs;
 
     std::vector<int> deadEntities;
 
@@ -235,15 +235,15 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
         {0, 1},
         {1, 1}};
 
-    for (int r = 0; r < separateX; r++)
+    for (int r = 0; r < bucketCountX; r++)
     {
-        for (int c = 0; c < separateY; c++)
+        for (int c = 0; c < bucketCountY; c++)
         {
             for (int i = 0; i < 4; i++)
             {
                 int neighborX = r + neighborOffsets[i][0];
                 int neighborY = c + neighborOffsets[i][1];
-                if (neighborX >= 0 && neighborX < separateX && neighborY >= 0 && neighborY < separateY)
+                if (neighborX >= 0 && neighborX < bucketCountX && neighborY >= 0 && neighborY < bucketCountY)
                 {
                     // collision for enemies
                     auto& neighborBucket = grid[neighborY][neighborX].entityIDs;
@@ -271,9 +271,9 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
         }
     }
 
-    int hitboxWidth = 24;
+    int hitboxWidth = playerSpriteWidth;
     int hitboxHeight = 3;
-    int playerFeetY = myPlayer.GetY() + 24;
+    int playerFeetY = myPlayer.GetY() + playerSpriteHeight;
     int playerFeetHeight = 6;
 
     for (int i = -1; i <= 1; i++)
@@ -283,7 +283,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
             int neighborX = playerGridX + i;
             int neighborY = playerGridY + j;
 
-            if (neighborX >= 0 && neighborX < separateX && neighborY >= 0 && neighborY < separateY)
+            if (neighborX >= 0 && neighborX < bucketCountX && neighborY >= 0 && neighborY < bucketCountY)
             {
                 auto& neighborBucket = grid[neighborY][neighborX].entityIDs;
 
@@ -353,6 +353,12 @@ void Game::DefineScreenshotParameters(Surface* gameScreen)
 void Game::TakeScreenshot()
 {
     FILE* f = fopen("screenshot.tga", "wb"); // TODO: add uniqe name to this
+    
+    if (f == NULL)
+    {
+        return;
+    }
+
     fwrite(&header, sizeof(TGAHeader), 1, f);
 
     unsigned int* buffer = screen->GetBuffer();

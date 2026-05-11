@@ -14,7 +14,7 @@ enum PlayerState
 class Player
 {
   public:
-    Player(float iy, float ix, float ispeed = 3.0f, int idirection = 0, float igravity = 2.5f);
+    Player(float startY, float startX, float startSpeed = 3.0f, int startDirection = 0, float startGravity = 2.5f);
 
     void Update(float deltaTime, Level& level, bool& leftPressed, bool& rightPressed, bool& upPressed);
     void Draw(Surface* gameScreen);
@@ -26,7 +26,7 @@ class Player
     float GetX() const { return x; }
     float GetY() const { return y; }
     bool IsDead() const { return (playerStatus == PlayerState::Dead);}
-    int DeadthAmout() { return totalDeaths; }
+    int DeathCount() { return totalDeaths; }
 
   private:
     void UpdateTimers(float deltaTime, Level& level);
@@ -35,7 +35,7 @@ class Player
     void ProcessInput(float& moveX, bool& jumpPressed, bool& leftPressed, bool& rightPressed, bool& upPressed);
     bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
 
-    float x, y, currentGravity = -1, speed, gravity, jumptime = 0.3f, coyotetime;
+    float x, y, currentGravity = -1.0f, speed, gravity, jumptime = 0.3f, coyotetime = 1.0f;
     int direction, jumpAmount = 0, playerWidth, playerHeight, tileSize = 32, spawnY = 0, spawnX = 0, totalDeaths = 0;
     bool grounded = false, jumplastframe = false;
 

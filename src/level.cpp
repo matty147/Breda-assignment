@@ -200,7 +200,7 @@ void Level::UpdateVines(std::vector<std::vector<int>>& listOfVines)
 
         int vineHeight = 1;
 
-        if (currentDay == timeOfDay::Day)
+        if (currentTime == TimeOfDay::Day)
         {
             tiles[vineY][vineX] = (int)TileType::VineBody;
 
@@ -234,7 +234,7 @@ void Level::Draw(Surface* gameScreen, float deltaTime)
     int ScreenWidth = gameScreen->GetWidth();
     int ScreenHeight = gameScreen->GetHeight();
 
-    if (currentDay == timeOfDay::Day)
+    if (currentTime == TimeOfDay::Day)
     {
         changeTileSetCoordinate -= 1.0f * deltaTime / 10;
     }
@@ -367,21 +367,21 @@ int Level::GetTileID(int y, int x)
     switch (currentTile)
     {
         case (int)TileType::Water:
-            if (currentDay == timeOfDay::Day)
+            if (currentTime == TimeOfDay::Day)
             {
                 return -currentTile;
             }
             break;
 
         case (int)TileType::MoonBlock:
-            if (currentDay == timeOfDay::Day)
+            if (currentTime == TimeOfDay::Day)
             {
                 return -currentTile;
             }
             break;
 
         case (int)TileType::SunBlock:
-            if (currentDay == timeOfDay::Night)
+            if (currentTime == TimeOfDay::Night)
             {
                 return -currentTile;
             }
@@ -441,5 +441,4 @@ float Tmpl8::Level::Sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x)
     return (p1x - p3x) * (p2y - p3y) - (p2x - p3x) * (p1y - p3y);
 }
 
-int width, height;
-} // namespace Tmpl8
+}

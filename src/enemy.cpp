@@ -13,25 +13,25 @@ namespace Tmpl8
 extern Sprite enemySprite;
 extern int screenHeight, screenWidth;
 
-Enemy::Enemy(float iy, float ix, float ispeed, int idirection, float igravity)
+Enemy::Enemy(float startY, float startX, float startSpeed, int startDirection, float startGravity)
 {
-    y = iy;
-    x = ix;
-    speed = ispeed;
-    direction = idirection;
-    gravity = igravity;
+    y = startY;
+    x = startX;
+    speed = startSpeed;
+    direction = startDirection;
+    gravity = startGravity;
 }
 
 void Enemy::Update(float deltaTime, Level& level)
 {
-    playerWidth = enemySprite.GetWidth();
-    playerHeight = enemySprite.GetHeight();
+    enemyWidth = enemySprite.GetWidth();
+    enemyHeight = enemySprite.GetHeight();
 
     int moveX = 1;
 
     UpdateX(deltaTime, level, moveX);
 
-    x = std::clamp(x, 0.0f, (float)screenWidth - playerWidth);
+    x = std::clamp(x, 0.0f, (float)screenWidth - enemyWidth);
 
     UpdateY(deltaTime, level);
 }
@@ -44,15 +44,15 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
     float nextX = x + deltaX;
 
     int leftTile = (int)nextX / tileSize;
-    int rightTile = (int)(nextX + playerWidth - 1) / tileSize;
+    int rightTile = (int)(nextX + enemyWidth - 1) / tileSize;
     int topTile = (int)y / tileSize;
-    int bottomTile = (int)(y + playerHeight - 1) / tileSize;
+    int bottomTile = (int)(y + enemyWidth - 1) / tileSize;
 
     bool hitX = TileCollision(topTile, bottomTile, leftTile, rightTile, level);
 
     bool edgeHitX = 1;
 
-    if (level.currentDay == timeOfDay::Day)
+    if (level.currentTime == TimeOfDay::Day)
     {
 
         if (direction == 1)
@@ -76,7 +76,7 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
     {
         if (deltaX > 0)
         {
-            x = (rightTile * tileSize) - playerWidth;
+            x = (rightTile * tileSize) - enemyWidth;
         }
         else if (deltaX < 0)
         {
@@ -91,7 +91,7 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
 
 void Enemy::UpdateY(float deltaTime, Level& level)
 {
-    int maxGravity = 15.0f;
+    float maxGravity = 15.0f;
 
     currentGravity += gravity * (deltaTime / 100.0f);
     if (currentGravity > maxGravity)
@@ -101,9 +101,9 @@ void Enemy::UpdateY(float deltaTime, Level& level)
     float nextY = y + deltaY;
 
     int leftTile = (int)x / tileSize;
-    int rightTile = (int)(x + playerWidth - 1) / tileSize;
+    int rightTile = (int)(x + enemyWidth - 1) / tileSize;
     int topTile = (int)nextY / tileSize;
-    int bottomTile = (int)(nextY + playerHeight - 1) / tileSize;
+    int bottomTile = (int)(nextY + enemyWidth - 1) / tileSize;
 
     bool hitY = TileCollision(topTile, bottomTile, leftTile, rightTile, level);
 
@@ -111,7 +111,7 @@ void Enemy::UpdateY(float deltaTime, Level& level)
     {
         if (deltaY > 0)
         {
-            y = (bottomTile * tileSize) - playerHeight;
+            y = (bottomTile * tileSize) - enemyWidth;
             currentGravity = 0;
         }
         else if (deltaY < 0)
@@ -139,18 +139,12 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
             {
                 case (int)TileType::Spike:
                 {
-                    int leftX = x;
-                    int rightX = x + playerWidth - 1;
-                    int centerX = x + (playerWidth / 2);
-
-                    int bottomY = y + playerHeight - 1;
-                    int centerY = y + (playerHeight / 2);
                     continue;
                 }
 
                 case (int)TileType::Water:
                 {
-                    if (level.currentDay == timeOfDay::Day)
+                    if (level.currentTime == TimeOfDay::Day)
                     {
                         continue;
                     }
@@ -158,25 +152,25 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
                 }
 
                 case (int)TileType::MoonBlock:
-                    if (level.currentDay == timeOfDay::Night)
+                    if (level.currentTime == TimeOfDay::Night)
                     {
                         return true;
                     }
                     continue;
 
                 case (int)TileType::SunBlock:
-                    if (level.currentDay == timeOfDay::Night)
+                    if (level.currentTime == TimeOfDay::Night)
                     {
                         return true;
                     }
                     continue;
 
                 case (int)TileType::Sun:
-                    level.currentDay = timeOfDay::Day;
+                    level.currentTime = TimeOfDay::Day;
                     continue;
 
                 case (int)TileType::Moon:
-                    level.currentDay = timeOfDay::Night;
+                    level.currentTime = TimeOfDay::Night;
                     continue;
 
                 case (int)TileType::Flag:

@@ -19,15 +19,15 @@ extern const char* timeChangeSound;
 extern const char* enemyDeathSound;
 extern ma_engine audioEngine;
 
-Player::Player(float iy, float ix, float ispeed, int idirection, float igravity)
+Player::Player(float startY, float startX, float startSpeed, int startDirection, float startGravity)
 {
-    y = iy;
-    x = ix;
+    y = startY;
+    x = startX;
     spawnX = x;
     spawnY = y;
-    speed = ispeed;
-    direction = idirection;
-    gravity = igravity;
+    speed = startSpeed;
+    direction = startDirection;
+    gravity = startGravity;
 }
 
 /// <summary>
@@ -112,8 +112,8 @@ void Player::UpdateX(float deltaTime, Level& level, float moveX)
 /// <param name="jumpPressed"></param>
 void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
 {
-    int jumpGravity = -6.0f;
-    int maxGravity = 15.0f;
+    float jumpGravity = -6.0f;
+    float maxGravity = 15.0f;
 
     if (jumpPressed)
     {
@@ -207,22 +207,22 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
                 }
 
                 case (int)TileType::Sun:
-                    level.currentDay = timeOfDay::Day;
+                    level.currentTime = TimeOfDay::Day;
                     continue;
 
                 case (int)TileType::Moon:
-                    level.currentDay = timeOfDay::Night;
+                    level.currentTime = TimeOfDay::Night;
                     continue;
 
                 case (int)TileType::MoonBlock:
-                    if (level.currentDay == timeOfDay::Night)
+                    if (level.currentTime == TimeOfDay::Night)
                     {
                         return true;
                     }
                     continue;
 
                 case (int)TileType::SunBlock:
-                    if (level.currentDay == timeOfDay::Day)
+                    if (level.currentTime == TimeOfDay::Day)
                     {
                         return true;
                     }
@@ -257,10 +257,10 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
 /// <param name="level"></param>
 void Player::UpdateTimers(float deltaTime, Level& level)
 {
-    float raycastLenght = 1.25;
+    float raycastLength = 1.25;
 
-    grounded = 0 < level.GetTileID(y + playerHeight * raycastLenght, x) ||
-               0 < level.GetTileID(y + playerHeight * raycastLenght, x + playerWidth - 1);
+    grounded = 0 < level.GetTileID(y + playerHeight * raycastLength, x) ||
+               0 < level.GetTileID(y + playerHeight * raycastLength, x + playerWidth - 1);
 
     if (grounded)
     {
