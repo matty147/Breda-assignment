@@ -3,6 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+.idea
+
 # User-specific files
 *.rsuser
 *.suo
@@ -426,3 +428,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/dlls_x64/
+/dlls_x86/
+/bin/
