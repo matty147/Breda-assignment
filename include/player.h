@@ -25,7 +25,7 @@ class Player
 
     float GetX() const { return x; }
     float GetY() const { return y; }
-    bool IsDead() const { return (playerStatus == PlayerState::Dead);}
+    bool IsDead() const { return (playerStatus == PlayerState::Dead); }
     int DeathCount() { return totalDeaths; }
 
   private:

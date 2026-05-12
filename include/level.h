@@ -39,7 +39,7 @@ class Level
     Level(int iwidth, int iheight);
 
     void CreateLevel(std::string levelname, std::vector<std::vector<int>>& entities);
-    void Draw(Surface* gameScreen,float deltaTime);
+    void Draw(Surface* gameScreen, float deltaTime);
     void FindFlag(int& outY, int& outX);
     void FindTileInstances(std::vector<std::vector<int>>& listOfTilesInstances, int tileId);
     void UpdateVines(std::vector<std::vector<int>>& listOfVines);
@@ -57,6 +57,6 @@ class Level
     float Sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x);
     int width, height, tileSize = 32;
     std::vector<std::vector<int>> tiles;
-    int rotatedIdValue = 100;
+    int rotatedIdValue = 100; // if higher then this value the sprite should be rotated
 };
 } // namespace Tmpl8

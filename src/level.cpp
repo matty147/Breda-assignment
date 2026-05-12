@@ -121,7 +121,7 @@ void Level::ParseTileCSV(const char* csvText, int width, int height)
 void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entities)
 {
     tinyxml2::XMLDocument doc;
-    string fullPath = "levels/" + levelName + ".tmx";
+    string fullPath = "assets/levels/" + levelName + ".tmx";
 
     printf("Trying to load level %s\n", fullPath.c_str());
 
@@ -229,7 +229,7 @@ void Level::UpdateVines(std::vector<std::vector<int>>& listOfVines)
 /// <param name="gameScreen"></param>
 void Level::Draw(Surface* gameScreen, float deltaTime)
 {
-    int screenShiftSize = 595;
+    int screenShiftSize = 595; // amount to shift to get to the next row on the screen
 
     int ScreenWidth = gameScreen->GetWidth();
     int ScreenHeight = gameScreen->GetHeight();
@@ -328,7 +328,7 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
     float cos = std::cos(angle);
     float sin = std::sin(angle);
 
-    //printf("ts:%d, 1:%.2f, 2:%.2f\n",tileSize, (tileSize) / 2 - 0.5f,(float)(tileSize - 1) / 2);
+    // printf("ts:%d, 1:%.2f, 2:%.2f\n",tileSize, (tileSize) / 2 - 0.5f,(float)(tileSize - 1) / 2);
 
     float off = (float)(tileSize - 1) / 2;
 
@@ -421,7 +421,7 @@ bool Level::SpikeCollision(int playerY, int playerX, int gridRow, int gridCol) /
     has_neg = (side1 < 0) || (side2 < 0) || (side3 < 0);
     has_pos = (side1 > 0) || (side2 > 0) || (side3 > 0);
 
-    //printf("%d\n", (has_neg && has_pos));
+    // printf("%d\n", (has_neg && has_pos));
 
     return !(has_neg && has_pos);
 }
@@ -441,4 +441,4 @@ float Tmpl8::Level::Sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x)
     return (p1x - p3x) * (p2y - p3y) - (p2x - p3x) * (p1y - p3y);
 }
 
-}
+} // namespace Tmpl8

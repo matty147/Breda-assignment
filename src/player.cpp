@@ -112,7 +112,7 @@ void Player::UpdateX(float deltaTime, Level& level, float moveX)
 /// <param name="jumpPressed"></param>
 void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
 {
-    float jumpGravity = -6.0f;
+    float jumpGravity = -6.0f; // bounce velocity
     float maxGravity = 15.0f;
 
     if (jumpPressed)
@@ -233,7 +233,6 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
 
                 case (int)TileType::Portal:
                     Game::updateLevel = true;
-                    playerStatus = Dead;
                     continue;
 
                     // case (int)TileType::Water:
@@ -257,7 +256,7 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
 /// <param name="level"></param>
 void Player::UpdateTimers(float deltaTime, Level& level)
 {
-    float raycastLength = 1.25;
+    float raycastLength = 1.25; // raycasts 1.25x sprite height below
 
     grounded = 0 < level.GetTileID(y + playerHeight * raycastLength, x) ||
                0 < level.GetTileID(y + playerHeight * raycastLength, x + playerWidth - 1);

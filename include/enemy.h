@@ -23,8 +23,8 @@ class Enemy
     bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
     void UpdateY(float deltaTime, Level& level);
     void UpdateX(float deltaTime, Level& level, float moveX);
-    float x, y,  currentGravity = -1;
-    int speed = 1, direction = 1, gravity = 1, enemyWidth, enemyHeight, tileSize = 32;
+    float x, y, currentGravity = -1.0f, gravity = 1.0f;
+    int speed = 1, direction = 1, enemyWidth, enemyHeight, tileSize = 32;
     bool grounded = false;
 };
 } // namespace Tmpl8

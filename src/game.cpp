@@ -4,8 +4,7 @@
 #include <string>
 #include <vector>
 #include <windows.h>
-
-#include <filesystem>
+#include <ctime>
 
 #define MINIAUDIO_IMPLEMENTATION
 
@@ -18,18 +17,18 @@
 
 namespace Tmpl8
 {
-Sprite playerSprite{new Surface("assets/sprPlayer.png"), 1};
-Sprite tilesSprite{new Surface("assets/nc2tiles.png"), 1};
-Sprite enemySprite{new Surface("assets/sprEnemy.png"), 1};
+Sprite playerSprite{new Surface("assets/sprites/sprPlayer.png"), 1};
+Sprite tilesSprite{new Surface("assets/sprites/nc2tiles.png"), 1};
+Sprite enemySprite{new Surface("assets/sprites/sprEnemy.png"), 1};
 
 ma_engine audioEngine;
 // const char* backgroundMusicSound = "audio/backgroundMusicSound.wav";
-const char* deathSound = "audio/deathSound.wav";
-const char* jumpSound = "audio/jumpSound.wav";
-const char* timeChangeSound = "audio/timeChangeSound.wav";
-const char* enemyDeathSound = "audio/enemyDeathSound.wav";
-const char* levelClearedSound = "audio/levelClearedSound.wav";
-const char* screenshotSound = "audio/screenshotSound.wav";
+const char* deathSound = "assets/audio/deathSound.wav";
+const char* jumpSound = "assets/audio/jumpSound.wav";
+const char* timeChangeSound = "assets/audio/timeChangeSound.wav";
+const char* enemyDeathSound = "assets/audio/enemyDeathSound.wav";
+const char* levelClearedSound = "assets/audio/levelClearedSound.wav";
+const char* screenshotSound = "assets/audio/screenshotSound.wav";
 
 int screenHeight = 0, screenWidth = 0;
 
@@ -47,6 +46,11 @@ bool Game::updateLevel = false;
 const int bucketCountX = 10;
 const int bucketCountY = 10;
 
+constexpr int KEY_W = 26, KEY_UP = 82;
+constexpr int KEY_A = 4, KEY_LEFT = 80;
+constexpr int KEY_D = 7, KEY_RIGHT = 79;
+constexpr int KEY_P = 19;
+
 std::vector<std::vector<int>> vineList;
 
 TGAHeader header;
@@ -57,11 +61,6 @@ void Game::Init()
     {
         printf("Failed to initialize audio engine.\n");
     }
-
-    //ma_data_source_set_looping(&audioEngine, MA_TRUE); hard to do i think
-
-    bool exists = std::filesystem::exists("audio/");
-    printf("file path is existent: %d\n",exists);
 
     grid.resize(bucketCountY, std::vector<Bucket>(bucketCountX));
 
@@ -123,6 +122,7 @@ void Game::Tick(float deltaTime)
 
     if (myPlayer.IsDead())
     {
+        printf("deaths: %d\n", myPlayer.DeathCount());
         ResetLevel();
     }
 
@@ -271,8 +271,9 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
         }
     }
 
+    // split into two functions
     int hitboxWidth = playerSpriteWidth;
-    int hitboxHeight = 3;
+    int hitboxHeight = playerSpriteHeight / 8;
     int playerFeetY = myPlayer.GetY() + playerSpriteHeight;
     int playerFeetHeight = 6;
 
@@ -324,7 +325,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
     }
 }
 
-bool Tmpl8::Game::IsOverlapping(int box1X, int box1Y, int box1Width, int box1Height,
+bool Game::IsOverlapping(int box1X, int box1Y, int box1Width, int box1Height,
                                 int box2X, int box2Y, int box2Width, int box2Height)
 {
     return (box1X < box2X + box2Width &&  // Box 1's Left edge is left of Box 2's Right edge
@@ -352,10 +353,19 @@ void Game::DefineScreenshotParameters(Surface* gameScreen)
 
 void Game::TakeScreenshot()
 {
-    FILE* f = fopen("screenshot.tga", "wb"); // TODO: add uniqe name to this
-    
+    std::time_t result = std::time(nullptr);
+    std::tm* now = std::localtime(&result);
+
+    char timeBuffer[80];
+    std::strftime(timeBuffer, sizeof(timeBuffer), "%Y-%m-%d_%H-%M-%S", now);
+
+    std::string screenshotName = "screenshot " + std::string(timeBuffer) + ".tga";
+
+    FILE* f = fopen(screenshotName.c_str(), "wb");
+
     if (f == NULL)
     {
+        printf("failed making a screenshot\n");
         return;
     }
 
@@ -382,39 +392,33 @@ void Game::TakeScreenshot()
     fclose(f);
 }
 
-// 26 - W 82
-//  22 - S 81
-//  4 - A 80
-//  7 - D 79
-// 19 - P
-
 void Game::KeyUp(int key)
 {
-    // player movement
-    if (key == 26 || key == 82) // 'W' and up arrow key
+    // Player controls
+    if (key == KEY_W || key == KEY_UP)
         upPressed = false;
-    if (key == 4 || key == 80) // 'A' and left arrow key
+    if (key == KEY_A || key == KEY_LEFT)
         leftPressed = false;
-    if (key == 7 || key == 79) // 'D' and right arrow key
+    if (key == KEY_D || key == KEY_RIGHT)
         rightPressed = false;
 
-    // screenshot button
-    if (key == 19)
+    // Screenshots
+    if (key == KEY_P)
         screenshotPressed = false;
 }
 
 void Game::KeyDown(int key)
 {
-    // player movement
-    if (key == 26 || key == 82) // 'W' and up arrow key
+    // Player constrols
+    if (key == KEY_W || key == KEY_UP)
         upPressed = true;
-    if (key == 4 || key == 80) // 'A' and left arrow key
+    if (key == KEY_A || key == KEY_LEFT)
         leftPressed = true;
-    if (key == 7 || key == 79) // 'D' and right arrow key
+    if (key == KEY_D || key == KEY_RIGHT)
         rightPressed = true;
 
-    // screenshot button
-    if (key == 19)
+    // Screenshot
+    if (key == KEY_P)
         screenshotPressed = true;
 }
 
