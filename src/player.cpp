@@ -47,7 +47,7 @@ void Player::Update(float deltaTime, Level& level, bool& leftPressed, bool& righ
 
     UpdateX(deltaTime, level, moveX);
 
-    x = std::clamp(x, 0.0f, (float)screenWidth - playerWidth);
+    x = std::clamp(x, 0, screenWidth - playerWidth);
 
     UpdateY(deltaTime, level, jumpPressed);
 

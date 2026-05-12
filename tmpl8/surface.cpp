@@ -5,7 +5,7 @@
 #include "template.h"
 #include <cassert>
 #include <cstring>
-#include "FreeImage.h"
+#include "lib/FreeImage/inc/FreeImage.h"
 
 namespace Tmpl8 {
 

@@ -35,7 +35,8 @@ class Player
     void ProcessInput(float& moveX, bool& jumpPressed, bool& leftPressed, bool& rightPressed, bool& upPressed);
     bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
 
-    float x, y, currentGravity = -1.0f, speed, gravity, jumptime = 0.3f, coyotetime = 1.0f;
+    int x, y;
+    float currentGravity = -1.0f, speed, gravity, jumptime = 0.3f, coyotetime = 1.0f;
     int direction, jumpAmount = 0, playerWidth, playerHeight, tileSize = 32, spawnY = 0, spawnX = 0, totalDeaths = 0;
     bool grounded = false, jumplastframe = false;
 

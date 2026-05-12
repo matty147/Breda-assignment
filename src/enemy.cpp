@@ -3,10 +3,10 @@
 #include <cstdio>
 #include <windows.h>
 
-#include "../include/enemy.h"
-#include "../include/game.h"
-#include "../include/level.h"
-#include "../tmpl8/surface.h"
+#include "enemy.h"
+#include "game.h"
+#include "level.h"
+#include "tmpl8/surface.h"
 
 namespace Tmpl8
 {

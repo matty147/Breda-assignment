@@ -19,8 +19,8 @@
     <ClCompile Include="..\src\player.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\tinyxml2.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\third_party\tinyxml2.cpp">
+      <Filter>third_party</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +45,12 @@
     <ClInclude Include="..\include\tinyxml2.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\third_party\miniaudio.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
+    <ClInclude Include="..\third_party\tinyxml2.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">
@@ -55,6 +61,9 @@
     </Filter>
     <Filter Include="include">
       <UniqueIdentifier>{02838c42-9af9-4e58-be57-085e4b27eb36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party">
+      <UniqueIdentifier>{50fde7f4-2bc2-4d0b-a645-07067b3e19ed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

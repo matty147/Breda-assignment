@@ -58,7 +58,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\lib;..\lib\OpenGL;..\lib\SDL2-2.0.3\include;..\lib\freeimage\inc;$(ProjectDir)/tmpl8;$(ProjectDir)\tmpl8;$(ProjectDir)include;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)include;$(SolutionDir)tmpl8</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -83,6 +83,15 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
     </Link>
+    <PostBuildEvent>
+      <Command>:: Copy the assets folder
+xcopy /y /d /s /i "$(SolutionDir)assets" "$(TargetDir)assets"
+
+:: Copy the tmpl8 dlls
+xcopy /y /d /s /i "$(SolutionDir)dlls_x64" "$(TargetDir)dlls_x64"
+
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -91,7 +100,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\lib;..\lib\OpenGL;..\lib\SDL2-2.0.3\include;..\lib\freeimage\inc;$(ProjectDir)/tmpl8;$(ProjectDir)\tmpl8;$(ProjectDir)include;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)include;$(SolutionDir)tmpl8</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -120,13 +129,22 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
     </Link>
+    <PostBuildEvent>
+      <Command>:: Copy the assets folder
+xcopy /y /d /s /i "$(SolutionDir)assets" "$(TargetDir)assets"
+
+:: Copy the tmpl8 dlls
+xcopy /y /d /s /i "$(SolutionDir)dlls_x64" "$(TargetDir)dlls_x64"
+
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\enemy.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\level.cpp" />
     <ClCompile Include="..\src\player.cpp" />
-    <ClCompile Include="..\src\tinyxml2.cpp" />
+    <ClCompile Include="..\third_party\tinyxml2.cpp" />
     <ClCompile Include="surface.cpp" />
     <ClCompile Include="template.cpp" />
   </ItemGroup>
@@ -136,6 +154,8 @@
     <ClInclude Include="..\include\level.h" />
     <ClInclude Include="..\include\player.h" />
     <ClInclude Include="..\include\tinyxml2.h" />
+    <ClInclude Include="..\third_party\miniaudio.h" />
+    <ClInclude Include="..\third_party\tinyxml2.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="template.h" />
   </ItemGroup>

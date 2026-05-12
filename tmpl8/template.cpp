@@ -13,10 +13,10 @@
 #define FULLSCREEN
 // #define ADVANCEDGL
 
-#include "../tmpl8/template.h"
-#include "../include/game.h"
-#include "../tmpl8/surface.h"
-#include <SDL.h>
+#include "tmpl8/template.h"
+#include "game.h"
+#include "tmpl8/surface.h"
+#include "lib/SDL2-2.0.3/include/SDL.h"
 #include <corecrt_math.h>
 #include <cstdio>
 #include <fcntl.h>

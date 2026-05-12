@@ -8,10 +8,11 @@
 
 #define MINIAUDIO_IMPLEMENTATION
 
+#include "../third_party/miniaudio.h"
+
 #include "../include/enemy.h"
 #include "../include/game.h"
 #include "../include/level.h"
-#include "../include/miniaudio.h"
 #include "../include/player.h"
 #include "../tmpl8/surface.h"
 

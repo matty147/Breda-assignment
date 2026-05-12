@@ -9,9 +9,10 @@
 #include <vector>
 #include <windows.h>
 
-#include "../include/level.h"
-#include "../include/tinyxml2.h"
+#include "../third_party/tinyxml2.h"
 #include "../tmpl8/surface.h"
+
+#include "../include/level.h"
 
 using namespace tinyxml2;
 
