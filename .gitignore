@@ -428,6 +428,5 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
-/dlls_x64/
 /dlls_x86/
 /bin/
