@@ -1,4 +1,4 @@
-# Night shade shifter
+# Night shade
 BUas intake assignment made in c++ with tmpl8
 
 - download the game from [itch.io](https://inkk-ing.itch.io/night-shade-shifter)

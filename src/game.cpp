@@ -80,12 +80,12 @@ void Game::Init()
 
     for (auto& spawnPoint : entitySpawnPoints)
     {
-        Enemy newEnemy(spawnPoint[0], spawnPoint[1]);
+        Enemy newEnemy(static_cast<float>(spawnPoint[0]), static_cast<float>(spawnPoint[1]));
 
         entities.push_back(newEnemy);
     }
 
-    myPlayer = Player(playerY, playerX);
+    myPlayer = Player(static_cast<float>(playerY), static_cast<float>(playerX));
     myPlayer.ChangeSpawnPosition(playerY, playerX);
 }
 
@@ -169,13 +169,13 @@ void Game::ResetLevel()
     level.FindFlag(newY, newX);
 
     // reset the level
-    myPlayer.ResetPlayerValues(newY, newX);
-    myPlayer.ChangeSpawnPosition(newY, newX);
+    myPlayer.ResetPlayerValues(static_cast<float>(newY), static_cast<float>(newX));
+    myPlayer.ChangeSpawnPosition(static_cast<int>(newY), static_cast<int>(newX));
     entities.clear();
 
     for (auto& spawnPoint : entitySpawnPoints)
     {
-        Enemy newEnemy(spawnPoint[0], spawnPoint[1]);
+        Enemy newEnemy(static_cast<float>(spawnPoint[0]), static_cast<float>(spawnPoint[1]));
 
         entities.push_back(newEnemy);
     }
@@ -253,12 +253,12 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     {
                         for (int neighborID : neighborBucket)
                         {
-                            int firstEnemyX = entities[currentID].GetX();
-                            int firstEnemyY = entities[currentID].GetY();
-                            int secondEnemyX = entities[neighborID].GetX();
-                            int secondEnemyY = entities[neighborID].GetY();
-                            float xdist = secondEnemyX - firstEnemyX;
-                            float ydist = secondEnemyY - firstEnemyY;
+                            int firstEnemyX = (int)entities[currentID].GetX();
+                            int firstEnemyY = (int)entities[currentID].GetY();
+                            int secondEnemyX = (int)entities[neighborID].GetX();
+                            int secondEnemyY = (int)entities[neighborID].GetY();
+                            float xdist = (float)secondEnemyX - firstEnemyX;
+                            float ydist = (float)secondEnemyY - firstEnemyY;
                             float distSq = (xdist * xdist) + (ydist * ydist);
                             float radiusSum = enemySpriteWidth + enemySpriteWidth;
                             if (distSq < (radiusSum * radiusSum))
@@ -275,7 +275,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
     // split into two functions
     int hitboxWidth = playerSpriteWidth;
     int hitboxHeight = playerSpriteHeight / 8;
-    int playerFeetY = myPlayer.GetY() + playerSpriteHeight;
+    int playerFeetY = (int)myPlayer.GetY() + playerSpriteHeight;
     int playerFeetHeight = 6;
 
     for (int i = -1; i <= 1; i++)
@@ -294,7 +294,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     float enemyX = entities[currentID].GetX();
                     float enemyY = entities[currentID].GetY();
 
-                    if (IsOverlapping(myPlayer.GetX(), playerFeetY, playerSpriteWidth, playerFeetHeight,
+                    if (IsOverlapping((int)myPlayer.GetX(), playerFeetY, playerSpriteWidth, playerFeetHeight,
                                       enemyX - 5, enemyY, hitboxWidth, hitboxHeight))
                     {
                         myPlayer.BounceOffObject();
@@ -304,7 +304,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     float xdist = enemyX - myPlayer.GetX();
                     float ydist = enemyY - myPlayer.GetY();
                     float distSq = (xdist * xdist) + (ydist * ydist);
-                    float radiusSum = playerSpriteWidth / 2 + enemySpriteWidth / 2;
+                    float radiusSum = (float)playerSpriteWidth / 2 + enemySpriteWidth / 2;
                     if (distSq < (radiusSum * radiusSum))
                     {
                         myPlayer.Kill();

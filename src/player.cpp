@@ -23,8 +23,8 @@ Player::Player(float startY, float startX, float startSpeed, int startDirection,
 {
     y = startY;
     x = startX;
-    spawnX = x;
-    spawnY = y;
+    spawnX = (int)x;
+    spawnY = (int)y;
     speed = startSpeed;
     direction = startDirection;
     gravity = startGravity;
@@ -47,7 +47,7 @@ void Player::Update(float deltaTime, Level& level, bool& leftPressed, bool& righ
 
     UpdateX(deltaTime, level, moveX);
 
-    x = std::clamp(x, 0, screenWidth - playerWidth);
+    x = std::clamp(x, 0.0f, (float)screenWidth - playerWidth);
 
     UpdateY(deltaTime, level, jumpPressed);
 
@@ -91,11 +91,11 @@ void Player::UpdateX(float deltaTime, Level& level, float moveX)
     {
         if (deltaX > 0)
         {
-            x = (rightTile * tileSize) - playerWidth;
+            x = (float)(rightTile * tileSize) - playerWidth;
         }
         else if (deltaX < 0)
         {
-            x = (leftTile * tileSize) + tileSize;
+            x = (float)(leftTile * tileSize) + tileSize;
         }
     }
     else
@@ -150,14 +150,14 @@ void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
     {
         if (deltaY > 0)
         {
-            y = (bottomTile * tileSize) - playerHeight;
+            y = (float)(bottomTile * tileSize) - playerHeight;
             currentGravity = 0;
             jumptime = 0.3f;
             jumpAmount = 1;
         }
         else if (deltaY < 0)
         {
-            y = (topTile * tileSize) + tileSize;
+            y = (float)(topTile * tileSize) + tileSize;
             currentGravity = 0;
         }
     }
@@ -190,12 +190,12 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
             {
                 case (int)TileType::Spike:
                 {
-                    int leftX = x;
-                    int rightX = x + playerWidth - 1;
-                    int centerX = x + (playerWidth / 2);
+                    int leftX = (int)x;
+                    int rightX = (int)x + playerWidth - 1;
+                    int centerX = (int)x + (playerWidth / 2);
 
-                    int bottomY = y + playerHeight - 1;
-                    int centerY = y + (playerHeight / 2);
+                    int bottomY = (int)y + playerHeight - 1;
+                    int centerY = (int)y + (playerHeight / 2);
 
                     if (level.SpikeCollision(bottomY, leftX, r, c) || level.SpikeCollision(bottomY, rightX, r, c) ||
                         level.SpikeCollision(bottomY, centerX, r, c) || level.SpikeCollision(centerY, leftX, r, c) ||
@@ -258,8 +258,8 @@ void Player::UpdateTimers(float deltaTime, Level& level)
 {
     float raycastLength = 1.25; // raycasts 1.25x sprite height below
 
-    grounded = 0 < level.GetTileID(y + playerHeight * raycastLength, x) ||
-               0 < level.GetTileID(y + playerHeight * raycastLength, x + playerWidth - 1);
+    grounded = 0 < level.GetTileID((int)y + playerHeight * raycastLength, (int)x) ||
+               0 < level.GetTileID((int)y + playerHeight * raycastLength, (int)x + playerWidth - 1);
 
     if (grounded)
     {
@@ -274,7 +274,7 @@ void Player::UpdateTimers(float deltaTime, Level& level)
 /// <param name="gameScreen"></param>
 void Player::Draw(Surface* gameScreen)
 {
-    playerSprite.Draw(gameScreen, x, y);
+    playerSprite.Draw(gameScreen, (int)x, (int)y);
 }
 
 /// <summary>
@@ -305,7 +305,7 @@ void Player::BounceOffObject()
 
 void Player::Kill() { playerStatus = Dead; }
 
-void Player::ChangeSpawnPosition(float newY, float newX)
+void Tmpl8::Player::ChangeSpawnPosition(int newY, int newX)
 {
     spawnY = newY;
     spawnX = newX;
