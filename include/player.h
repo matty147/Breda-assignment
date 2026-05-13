@@ -14,17 +14,17 @@ enum PlayerState
 class Player
 {
   public:
-    Player(float startY, float startX, float startSpeed = 3.0f, int startDirection = 0, float startGravity = 2.5f);
+    Player(int startY, int startX, float startSpeed = 3.0f, int startDirection = 0, float startGravity = 2.5f);
 
     void Update(float deltaTime, Level& level, bool& leftPressed, bool& rightPressed, bool& upPressed);
     void Draw(Surface* gameScreen);
     void Kill();
-    void ResetPlayerValues(float newY, float newX);
+    void ResetPlayerValues(int newY, int newX);
     void BounceOffObject();
     void ChangeSpawnPosition(int newY, int newX);
 
-    float GetX() const { return x; }
-    float GetY() const { return y; }
+    int GetX() const { return (int)x; }
+    int GetY() const { return (int)y; }
     bool IsDead() const { return (playerStatus == PlayerState::Dead); }
     int DeathCount() { return totalDeaths; }
 

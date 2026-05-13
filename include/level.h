@@ -54,7 +54,7 @@ class Level
     void ParseTileCSV(const char* csvText, int width, int height);
 
     void DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeight, int ScreenWidth, int backgroundTileSet);
-    float Sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x);
+    int Sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x);
     int width, height, tileSize = 32;
     std::vector<std::vector<int>> tiles;
     int rotatedIdValue = 100; // if higher then this value the sprite should be rotated

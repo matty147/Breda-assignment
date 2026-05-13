@@ -80,12 +80,12 @@ void Game::Init()
 
     for (auto& spawnPoint : entitySpawnPoints)
     {
-        Enemy newEnemy(static_cast<float>(spawnPoint[0]), static_cast<float>(spawnPoint[1]));
+        Enemy newEnemy(spawnPoint[0], spawnPoint[1]);
 
         entities.push_back(newEnemy);
     }
 
-    myPlayer = Player(static_cast<float>(playerY), static_cast<float>(playerX));
+    myPlayer = Player(playerY, playerX);
     myPlayer.ChangeSpawnPosition(playerY, playerX);
 }
 
@@ -169,13 +169,13 @@ void Game::ResetLevel()
     level.FindFlag(newY, newX);
 
     // reset the level
-    myPlayer.ResetPlayerValues(static_cast<float>(newY), static_cast<float>(newX));
-    myPlayer.ChangeSpawnPosition(static_cast<int>(newY), static_cast<int>(newX));
+    myPlayer.ResetPlayerValues(newY, newX);
+    myPlayer.ChangeSpawnPosition(newY, newX);
     entities.clear();
 
     for (auto& spawnPoint : entitySpawnPoints)
     {
-        Enemy newEnemy(static_cast<float>(spawnPoint[0]), static_cast<float>(spawnPoint[1]));
+        Enemy newEnemy(spawnPoint[0], spawnPoint[1]);
 
         entities.push_back(newEnemy);
     }
@@ -200,8 +200,8 @@ void Game::SpatialHashing(Surface* gameScreen)
 
     for (int i = 0; i < entities.size(); i++)
     {
-        int x = std::clamp((int)entities[i].GetX() / bucketXSize, 0, bucketCountX - 1);
-        int y = std::clamp((int)entities[i].GetY() / bucketYSize, 0, bucketCountY - 1);
+        int x = std::clamp(entities[i].GetX() / bucketXSize, 0, bucketCountX - 1);
+        int y = std::clamp(entities[i].GetY() / bucketYSize, 0, bucketCountY - 1);
 
         grid[y][x].entityIDs.push_back(i);
     }
@@ -253,14 +253,14 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
                     {
                         for (int neighborID : neighborBucket)
                         {
-                            int firstEnemyX = (int)entities[currentID].GetX();
-                            int firstEnemyY = (int)entities[currentID].GetY();
-                            int secondEnemyX = (int)entities[neighborID].GetX();
-                            int secondEnemyY = (int)entities[neighborID].GetY();
+                            int firstEnemyX = entities[currentID].GetX();
+                            int firstEnemyY = entities[currentID].GetY();
+                            int secondEnemyX = entities[neighborID].GetX();
+                            int secondEnemyY = entities[neighborID].GetY();
                             float xdist = (float)secondEnemyX - firstEnemyX;
                             float ydist = (float)secondEnemyY - firstEnemyY;
                             float distSq = (xdist * xdist) + (ydist * ydist);
-                            float radiusSum = enemySpriteWidth + enemySpriteWidth;
+                            int radiusSum = enemySpriteWidth + enemySpriteWidth;
                             if (distSq < (radiusSum * radiusSum))
                             {
                                 // do smthing
@@ -291,20 +291,20 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
 
                 for (int currentID : neighborBucket)
                 {
-                    float enemyX = entities[currentID].GetX();
-                    float enemyY = entities[currentID].GetY();
+                    int enemyX = entities[currentID].GetX();
+                    int enemyY = entities[currentID].GetY();
 
-                    if (IsOverlapping((int)myPlayer.GetX(), playerFeetY, playerSpriteWidth, playerFeetHeight,
+                    if (IsOverlapping(myPlayer.GetX(), playerFeetY, playerSpriteWidth, playerFeetHeight,
                                       enemyX - 5, enemyY, hitboxWidth, hitboxHeight))
                     {
                         myPlayer.BounceOffObject();
                         deadEntities.push_back(currentID);
                         continue;
                     }
-                    float xdist = enemyX - myPlayer.GetX();
-                    float ydist = enemyY - myPlayer.GetY();
-                    float distSq = (xdist * xdist) + (ydist * ydist);
-                    float radiusSum = (float)playerSpriteWidth / 2 + enemySpriteWidth / 2;
+                    int xdist = enemyX - myPlayer.GetX();
+                    int ydist = enemyY - myPlayer.GetY();
+                    int distSq = (xdist * xdist) + (ydist * ydist);
+                    int radiusSum = playerSpriteWidth / 2 + enemySpriteWidth / 2;
                     if (distSq < (radiusSum * radiusSum))
                     {
                         myPlayer.Kill();

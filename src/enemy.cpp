@@ -13,10 +13,10 @@ namespace Tmpl8
 extern Sprite enemySprite;
 extern int screenHeight, screenWidth;
 
-Enemy::Enemy(float startY, float startX, float startSpeed, int startDirection, float startGravity)
+Enemy::Enemy(int startY, int startX, float startSpeed, int startDirection, float startGravity)
 {
-    y = startY;
-    x = startX;
+    y = (float) startY;
+    x = (float) startX;
     speed = startSpeed;
     direction = startDirection;
     gravity = startGravity;
@@ -27,9 +27,7 @@ void Enemy::Update(float deltaTime, Level& level)
     enemyWidth = enemySprite.GetWidth();
     enemyHeight = enemySprite.GetHeight();
 
-    int moveX = 1;
-
-    UpdateX(deltaTime, level, moveX);
+    UpdateX(deltaTime, level, 1.0);
 
     x = std::clamp(x, 0.0f, (float)screenWidth - enemyWidth);
 
@@ -50,24 +48,19 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
 
     bool hitX = TileCollision(topTile, bottomTile, leftTile, rightTile, level);
 
-    bool edgeHitX = 1;
+    bool edgeHitX = true;
 
     if (level.currentTime == TimeOfDay::Day)
     {
-
-        if (direction == 1)
-        {
-            edgeHitX = TileCollision(bottomTile + 1, bottomTile + 1, leftTile + direction, leftTile + direction, level);
-        }
-        else
-            edgeHitX = TileCollision(bottomTile + 1, bottomTile + 1, rightTile + direction, rightTile + direction, level);
+        int lr = (direction == 1) ? leftTile : rightTile;
+        edgeHitX = TileCollision(bottomTile + 1, bottomTile + 1, lr + direction, lr + direction, level);
     }
 
-    if (0 < hitX || nextX < 0)
+    if (nextX < 0 || hitX)
     {
         direction *= -1;
     }
-    else if (0 >= edgeHitX)
+    else if (!edgeHitX)
     {
         direction *= -1;
     }
@@ -76,11 +69,11 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
     {
         if (deltaX > 0)
         {
-            x = (rightTile * tileSize) - enemyWidth;
+            x = (float)(rightTile * tileSize) - enemyWidth;
         }
         else if (deltaX < 0)
         {
-            x = (leftTile * tileSize) + tileSize;
+            x = (float) (leftTile * tileSize) + tileSize;
         }
     }
     else
@@ -111,12 +104,12 @@ void Enemy::UpdateY(float deltaTime, Level& level)
     {
         if (deltaY > 0)
         {
-            y = (bottomTile * tileSize) - enemyWidth;
+            y = (float) (bottomTile * tileSize) - enemyWidth;
             currentGravity = 0;
         }
         else if (deltaY < 0)
         {
-            y = (topTile * tileSize) + tileSize;
+            y = (float) (topTile * tileSize) + tileSize;
             currentGravity = 0;
         }
     }
@@ -188,5 +181,5 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
     return false;
 }
 
-void Enemy::Draw(Surface* gameScreen) { enemySprite.Draw(gameScreen, x, y); }
+void Enemy::Draw(Surface* gameScreen) { enemySprite.Draw(gameScreen, GetX(), GetY()); }
 } // namespace Tmpl8

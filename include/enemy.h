@@ -10,21 +10,21 @@ class Surface;
 class Enemy
 {
   public:
-    Enemy(float startY, float startX, float startSpeed = 3.0f, int startDirection = 1, float startGravity = 2.5f);
+    Enemy(int startY, int startX, float startSpeed = 3.0f, int startDirection = 1, float startGravity = 2.5f);
 
     void Update(float deltaTime, Level& level);
     void Draw(Surface* gameScreen);
 
-    float GetX() const { return x; }
-    float GetY() const { return y; }
+    int GetX() const { return (int)x; }
+    int GetY() const { return (int)y; }
 
   private:
     // void UpdateTimers(float deltaTime, Level& level);
     bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
     void UpdateY(float deltaTime, Level& level);
     void UpdateX(float deltaTime, Level& level, float moveX);
-    float x, y, currentGravity = -1.0f, gravity = 1.0f;
-    int speed = 1, direction = 1, enemyWidth, enemyHeight, tileSize = 32;
+    float x, y, currentGravity = -1.0f, speed, gravity = 1.0f;
+    int direction = 1, enemyWidth, enemyHeight, tileSize = 32;
     bool grounded = false;
 };
 } // namespace Tmpl8

@@ -19,12 +19,12 @@ extern const char* timeChangeSound;
 extern const char* enemyDeathSound;
 extern ma_engine audioEngine;
 
-Player::Player(float startY, float startX, float startSpeed, int startDirection, float startGravity)
+Player::Player(int startY, int startX, float startSpeed, int startDirection, float startGravity)
 {
-    y = startY;
-    x = startX;
-    spawnX = (int)x;
-    spawnY = (int)y;
+    y = (float)startY;
+    x = (float)startX;
+    spawnX = startX;
+    spawnY = startY;
     speed = startSpeed;
     direction = startDirection;
     gravity = startGravity;
@@ -257,9 +257,9 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
 void Player::UpdateTimers(float deltaTime, Level& level)
 {
     float raycastLength = 1.25; // raycasts 1.25x sprite height below
+    int under_player = (int) (y + playerHeight * raycastLength);
 
-    grounded = 0 < level.GetTileID((int)y + playerHeight * raycastLength, (int)x) ||
-               0 < level.GetTileID((int)y + playerHeight * raycastLength, (int)x + playerWidth - 1);
+    grounded = 0 < level.GetTileID(under_player, GetX()) || 0 < level.GetTileID(under_player, GetX() + playerWidth - 1);
 
     if (grounded)
     {
@@ -281,7 +281,7 @@ void Player::Draw(Surface* gameScreen)
 ///
 /// </summary>
 
-void Player::ResetPlayerValues(float newY, float newX)
+void Player::ResetPlayerValues(int newY, int newX)
 {
     if (playerStatus == Dead)
     {
@@ -293,8 +293,8 @@ void Player::ResetPlayerValues(float newY, float newX)
     playerStatus = Alive;
 
     currentGravity = -1;
-    y = newY;
-    x = newX;
+    y = (float)newY;
+    x = (float)newX;
 }
 
 void Player::BounceOffObject()

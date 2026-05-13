@@ -148,7 +148,7 @@ void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entitie
     }
 
     ParseTileCSV(dataNode->GetText(), width, height);
-    printf("Level loaded successfully from TMX!\n");
+
 }
 
 /// <summary>
@@ -240,7 +240,9 @@ void Level::Draw(Surface* gameScreen, float deltaTime)
         changeTileSetCoordinate -= 1.0f * deltaTime / 10;
     }
     else
+    {
         changeTileSetCoordinate += 1.0f * deltaTime / 10;
+    }
 
     changeTileSetCoordinate = std::clamp(changeTileSetCoordinate, 0.0f, (float)width);
 
@@ -268,7 +270,9 @@ void Level::Draw(Surface* gameScreen, float deltaTime)
                 for (int i = 0; i < tileSize; i++)
                 {
                     for (int j = 0; j < tileSize; j++)
+                    {
                         dst[j] = src[j];
+                    }
                     src += screenShiftSize, dst += ScreenWidth;
                 }
             }
@@ -338,10 +342,10 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
     {
         for (int j = 0; j < drawWidth; j++)
         {
-            int dx = j - off, dy = i - off;
+            float dx = j - off, dy = i - off;
 
-            int newX = std::round((dx * cos) - (dy * sin) + tileSize / 2);
-            int newY = std::round((dx * sin) + (dy * cos) + tileSize / 2);
+            int newX = (int)std::round((dx * cos) - (dy * sin) + tileSize / 2);
+            int newY = (int)std::round((dx * sin) + (dy * cos) + tileSize / 2);
 
             newX = std::clamp(newX, 0, tileSize - 1);
             newY = std::clamp(newY, 0, tileSize - 1);
@@ -406,21 +410,18 @@ int Level::GetTileID(int y, int x)
 /// <returns></returns>
 bool Level::SpikeCollision(int playerY, int playerX, int gridRow, int gridCol) // TODO: needs rotation
 {
-    float side1, side2, side3;
-    bool has_neg, has_pos;
-    int bottomLeftY, bottomLeftX, bottomRightY, bottomRightX, topCenterY, topCenterX;
     int ty = gridRow * tileSize, tx = gridCol * tileSize;
 
-    bottomLeftY = ty + tileSize, bottomLeftX = tx;
-    bottomRightY = ty + tileSize, bottomRightX = tx + tileSize;
-    topCenterY = ty, topCenterX = tx + tileSize / 2;
+    int bottomLeftY = ty + tileSize, bottomLeftX = tx;
+    int bottomRightY = ty + tileSize, bottomRightX = tx + tileSize;
+    int topCenterY = ty, topCenterX = tx + tileSize / 2;
 
-    side1 = Sign(playerY, playerX, bottomLeftY, bottomLeftX, bottomRightY, bottomRightX);
-    side2 = Sign(playerY, playerX, bottomRightY, bottomRightX, topCenterY, topCenterX);
-    side3 = Sign(playerY, playerX, topCenterY, topCenterX, bottomLeftY, bottomLeftX);
+    int side1 = Sign(playerY, playerX, bottomLeftY, bottomLeftX, bottomRightY, bottomRightX);
+    int side2 = Sign(playerY, playerX, bottomRightY, bottomRightX, topCenterY, topCenterX);
+    int side3 = Sign(playerY, playerX, topCenterY, topCenterX, bottomLeftY, bottomLeftX);
 
-    has_neg = (side1 < 0) || (side2 < 0) || (side3 < 0);
-    has_pos = (side1 > 0) || (side2 > 0) || (side3 > 0);
+    bool has_neg = (side1 < 0) || (side2 < 0) || (side3 < 0);
+    bool has_pos = (side1 > 0) || (side2 > 0) || (side3 > 0);
 
     // printf("%d\n", (has_neg && has_pos));
 
@@ -437,7 +438,7 @@ bool Level::SpikeCollision(int playerY, int playerX, int gridRow, int gridCol) /
 /// <param name="p3y"></param>
 /// <param name="p3x"></param>
 /// <returns></returns>
-float Tmpl8::Level::Sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x)
+int Tmpl8::Level::Sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x)
 {
     return (p1x - p3x) * (p2y - p3y) - (p2x - p3x) * (p1y - p3y);
 }
