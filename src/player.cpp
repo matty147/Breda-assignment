@@ -20,14 +20,8 @@ extern const char* enemyDeathSound;
 extern ma_engine audioEngine;
 
 Player::Player(int startY, int startX, float startSpeed, int startDirection, float startGravity)
+    : Entity(startY, startX, startSpeed, startDirection, startGravity)
 {
-    y = (float)startY;
-    x = (float)startX;
-    spawnX = startX;
-    spawnY = startY;
-    speed = startSpeed;
-    direction = startDirection;
-    gravity = startGravity;
 }
 
 /// <summary>
@@ -37,8 +31,8 @@ Player::Player(int startY, int startX, float startSpeed, int startDirection, flo
 /// <param name="level"></param>
 void Player::Update(float deltaTime, Level& level, bool& leftPressed, bool& rightPressed, bool& upPressed)
 {
-    playerWidth = playerSprite.GetWidth();
-    playerHeight = playerSprite.GetHeight();
+    width = playerSprite.GetWidth();
+    height = playerSprite.GetHeight();
 
     bool jumpPressed = false;
     float moveX = 0;
@@ -47,12 +41,13 @@ void Player::Update(float deltaTime, Level& level, bool& leftPressed, bool& righ
 
     UpdateX(deltaTime, level, moveX);
 
-    x = std::clamp(x, 0.0f, (float)screenWidth - playerWidth);
+    x = std::clamp(x, 0.0f, (float)screenWidth - width);
 
     UpdateY(deltaTime, level, jumpPressed);
 
     UpdateTimers(deltaTime, level);
 }
+
 
 /// <summary>
 /// Reads player input to determine intended movement and actions.
@@ -81,9 +76,9 @@ void Player::UpdateX(float deltaTime, Level& level, float moveX)
     float nextX = x + deltaX;
 
     int leftTile = (int)nextX / tileSize;
-    int rightTile = (int)(nextX + playerWidth - 1) / tileSize;
+    int rightTile = (int)(nextX + width - 1) / tileSize;
     int topTile = (int)y / tileSize;
-    int bottomTile = (int)(y + playerHeight - 1) / tileSize;
+    int bottomTile = (int)(y + height - 1) / tileSize;
 
     bool hitX = TileCollision(topTile, bottomTile, leftTile, rightTile, level);
 
@@ -91,7 +86,7 @@ void Player::UpdateX(float deltaTime, Level& level, float moveX)
     {
         if (deltaX > 0)
         {
-            x = (float)(rightTile * tileSize) - playerWidth;
+            x = (float)(rightTile * tileSize) - width;
         }
         else if (deltaX < 0)
         {
@@ -140,9 +135,9 @@ void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
     float nextY = y + deltaY;
 
     int leftTile = (int)x / tileSize;
-    int rightTile = (int)(x + playerWidth - 1) / tileSize;
+    int rightTile = (int)(x + width - 1) / tileSize;
     int topTile = (int)nextY / tileSize;
-    int bottomTile = (int)(nextY + playerHeight - 1) / tileSize;
+    int bottomTile = (int)(nextY + height - 1) / tileSize;
 
     bool hitY = TileCollision(topTile, bottomTile, leftTile, rightTile, level);
 
@@ -150,7 +145,7 @@ void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
     {
         if (deltaY > 0)
         {
-            y = (float)(bottomTile * tileSize) - playerHeight;
+            y = (float)(bottomTile * tileSize) - height;
             currentGravity = 0;
             jumptime = 0.3f;
             jumpAmount = 1;
@@ -191,11 +186,11 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
                 case (int)TileType::Spike:
                 {
                     int leftX = (int)x;
-                    int rightX = (int)x + playerWidth - 1;
-                    int centerX = (int)x + (playerWidth / 2);
+                    int rightX = (int)x + width - 1;
+                    int centerX = (int)x + (width / 2);
 
-                    int bottomY = (int)y + playerHeight - 1;
-                    int centerY = (int)y + (playerHeight / 2);
+                    int bottomY = (int)y + height - 1;
+                    int centerY = (int)y + (height / 2);
 
                     if (level.SpikeCollision(bottomY, leftX, r, c) || level.SpikeCollision(bottomY, rightX, r, c) ||
                         level.SpikeCollision(bottomY, centerX, r, c) || level.SpikeCollision(centerY, leftX, r, c) ||
@@ -257,9 +252,9 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
 void Player::UpdateTimers(float deltaTime, Level& level)
 {
     float raycastLength = 1.25; // raycasts 1.25x sprite height below
-    int under_player = (int) (y + playerHeight * raycastLength);
+    int under_player = (int) (y + height * raycastLength);
 
-    grounded = 0 < level.GetTileID(under_player, GetX()) || 0 < level.GetTileID(under_player, GetX() + playerWidth - 1);
+    grounded = 0 < level.GetTileID(under_player, GetX()) || 0 < level.GetTileID(under_player, GetX() + width - 1);
 
     if (grounded)
     {

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "entity.h"
+
+
 namespace Tmpl8
 {
 class Surface;
@@ -11,7 +14,7 @@ enum PlayerState
     Dead
 };
 
-class Player
+class Player: public Entity
 {
   public:
     Player(int startY, int startX, float startSpeed = 3.0f, int startDirection = 0, float startGravity = 2.5f);
@@ -23,8 +26,6 @@ class Player
     void BounceOffObject();
     void ChangeSpawnPosition(int newY, int newX);
 
-    int GetX() const { return (int)x; }
-    int GetY() const { return (int)y; }
     bool IsDead() const { return (playerStatus == PlayerState::Dead); }
     int DeathCount() { return totalDeaths; }
 
@@ -35,12 +36,11 @@ class Player
     void ProcessInput(float& moveX, bool& jumpPressed, bool& leftPressed, bool& rightPressed, bool& upPressed);
     bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
 
-    float x, y;
-    float currentGravity = -1.0f, speed, gravity, jumptime = 0.3f, coyotetime = 1.0f;
-    int direction, jumpAmount = 0, playerWidth, playerHeight, tileSize = 32;
+    float jumptime = 0.3f, coyotetime = 1.0f;
+    int jumpAmount = 0;
     int spawnY = 0, spawnX = 0;
     int totalDeaths = 0;
-    bool grounded = false, jumplastframe = false;
+    bool jumplastframe = false;
 
     PlayerState playerStatus = Alive;
 };

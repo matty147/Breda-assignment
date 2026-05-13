@@ -14,22 +14,18 @@ extern Sprite enemySprite;
 extern int screenHeight, screenWidth;
 
 Enemy::Enemy(int startY, int startX, float startSpeed, int startDirection, float startGravity)
+    : Entity(startY, startX, startSpeed, startDirection, startGravity)
 {
-    y = (float) startY;
-    x = (float) startX;
-    speed = startSpeed;
-    direction = startDirection;
-    gravity = startGravity;
 }
 
 void Enemy::Update(float deltaTime, Level& level)
 {
-    enemyWidth = enemySprite.GetWidth();
-    enemyHeight = enemySprite.GetHeight();
+    width = enemySprite.GetWidth();
+    height = enemySprite.GetHeight();
 
     UpdateX(deltaTime, level, 1.0);
 
-    x = std::clamp(x, 0.0f, (float)screenWidth - enemyWidth);
+    x = std::clamp(x, 0.0f, (float)screenWidth - width);
 
     UpdateY(deltaTime, level);
 }
@@ -42,9 +38,9 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
     float nextX = x + deltaX;
 
     int leftTile = (int)nextX / tileSize;
-    int rightTile = (int)(nextX + enemyWidth - 1) / tileSize;
+    int rightTile = (int)(nextX + width - 1) / tileSize;
     int topTile = (int)y / tileSize;
-    int bottomTile = (int)(y + enemyWidth - 1) / tileSize;
+    int bottomTile = (int)(y + width - 1) / tileSize;
 
     bool hitX = TileCollision(topTile, bottomTile, leftTile, rightTile, level);
 
@@ -69,7 +65,7 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
     {
         if (deltaX > 0)
         {
-            x = (float)(rightTile * tileSize) - enemyWidth;
+            x = (float)(rightTile * tileSize) - width;
         }
         else if (deltaX < 0)
         {
@@ -94,9 +90,9 @@ void Enemy::UpdateY(float deltaTime, Level& level)
     float nextY = y + deltaY;
 
     int leftTile = (int)x / tileSize;
-    int rightTile = (int)(x + enemyWidth - 1) / tileSize;
+    int rightTile = (int)(x + width - 1) / tileSize;
     int topTile = (int)nextY / tileSize;
-    int bottomTile = (int)(nextY + enemyWidth - 1) / tileSize;
+    int bottomTile = (int)(nextY + width - 1) / tileSize;
 
     bool hitY = TileCollision(topTile, bottomTile, leftTile, rightTile, level);
 
@@ -104,7 +100,7 @@ void Enemy::UpdateY(float deltaTime, Level& level)
     {
         if (deltaY > 0)
         {
-            y = (float) (bottomTile * tileSize) - enemyWidth;
+            y = (float)(bottomTile * tileSize) - width;
             currentGravity = 0;
         }
         else if (deltaY < 0)
