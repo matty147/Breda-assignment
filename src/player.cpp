@@ -276,6 +276,11 @@ void Player::Draw(Surface* gameScreen)
 ///
 /// </summary>
 
+/// <summary>
+/// Resets the player position and his values
+/// </summary>
+/// <param name="newY"></param>
+/// <param name="newX"></param>
 void Player::ResetPlayerValues(int newY, int newX)
 {
     if (playerStatus == Dead)
@@ -292,14 +297,25 @@ void Player::ResetPlayerValues(int newY, int newX)
     x = (float)newX;
 }
 
+/// <summary>
+/// Bounces the player upwards
+/// </summary>
 void Player::BounceOffObject()
 {
     currentGravity = -6;
     jumpAmount = 1;
 }
 
+/// <summary>
+/// kills the player
+/// </summary>
 void Player::Kill() { playerStatus = Dead; }
 
+/// <summary>
+///  changes where the player will respawn
+/// </summary>
+/// <param name="newY"></param>
+/// <param name="newX"></param>
 void Tmpl8::Player::ChangeSpawnPosition(int newY, int newX)
 {
     spawnY = newY;

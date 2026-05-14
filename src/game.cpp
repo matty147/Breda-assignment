@@ -1,10 +1,10 @@
 #include <algorithm>
 #include <cstdio>
+#include <ctime>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <windows.h>
-#include <ctime>
 
 #define MINIAUDIO_IMPLEMENTATION
 
@@ -23,7 +23,6 @@ Sprite tilesSprite{new Surface("assets/sprites/nc2tiles.png"), 1};
 Sprite enemySprite{new Surface("assets/sprites/sprEnemy.png"), 1};
 
 ma_engine audioEngine;
-// const char* backgroundMusicSound = "audio/backgroundMusicSound.wav";
 const char* deathSound = "assets/audio/deathSound.wav";
 const char* jumpSound = "assets/audio/jumpSound.wav";
 const char* timeChangeSound = "assets/audio/timeChangeSound.wav";
@@ -31,10 +30,16 @@ const char* enemyDeathSound = "assets/audio/enemyDeathSound.wav";
 const char* levelClearedSound = "assets/audio/levelClearedSound.wav";
 const char* screenshotSound = "assets/audio/screenshotSound.wav";
 
-int screenHeight = 0, screenWidth = 0;
+constexpr int KEY_W = 26, KEY_UP = 82;
+constexpr int KEY_A = 4, KEY_LEFT = 80;
+constexpr int KEY_D = 7, KEY_RIGHT = 79;
+constexpr int KEY_P = 19;
 
 Level level(100, 100);
 Player myPlayer(0, 0);
+TGAHeader header;
+
+int screenHeight = 0, screenWidth = 0;
 
 std::vector<Enemy> entities;
 std::vector<std::vector<int>> entitySpawnPoints;
@@ -44,17 +49,11 @@ const std::vector<std::string> levelNames = {"level1", "level2", "level3"};
 int Game::currentLevelID = 0;
 bool Game::updateLevel = false;
 
+// amout of collision buckets per row/column on screen
 const int bucketCountX = 10;
 const int bucketCountY = 10;
 
-constexpr int KEY_W = 26, KEY_UP = 82;
-constexpr int KEY_A = 4, KEY_LEFT = 80;
-constexpr int KEY_D = 7, KEY_RIGHT = 79;
-constexpr int KEY_P = 19;
-
-std::vector<std::vector<int>> vineList;
-
-TGAHeader header;
+std::vector<std::vector<int>> vineList; // [y,x] coordinates of the stumps of vines
 
 void Game::Init()
 {
@@ -63,6 +62,8 @@ void Game::Init()
         printf("Failed to initialize audio engine.\n");
     }
 
+    DefineScreenshotParameters(screen);
+
     grid.resize(bucketCountY, std::vector<Bucket>(bucketCountX));
 
     screenWidth = screen->GetWidth();
@@ -70,11 +71,12 @@ void Game::Init()
 
     int playerX = 0, playerY = 0;
 
-    DefineScreenshotParameters(screen);
-
     level.CreateLevel(levelNames[Game::currentLevelID], entitySpawnPoints);
     level.FindFlag(playerY, playerX);
     level.FindTileInstances(vineList, (int)TileType::VineStump);
+
+    myPlayer = Player(playerY, playerX);
+    myPlayer.ChangeSpawnPosition(playerY, playerX);
 
     entities.reserve(entitySpawnPoints.size());
 
@@ -84,9 +86,6 @@ void Game::Init()
 
         entities.push_back(newEnemy);
     }
-
-    myPlayer = Player(playerY, playerX);
-    myPlayer.ChangeSpawnPosition(playerY, playerX);
 }
 
 void Game::Shutdown()
@@ -100,15 +99,17 @@ void Game::Shutdown()
 /// <param name="deltaTime"></param>
 void Game::Tick(float deltaTime)
 {
+    screen->Clear(0);
+
     const float deltaTimeMaximumDelay = 33.0f;
 
     deltaTime = (std::min)(deltaTime, deltaTimeMaximumDelay); // stop the objects from lagging through the floor
 
-    screen->Clear(0);
-
     level.UpdateVines(vineList);
 
     level.Draw(screen, deltaTime);
+
+    SpatialHashing(screen);
 
     myPlayer.Update(deltaTime, level, leftPressed, rightPressed, upPressed);
     myPlayer.Draw(screen);
@@ -118,8 +119,6 @@ void Game::Tick(float deltaTime)
         entity.Update(deltaTime, level);
         entity.Draw(screen);
     }
-
-    SpatialHashing(screen);
 
     if (myPlayer.IsDead())
     {
@@ -144,6 +143,9 @@ void Game::Tick(float deltaTime)
     }
 }
 
+/// <summary>
+///  Reset values and loads the next level
+/// </summary>
 void Game::GoToNextLevel()
 {
     Game::currentLevelID++;
@@ -154,6 +156,9 @@ void Game::GoToNextLevel()
     vineList.clear();
 }
 
+/// <summary>
+/// reset all values and entities
+/// </summary>
 void Game::ResetLevel()
 {
     int newY = 0, newX = 0;
@@ -213,7 +218,7 @@ void Game::SpatialHashing(Surface* gameScreen)
 }
 
 /// <summary>
-/// check for collision
+/// check for entities collision in each sector of the screen
 /// </summary>
 /// <param name="bucketYSize"></param>
 /// <param name="bucketXSize"></param>
@@ -236,6 +241,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
         {0, 1},
         {1, 1}};
 
+    // entities
     for (int r = 0; r < bucketCountX; r++)
     {
         for (int c = 0; c < bucketCountY; c++)
@@ -272,7 +278,8 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
         }
     }
 
-    // split into two functions
+    // player
+    // TODO: split into two functions
     int hitboxWidth = playerSpriteWidth;
     int hitboxHeight = playerSpriteHeight / 8;
     int playerFeetY = (int)myPlayer.GetY() + playerSpriteHeight;
@@ -326,8 +333,20 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
     }
 }
 
+/// <summary>
+/// check if two entities are colliding with each other
+/// </summary>
+/// <param name="box1X"></param>
+/// <param name="box1Y"></param>
+/// <param name="box1Width"></param>
+/// <param name="box1Height"></param>
+/// <param name="box2X"></param>
+/// <param name="box2Y"></param>
+/// <param name="box2Width"></param>
+/// <param name="box2Height"></param>
+/// <returns></returns>
 bool Game::IsOverlapping(int box1X, int box1Y, int box1Width, int box1Height,
-                                int box2X, int box2Y, int box2Width, int box2Height)
+                         int box2X, int box2Y, int box2Width, int box2Height)
 {
     return (box1X < box2X + box2Width &&  // Box 1's Left edge is left of Box 2's Right edge
             box1X + box1Width > box2X &&  // Box 1's Right edge is right of Box 2's Left edge
@@ -335,6 +354,10 @@ bool Game::IsOverlapping(int box1X, int box1Y, int box1Width, int box1Height,
             box1Y + box1Height > box2Y);  // Box 1's Bottom edge is below Box 2's Top edge
 }
 
+/// <summary>
+/// create and fill data for the .tga header
+/// </summary>
+/// <param name="gameScreen"></param>
 void Game::DefineScreenshotParameters(Surface* gameScreen)
 {
     header.ID = header.colmapt = 0;
@@ -352,6 +375,9 @@ void Game::DefineScreenshotParameters(Surface* gameScreen)
     header.idesc = 0x28;
 }
 
+/// <summary>
+/// Takes a screenshot of the screen and saves it with the current date the name
+/// </summary>
 void Game::TakeScreenshot()
 {
     std::time_t result = std::time(nullptr);

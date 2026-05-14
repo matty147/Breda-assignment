@@ -18,6 +18,11 @@ Enemy::Enemy(int startY, int startX, float startSpeed, int startDirection, float
 {
 }
 
+/// <summary>
+/// Manages the Enemies's overall state, movement, and lifecycle for the current frame.
+/// </summary>
+/// <param name="deltaTime"></param>
+/// <param name="level"></param>
 void Enemy::Update(float deltaTime, Level& level)
 {
     width = enemySprite.GetWidth();
@@ -30,6 +35,12 @@ void Enemy::Update(float deltaTime, Level& level)
     UpdateY(deltaTime, level);
 }
 
+/// <summary>
+/// calculates the enemy movement on the X axis
+/// </summary>
+/// <param name="deltaTime"></param>
+/// <param name="level"></param>
+/// <param name="moveX"></param>
 void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
 {
     moveX *= direction;
@@ -69,7 +80,7 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
         }
         else if (deltaX < 0)
         {
-            x = (float) (leftTile * tileSize) + tileSize;
+            x = (float)(leftTile * tileSize) + tileSize;
         }
     }
     else
@@ -78,6 +89,11 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
     }
 }
 
+/// <summary>
+/// calculates the enemy movement on the Y axis
+/// </summary>
+/// <param name="deltaTime"></param>
+/// <param name="level"></param>
 void Enemy::UpdateY(float deltaTime, Level& level)
 {
     float maxGravity = 15.0f;
@@ -105,7 +121,7 @@ void Enemy::UpdateY(float deltaTime, Level& level)
         }
         else if (deltaY < 0)
         {
-            y = (float) (topTile * tileSize) + tileSize;
+            y = (float)(topTile * tileSize) + tileSize;
             currentGravity = 0;
         }
     }
@@ -115,6 +131,15 @@ void Enemy::UpdateY(float deltaTime, Level& level)
     }
 }
 
+/// <summary>
+/// Checks for what to do on collision with a object
+/// </summary>
+/// <param name="topTile"></param>
+/// <param name="bottomTile"></param>
+/// <param name="leftTile"></param>
+/// <param name="rightTile"></param>
+/// <param name="level"></param>
+/// <returns></returns>
 bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level)
 {
     bool hit = false;
@@ -177,5 +202,9 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
     return false;
 }
 
+/// <summary>
+/// draws the enemy sprite
+/// </summary>
+/// <param name="gameScreen"></param>
 void Enemy::Draw(Surface* gameScreen) { enemySprite.Draw(gameScreen, GetX(), GetY()); }
 } // namespace Tmpl8

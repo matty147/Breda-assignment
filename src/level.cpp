@@ -192,6 +192,10 @@ void Level::FindTileInstances(std::vector<std::vector<int>>& listOfTilesInstance
     }
 }
 
+/// <summary>
+/// Updates the state of the vine stump
+/// </summary>
+/// <param name="listOfVines"></param>
 void Level::UpdateVines(std::vector<std::vector<int>>& listOfVines)
 {
     for (int i = 0; i < listOfVines.size(); i++)
@@ -333,19 +337,17 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
     float cos = std::cos(angle);
     float sin = std::sin(angle);
 
-    // printf("ts:%d, 1:%.2f, 2:%.2f\n",tileSize, (tileSize) / 2 - 0.5f,(float)(tileSize - 1) / 2);
-
-    float off = (float)(tileSize - 1) / 2;
-
+    int off = (tileSize) / 2;
+    
     Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
     for (int i = 0; i < drawHeight; i++)
     {
         for (int j = 0; j < drawWidth; j++)
         {
-            float dx = j - off, dy = i - off;
+            int dx = j - off, dy = i - off;
 
-            int newX = (int)std::round((dx * cos) - (dy * sin) + tileSize / 2);
-            int newY = (int)std::round((dx * sin) + (dy * cos) + tileSize / 2);
+            int newX = std::round((dx * cos) - (dy * sin) + tileSize / 2);
+            int newY = std::round((dx * sin) + (dy * cos) + tileSize / 2);
 
             newX = std::clamp(newX, 0, tileSize - 1);
             newY = std::clamp(newY, 0, tileSize - 1);
