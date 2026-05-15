@@ -14,7 +14,7 @@ Controls
 A / Left arrow   - move left
 D / Right arrow  - move right
 W / Up arrow     - jump
-P                - take a screenshot
+P                - take a screenshot that is saved into the project folder
 Esc              - quit
 
 Build

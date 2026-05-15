@@ -2,7 +2,7 @@
 <map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="13">
  <tileset firstgid="1" name="Default tileset" tilewidth="32" tileheight="32" spacing="1" tilecount="108" columns="18">
   <image source="../assets/nc2tiles.png" width="595" height="199"/>
- </tileset>
+ </tileset>	
  <tileset firstgid="109" source="Default tileset.tsx"/>
  <layer id="1" name="Tile Layer 1" width="50" height="30">
   <data encoding="csv">

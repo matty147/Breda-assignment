@@ -75,7 +75,7 @@ class Game
 
     /// <summary>Partitions entities into spatial buckets and runs collision checks.</summary>
     /// <param name="gameScreen">Screen surface (currently unused).</param>
-    void SpatialHashing(Surface* gameScreen);
+    void SpatialHashing();
 
     /// <summary>Checks player-vs-entity collisions across neighbouring buckets.</summary>
     /// <param name="bucketYSize">Height of one bucket in pixels.</param>

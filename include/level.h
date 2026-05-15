@@ -7,6 +7,9 @@
 
 namespace Tmpl8
 {
+
+static constexpr int tileSize = 32;
+
 class Surface;
 
 enum class TileType
@@ -117,8 +120,8 @@ class Level
     /// <returns>Signed value indicating which side of the line p2-p3 the point p1 lies on.</returns>
     int Sign(int p1y, int p1x, int p2y, int p2x, int p3y, int p3x);
 
-    int width, height, tileSize = 32;
+    int width, height;
     std::vector<std::vector<int>> tiles;
-    int rotatedIdValue = 100; // if higher then this value the sprite should be rotated
+    static constexpr int rotatedIdValue = 100; // if higher then this value the sprite should be rotated
 };
 } // namespace Tmpl8

@@ -119,19 +119,19 @@ void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
 
     if (jumpPressed)
     {
-        if (!jumplastframe && (grounded || jumpAmount > 0))
+        if (!jumpLastFrame && (grounded || jumpAmount > 0))
         {
             currentGravity = jumpGravity;
             ma_engine_play_sound(&audioEngine, jumpSound, NULL);
-            if (!(grounded || coyotetime >= 0))
+            if (!(grounded || coyoteTime >= 0))
                 jumpAmount--;
             grounded = false;
         }
-        jumplastframe = true;
+        jumpLastFrame = true;
     }
     else
     {
-        jumplastframe = false;
+        jumpLastFrame = false;
     }
 
     currentGravity += gravity * (deltaTime / 100.0f);
@@ -154,7 +154,6 @@ void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
         {
             y = (float)(bottomTile * tileSize) - height;
             currentGravity = 0;
-            jumptime = 0.3f;
             jumpAmount = 1;
         }
         else if (deltaY < 0)
@@ -180,7 +179,6 @@ void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
 /// <returns>True if collision ocures false if not</returns>
 bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level)
 {
-    bool hit = false;
     for (int r = topTile; r <= bottomTile; r++)
     {
         for (int c = leftTile; c <= rightTile; c++)
@@ -261,9 +259,9 @@ void Player::UpdateTimers(float deltaTime, Level& level)
 
     if (grounded)
     {
-        coyotetime = 1;
+        coyoteTime = 1;
     }
-    coyotetime -= deltaTime / 100;
+    coyoteTime -= deltaTime / 100;
 }
 
 /// <summary>
@@ -315,7 +313,7 @@ void Player::Kill() { playerStatus = Dead; }
 /// </summary>
 /// <param name="newY"></param>
 /// <param name="newX"></param>
-void Tmpl8::Player::ChangeSpawnPosition(int newY, int newX)
+void Player::ChangeSpawnPosition(int newY, int newX)
 {
     spawnY = newY;
     spawnX = newX;

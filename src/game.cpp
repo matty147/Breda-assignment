@@ -65,12 +65,12 @@ void Game::Init()
         printf("Failed to initialize audio engine.\n");
     }
 
-    DefineScreenshotParameters(screen);
-
     grid.resize(bucketCountY, std::vector<Bucket>(bucketCountX));
 
     screenWidth = screen->GetWidth();
     screenHeight = screen->GetHeight();
+
+    DefineScreenshotParameters(screen);
 
     int playerX = 0, playerY = 0;
 
@@ -115,7 +115,7 @@ void Game::Tick(float deltaTime)
 
     level.Draw(screen, deltaTime);
 
-    SpatialHashing(screen);
+    SpatialHashing();
 
     myPlayer.Update(deltaTime, level, leftPressed, rightPressed, upPressed);
     myPlayer.Draw(screen);
@@ -197,8 +197,7 @@ void Game::ResetLevel()
 /// <summary>
 ///  separate entities into sectors for collision detetion
 /// </summary>
-/// <param name="gameScreen"></param>
-void Game::SpatialHashing(Surface* gameScreen)
+void Game::SpatialHashing()
 {
     int bucketXSize = screenWidth / bucketCountX;
     int bucketYSize = screenHeight / bucketCountY;

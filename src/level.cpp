@@ -143,6 +143,12 @@ void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entitie
     tiles.assign(height, std::vector<int>(width, 0));
 
     XMLElement* entityNode = mapNode->FirstChildElement("objectgroup");
+
+    if (!entityNode)
+    {
+        printf("Could find any entities!\n");
+    }
+
     ParseEntities(entityNode->FirstChildElement("object"), entities);
 
     XMLElement* dataNode = mapNode->FirstChildElement("layer")->FirstChildElement("data");

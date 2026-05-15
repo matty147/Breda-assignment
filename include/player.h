@@ -93,11 +93,14 @@ class Player : public Entity
     /// <returns>True if a solid tile was hit.</returns>
     bool TileCollision(int topTile, int bottomTile, int leftTile, int rightTile, Level& level);
 
-    float jumptime = 0.3f, coyotetime = 1.0f;
+    float coyoteTime = 1.0f;
     int jumpAmount = 0;
     int spawnY = 0, spawnX = 0;
     int totalDeaths = 0;
-    bool jumplastframe = false;
+    bool jumpLastFrame = false;
+
+    static constexpr float deltaTime = 10.0f;
+
 
     PlayerState playerStatus = Alive;
 };
