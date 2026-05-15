@@ -30,5 +30,8 @@ class Entity
     int direction = 1;
     int width, height;
     bool grounded = false;
+
+    static constexpr float deltaTimeScale = 10.0f;
+    static constexpr float deltaTimeGravityScale = 100.0f;
 };
 } // namespace Tmpl8

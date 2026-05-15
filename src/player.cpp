@@ -79,7 +79,7 @@ void Player::ProcessInput(float& moveX, bool& jumpPressed, bool& leftPressed, bo
 /// <param name="moveX"></param>
 void Player::UpdateX(float deltaTime, Level& level, float moveX)
 {
-    float deltaX = moveX * (deltaTime / 10.0f);
+    float deltaX = moveX * (deltaTime / deltaTimeScale);
     float nextX = x + deltaX;
 
     int leftTile = (int)nextX / tileSize;
@@ -134,11 +134,11 @@ void Player::UpdateY(float deltaTime, Level& level, bool& jumpPressed)
         jumpLastFrame = false;
     }
 
-    currentGravity += gravity * (deltaTime / 100.0f);
+    currentGravity += gravity * (deltaTime / deltaTimeGravityScale);
     if (currentGravity > maxGravity)
         currentGravity = maxGravity;
 
-    float deltaY = currentGravity * (deltaTime / 10.0f);
+    float deltaY = currentGravity * (deltaTime / deltaTimeScale);
     float nextY = y + deltaY;
 
     int leftTile = (int)x / tileSize;
@@ -261,7 +261,7 @@ void Player::UpdateTimers(float deltaTime, Level& level)
     {
         coyoteTime = 1;
     }
-    coyoteTime -= deltaTime / 100;
+    coyoteTime -= deltaTime / deltaTimeCoyoteScale;
 }
 
 /// <summary>

@@ -53,7 +53,7 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
 {
     moveX *= direction;
 
-    float deltaX = moveX * (deltaTime / 10.0f);
+    float deltaX = moveX * (deltaTime / deltaTimeScale);
     float nextX = x + deltaX;
 
     int leftTile = (int)nextX / tileSize;
@@ -106,11 +106,11 @@ void Enemy::UpdateY(float deltaTime, Level& level)
 {
     float maxGravity = 15.0f;
 
-    currentGravity += gravity * (deltaTime / 100.0f);
+    currentGravity += gravity * (deltaTime / deltaTimeGravityScale);
     if (currentGravity > maxGravity)
         currentGravity = maxGravity;
 
-    float deltaY = currentGravity * (deltaTime / 10.0f);
+    float deltaY = currentGravity * (deltaTime / deltaTimeScale);
     float nextY = y + deltaY;
 
     int leftTile = (int)x / tileSize;

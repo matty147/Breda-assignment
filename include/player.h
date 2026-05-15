@@ -99,8 +99,7 @@ class Player : public Entity
     int totalDeaths = 0;
     bool jumpLastFrame = false;
 
-    static constexpr float deltaTime = 10.0f;
-
+    static constexpr float deltaTimeCoyoteScale = 100.0f;
 
     PlayerState playerStatus = Alive;
 };

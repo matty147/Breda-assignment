@@ -251,11 +251,11 @@ void Level::Draw(Surface* gameScreen, float deltaTime)
 
     if (currentTime == TimeOfDay::Day)
     {
-        changeTileSetCoordinate -= 1.0f * deltaTime / 10;
+        changeTileSetCoordinate -= deltaTime / deltaTimeDrawScale;
     }
     else
     {
-        changeTileSetCoordinate += 1.0f * deltaTime / 10;
+        changeTileSetCoordinate += deltaTime / deltaTimeDrawScale;
     }
 
     changeTileSetCoordinate = std::clamp(changeTileSetCoordinate, 0.0f, (float)width);

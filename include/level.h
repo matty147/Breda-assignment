@@ -123,5 +123,6 @@ class Level
     int width, height;
     std::vector<std::vector<int>> tiles;
     static constexpr int rotatedIdValue = 100; // if higher then this value the sprite should be rotated
+    static constexpr float deltaTimeDrawScale = 10.0f;
 };
 } // namespace Tmpl8
