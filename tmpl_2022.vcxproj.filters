@@ -1,61 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="surface.cpp">
-      <Filter>template code</Filter>
-    </ClCompile>
-    <ClCompile Include="template.cpp">
-      <Filter>template code</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\enemy.cpp">
+    <ClCompile Include="src\enemy.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\game.cpp">
+    <ClCompile Include="src\entity.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\level.cpp">
+    <ClCompile Include="src\game.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\player.cpp">
+    <ClCompile Include="src\level.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\third_party\tinyxml2.cpp">
+    <ClCompile Include="src\player.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\tinyxml2.cpp">
       <Filter>third_party</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\entity.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="tmpl8\surface.cpp">
+      <Filter>template code</Filter>
+    </ClCompile>
+    <ClCompile Include="tmpl8\template.cpp">
+      <Filter>template code</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="surface.h">
-      <Filter>template code</Filter>
-    </ClInclude>
-    <ClInclude Include="template.h">
-      <Filter>template code</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\enemy.h">
+    <ClInclude Include="include\enemy.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\game.h">
+    <ClInclude Include="include\entity.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\level.h">
+    <ClInclude Include="include\game.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\player.h">
+    <ClInclude Include="include\level.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\tinyxml2.h">
+    <ClInclude Include="include\player.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\third_party\miniaudio.h">
+    <ClInclude Include="third_party\miniaudio.h">
       <Filter>third_party</Filter>
     </ClInclude>
-    <ClInclude Include="..\third_party\tinyxml2.h">
+    <ClInclude Include="third_party\tinyxml2.h">
       <Filter>third_party</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\entity.h">
-      <Filter>include</Filter>
+    <ClInclude Include="tmpl8\surface.h">
+      <Filter>template code</Filter>
+    </ClInclude>
+    <ClInclude Include="tmpl8\template.h">
+      <Filter>template code</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -73,9 +70,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="_readme.txt">
-      <Filter>template code</Filter>
-    </Text>
-    <Text Include="..\README.md" />
+    <Text Include="readme.txt" />
   </ItemGroup>
 </Project>
