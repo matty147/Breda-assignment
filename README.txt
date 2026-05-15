@@ -26,3 +26,7 @@ Credits
 -------
 - tmpl8 framework by Jacco Bikker (included under third_party / tmpl8)
 - Art and game design by me
+
+Download
+--------
+https://inkk-ing.itch.io/night-shade
