@@ -24,6 +24,11 @@ namespace Tmpl8
 {
 extern Sprite tilesSprite;
 
+/// <summary>
+/// Constructs an empty level with the given tile dimensions and allocates the tile grid.
+/// </summary>
+/// <param name="iwidth">Width in tiles.</param>
+/// <param name="iheight">Height in tiles.</param>
 Level::Level(int iwidth, int iheight)
 {
     width = iwidth;
@@ -148,7 +153,6 @@ void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entitie
     }
 
     ParseTileCSV(dataNode->GetText(), width, height);
-
 }
 
 /// <summary>
@@ -156,7 +160,7 @@ void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entitie
 /// </summary>
 /// <param name="outY"></param>
 /// <param name="outX"></param>
-void Level::FindFlag(int& outY, int& outX) // this is probably not really needed and can use the fun under it
+void Level::FindFlag(int& outY, int& outX)
 {
     for (int y = 0; y < height; y++)
     {
@@ -288,8 +292,8 @@ void Level::Draw(Surface* gameScreen, float deltaTime)
 /// Calculates and draws the correctly rotated sprite
 /// </summary>
 /// <param name="gameScreen"></param>
-/// <param name="y"> - Tile Y position</param>
-/// <param name="x"> - Tile X position</param>
+/// <param name="y"></param>
+/// <param name="x"></param>
 /// <param name="ScreenHeight"></param>
 /// <param name="ScreenWidth"></param>
 /// <param name="backgroundType"></param>
@@ -338,7 +342,7 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
     float sin = std::sin(angle);
 
     int off = (tileSize) / 2;
-    
+
     Pixel* dst = gameScreen->GetBuffer() + x * tileSize + y * tileSize * ScreenWidth;
     for (int i = 0; i < drawHeight; i++)
     {
@@ -424,8 +428,6 @@ bool Level::SpikeCollision(int playerY, int playerX, int gridRow, int gridCol) /
 
     bool has_neg = (side1 < 0) || (side2 < 0) || (side3 < 0);
     bool has_pos = (side1 > 0) || (side2 > 0) || (side3 > 0);
-
-    // printf("%d\n", (has_neg && has_pos));
 
     return !(has_neg && has_pos);
 }

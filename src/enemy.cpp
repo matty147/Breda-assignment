@@ -13,6 +13,14 @@ namespace Tmpl8
 extern Sprite enemySprite;
 extern int screenHeight, screenWidth;
 
+/// <summary>
+/// Constructs an enemy at the given spawn position with the given movement parameters.
+/// </summary>
+/// <param name="startY">Initial Y position in pixels.</param>
+/// <param name="startX">Initial X position in pixels.</param>
+/// <param name="startSpeed">Horizontal movement speed.</param>
+/// <param name="startDirection">Initial facing direction (1 = right, -1 = left).</param>
+/// <param name="startGravity">Per-frame gravity acceleration.</param>
 Enemy::Enemy(int startY, int startX, float startSpeed, int startDirection, float startGravity)
     : Entity(startY, startX, startSpeed, startDirection, startGravity)
 {
@@ -51,7 +59,7 @@ void Enemy::UpdateX(float deltaTime, Level& level, float moveX)
     int leftTile = (int)nextX / tileSize;
     int rightTile = (int)(nextX + width - 1) / tileSize;
     int topTile = (int)y / tileSize;
-    int bottomTile = (int)(y + width - 1) / tileSize;
+    int bottomTile = (int)(y + height - 1) / tileSize;
 
     bool hitX = TileCollision(topTile, bottomTile, leftTile, rightTile, level);
 
@@ -108,7 +116,7 @@ void Enemy::UpdateY(float deltaTime, Level& level)
     int leftTile = (int)x / tileSize;
     int rightTile = (int)(x + width - 1) / tileSize;
     int topTile = (int)nextY / tileSize;
-    int bottomTile = (int)(nextY + width - 1) / tileSize;
+    int bottomTile = (int)(nextY + height - 1) / tileSize;
 
     bool hitY = TileCollision(topTile, bottomTile, leftTile, rightTile, level);
 
@@ -116,7 +124,7 @@ void Enemy::UpdateY(float deltaTime, Level& level)
     {
         if (deltaY > 0)
         {
-            y = (float)(bottomTile * tileSize) - width;
+            y = (float)(bottomTile * tileSize) - height;
             currentGravity = 0;
         }
         else if (deltaY < 0)
@@ -173,7 +181,7 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
                     continue;
 
                 case (int)TileType::SunBlock:
-                    if (level.currentTime == TimeOfDay::Night)
+                    if (level.currentTime == TimeOfDay::Day)
                     {
                         return true;
                     }
@@ -188,8 +196,6 @@ bool Enemy::TileCollision(int topTile, int bottomTile, int leftTile, int rightTi
                     continue;
 
                 case (int)TileType::Flag:
-                    // case (int)TileType::Sun:
-                    // case (int)TileType::Moon:
                     continue;
             }
 

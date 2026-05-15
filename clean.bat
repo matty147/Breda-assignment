@@ -46,3 +46,4 @@ rd release /S /Q
 rd debug /S /Q
 rd x64 /S /Q
 rd .vs /S /Q
+rd bin /S /Q

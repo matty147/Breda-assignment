@@ -55,6 +55,9 @@ const int bucketCountY = 10;
 
 std::vector<std::vector<int>> vineList; // [y,x] coordinates of the stumps of vines
 
+/// <summary>
+/// Initializes audio, loads the first level, and spawns the player and enemies.
+/// </summary>
 void Game::Init()
 {
     if (ma_engine_init(NULL, &audioEngine) != MA_SUCCESS)
@@ -88,6 +91,9 @@ void Game::Init()
     }
 }
 
+/// <summary>
+/// Shuts down the audio engine and releases its resources.
+/// </summary>
 void Game::Shutdown()
 {
     ma_engine_uninit(&audioEngine);
@@ -187,7 +193,7 @@ void Game::ResetLevel()
 }
 
 /// <summary>
-///  seperate entities into sectors for collision detetion
+///  separate entities into sectors for collision detetion
 /// </summary>
 /// <param name="gameScreen"></param>
 void Game::SpatialHashing(Surface* gameScreen)
@@ -241,45 +247,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
         {0, 1},
         {1, 1}};
 
-    // entities
-    for (int r = 0; r < bucketCountX; r++)
-    {
-        for (int c = 0; c < bucketCountY; c++)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                int neighborX = r + neighborOffsets[i][0];
-                int neighborY = c + neighborOffsets[i][1];
-                if (neighborX >= 0 && neighborX < bucketCountX && neighborY >= 0 && neighborY < bucketCountY)
-                {
-                    // collision for enemies
-                    auto& neighborBucket = grid[neighborY][neighborX].entityIDs;
-                    auto& CurrentBucket = grid[r][c].entityIDs;
-                    for (int currentID : CurrentBucket)
-                    {
-                        for (int neighborID : neighborBucket)
-                        {
-                            int firstEnemyX = entities[currentID].GetX();
-                            int firstEnemyY = entities[currentID].GetY();
-                            int secondEnemyX = entities[neighborID].GetX();
-                            int secondEnemyY = entities[neighborID].GetY();
-                            float xdist = (float)secondEnemyX - firstEnemyX;
-                            float ydist = (float)secondEnemyY - firstEnemyY;
-                            float distSq = (xdist * xdist) + (ydist * ydist);
-                            int radiusSum = enemySpriteWidth + enemySpriteWidth;
-                            if (distSq < (radiusSum * radiusSum))
-                            {
-                                // do smthing
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     // player
-    // TODO: split into two functions
     int hitboxWidth = playerSpriteWidth;
     int hitboxHeight = playerSpriteHeight / 8;
     int playerFeetY = (int)myPlayer.GetY() + playerSpriteHeight;
@@ -327,7 +295,7 @@ void Game::CheckEntityCollision(int bucketYSize, int bucketXSize)
     // destroy enemies marked for death
     for (int d = 0; d < deadEntities.size(); d++)
     {
-        ma_engine_play_sound(&audioEngine, enemyDeathSound, NULL); // move this to the enemy at least add a kill() function;
+        ma_engine_play_sound(&audioEngine, enemyDeathSound, NULL);
         entities[deadEntities[d]] = entities.back();
         entities.pop_back();
     }
@@ -419,6 +387,10 @@ void Game::TakeScreenshot()
     fclose(f);
 }
 
+/// <summary>
+/// Handles a key release event and clears the corresponding input flag.
+/// </summary>
+/// <param name="key">HID usage code of the released key.</param>
 void Game::KeyUp(int key)
 {
     // Player controls
@@ -434,6 +406,10 @@ void Game::KeyUp(int key)
         screenshotPressed = false;
 }
 
+/// <summary>
+/// Handles a key press event and sets the corresponding input flag.
+/// </summary>
+/// <param name="key">HID usage code of the pressed key.</param>
 void Game::KeyDown(int key)
 {
     // Player constrols

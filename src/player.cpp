@@ -19,6 +19,14 @@ extern const char* timeChangeSound;
 extern const char* enemyDeathSound;
 extern ma_engine audioEngine;
 
+/// <summary>
+/// Constructs a player at the given spawn position with the given movement parameters.
+/// </summary>
+/// <param name="startY">Initial Y position in pixels.</param>
+/// <param name="startX">Initial X position in pixels.</param>
+/// <param name="startSpeed">Horizontal movement speed.</param>
+/// <param name="startDirection">Initial facing direction.</param>
+/// <param name="startGravity">Per-frame gravity acceleration.</param>
 Player::Player(int startY, int startX, float startSpeed, int startDirection, float startGravity)
     : Entity(startY, startX, startSpeed, startDirection, startGravity)
 {
@@ -47,7 +55,6 @@ void Player::Update(float deltaTime, Level& level, bool& leftPressed, bool& righ
 
     UpdateTimers(deltaTime, level);
 }
-
 
 /// <summary>
 /// Reads player input to determine intended movement and actions.
@@ -229,10 +236,6 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
                 case (int)TileType::Portal:
                     Game::updateLevel = true;
                     continue;
-
-                    // case (int)TileType::Water:
-                    // case (int)TileType::Flag:
-                    //     continue;
             }
 
             if (tileId > 0)
@@ -252,7 +255,7 @@ bool Player::TileCollision(int topTile, int bottomTile, int leftTile, int rightT
 void Player::UpdateTimers(float deltaTime, Level& level)
 {
     float raycastLength = 1.25; // raycasts 1.25x sprite height below
-    int under_player = (int) (y + height * raycastLength);
+    int under_player = (int)(y + height * raycastLength);
 
     grounded = 0 < level.GetTileID(under_player, GetX()) || 0 < level.GetTileID(under_player, GetX() + width - 1);
 
@@ -271,10 +274,6 @@ void Player::Draw(Surface* gameScreen)
 {
     playerSprite.Draw(gameScreen, (int)x, (int)y);
 }
-
-/// <summary>
-///
-/// </summary>
 
 /// <summary>
 /// Resets the player position and his values
