@@ -103,6 +103,7 @@ class Game
     bool IsOverlapping(int box1X, int box1Y, int box1Width, int box1Height, int box2X, int box2Y, int box2Width, int box2Height);
 
     bool leftPressed = false, rightPressed = false, upPressed = false, screenshotPressed = false;
+    bool screenshotLastFrame = false;
     int moveX = 0;
 
     Surface* screen;

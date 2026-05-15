@@ -142,11 +142,13 @@ void Game::Tick(float deltaTime)
         ResetLevel();
     }
 
-    if (screenshotPressed)
+    if (screenshotPressed && !screenshotLastFrame)
     {
         ma_engine_play_sound(&audioEngine, screenshotSound, NULL);
         TakeScreenshot();
     }
+
+    screenshotLastFrame = screenshotPressed;
 }
 
 /// <summary>

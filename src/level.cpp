@@ -140,7 +140,7 @@ void Level::CreateLevel(string levelName, std::vector<std::vector<int>>& entitie
     XMLElement* mapNode = doc.FirstChildElement("map");
     width = mapNode->IntAttribute("width");
     height = mapNode->IntAttribute("height");
-    tiles.resize(height, std::vector<int>(width, 0));
+    tiles.assign(height, std::vector<int>(width, 0));
 
     XMLElement* entityNode = mapNode->FirstChildElement("objectgroup");
     ParseEntities(entityNode->FirstChildElement("object"), entities);
