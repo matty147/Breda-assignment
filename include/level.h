@@ -3,7 +3,7 @@
 #include <tuple>
 #include <vector>
 
-#include "../third_party/tinyxml2.h"
+#include "third_party/tinyxml2.h"
 
 namespace Tmpl8
 {

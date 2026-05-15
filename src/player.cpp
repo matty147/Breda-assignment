@@ -2,11 +2,10 @@
 #include <cmath>
 #include <cstdio>
 
-#include "../include/game.h"
-#include "../include/level.h"
-#include "../include/player.h"
-#include "../tmpl8/surface.h"
-#include <windows.h>
+#include "game.h"
+#include "level.h"
+#include "player.h"
+#include "surface.h"
 
 namespace Tmpl8
 {

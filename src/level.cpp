@@ -7,12 +7,11 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <windows.h>
 
-#include "../third_party/tinyxml2.h"
-#include "../tmpl8/surface.h"
+#include "third_party/tinyxml2.h"
+#include "surface.h"
 
-#include "../include/level.h"
+#include "level.h"
 
 using namespace tinyxml2;
 
@@ -356,8 +355,8 @@ void Level::DrawRotatedSprite(Surface* gameScreen, int y, int x, int ScreenHeigh
         {
             int dx = j - off, dy = i - off;
 
-            int newX = std::round((dx * cos) - (dy * sin) + tileSize / 2);
-            int newY = std::round((dx * sin) + (dy * cos) + tileSize / 2);
+            int newX = (int) std::round((dx * cos) - (dy * sin) + tileSize / 2);
+            int newY = (int) std::round((dx * sin) + (dy * cos) + tileSize / 2);
 
             newX = std::clamp(newX, 0, tileSize - 1);
             newY = std::clamp(newY, 0, tileSize - 1);
